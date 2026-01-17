@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "APIServer",
+        "type": "go",
+        "request": "launch",
+        "mode": "auto",
+        "program": "${workspaceRoot}/cmd/server/apiserver/main.go",
+        "args": ["--config.file", "${workspaceRoot}/conf/config.json"],
+        "windows": {
+          "args": ["--config.file", "${workspaceRoot}/conf/config.json"]
+        },
+        "env": {
+          "ENABLE_SWAGGER": "true"
+        }
+      }
+    ]
+  }

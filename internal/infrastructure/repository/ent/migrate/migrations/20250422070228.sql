@@ -1,0 +1,2 @@
+-- Modify "organization_applications" table
+ALTER TABLE "organization_applications" DROP CONSTRAINT "organization_applications_applications_organization_application", DROP COLUMN "refresh_at", DROP COLUMN "expires_at", DROP COLUMN "permission_code", DROP COLUMN "contract", DROP COLUMN "application_organization_application", ADD COLUMN "trial_days" integer NULL, ADD CONSTRAINT "organization_applications_applications_organization_application" FOREIGN KEY ("application_id") REFERENCES "applications" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION;
