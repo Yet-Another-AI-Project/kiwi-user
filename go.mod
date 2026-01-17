@@ -4,7 +4,7 @@ go 1.25
 
 require (
 	entgo.io/ent v0.14.3
-	github.com/Yet-Another-AI-Project/kiwi-lib v0.0.0-20260114053040-e14805480f22
+	github.com/Yet-Another-AI-Project/kiwi-lib v0.0.0-20260117113424-d174c35ed584
 	github.com/avast/retry-go v3.0.0+incompatible
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/futurxlab/golanggraph v0.0.9
@@ -123,5 +123,3 @@ require (
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/Yet-Another-AI-Project/kiwi-lib v0.0.0-20260114053040-e14805480f22 => /Users/liyifan/Documents/Github/kiwi-lib
