@@ -1,10 +1,10 @@
-FROM golang:1.24 as builder
+FROM golang:1.25 as builder
 
-ARG gitlab_user
-ARG gitlab_access_token
+ARG github_user
+ARG github_access_token
 
-RUN go env -w GOPRIVATE=git.futurx.cn
-RUN git config --global url."https://${gitlab_user}:${gitlab_access_token}@git.futurx.cn".insteadOf "https://git.futurx.cn"
+RUN go env -w GOPRIVATE=github.com
+RUN git config --global url."https://${github_user}:${github_access_token}@github.com".insteadOf "https://github.com"
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ COPY . .
 
 RUN GOOS=linux go build -o /apiserver cmd/server/apiserver/main.go
 
-FROM golang:1.24
+FROM golang:1.25
 
 RUN curl -sSf https://atlasgo.sh | sh
 RUN apt update && apt install -y jq

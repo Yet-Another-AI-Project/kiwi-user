@@ -1325,12 +1325,6 @@ type googleTokenResponse struct {
 	ErrorDescription string `json:"error_description"`
 }
 
-// getGoogleIdTokenFromCode 使用授权码换取 Google ID token
-func (l *LoginService) getGoogleIdTokenFromCode(ctx context.Context, code string, redirectURI string) (string, error) {
-	idToken, _, err := l.getGoogleTokensFromCode(ctx, code, redirectURI)
-	return idToken, err
-}
-
 // getGoogleTokensFromCode 使用授权码换取 Google ID token 和 access token
 func (l *LoginService) getGoogleTokensFromCode(ctx context.Context, code string, redirectURI string) (string, string, error) {
 	if l.googleClientID == "" || l.googleClientSecret == "" {
@@ -1347,7 +1341,13 @@ func (l *LoginService) getGoogleTokensFromCode(ctx context.Context, code string,
 	data.Set("redirect_uri", redirectURI)
 	data.Set("grant_type", "authorization_code")
 
-	resp, err := l.httpClient.Post(apiURL, "application/x-www-form-urlencoded", strings.NewReader(data.Encode()))
+	request, err := http.NewRequestWithContext(ctx, "POST", apiURL, strings.NewReader(data.Encode()))
+	if err != nil {
+		return "", "", xerror.Wrap(err)
+	}
+	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, err := l.httpClient.Do(request)
 	if err != nil {
 		return "", "", xerror.Wrap(err)
 	}
@@ -1432,45 +1432,6 @@ func (l *LoginService) verifyGoogleIdToken(ctx context.Context, idToken string) 
 	return userInfo, nil
 }
 
-// getGoogleUserInfoFromAccessToken 使用 access token 调用 userinfo API 获取用户信息
-func (l *LoginService) getGoogleUserInfoFromAccessToken(ctx context.Context, accessToken string) (*googleUserInfo, error) {
-	// 使用 OpenID Connect userinfo endpoint
-	apiURL := "https://openidconnect.googleapis.com/v1/userinfo"
-
-	// 使用标准 http.Client 发送带 Authorization header 的请求
-	req, err := http.NewRequestWithContext(ctx, "GET", apiURL, nil)
-	if err != nil {
-		return nil, xerror.Wrap(err)
-	}
-
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", accessToken))
-
-	// 使用标准 http.Client
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, xerror.Wrap(err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		body, _ := io.ReadAll(resp.Body)
-		return nil, xerror.Wrap(fmt.Errorf("failed to get userinfo: status %d, body: %s", resp.StatusCode, string(body)))
-	}
-
-	b, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, xerror.Wrap(err)
-	}
-
-	var userInfo googleUserInfo
-	if err := json.Unmarshal(b, &userInfo); err != nil {
-		return nil, xerror.Wrap(err)
-	}
-
-	return &userInfo, nil
-}
-
 // uploadGooglePictureToOSS 下载 Google 头像并上传到 OSS
 func (l *LoginService) uploadGooglePictureToOSS(ctx context.Context, pictureURL string, userID string) (string, error) {
 	if pictureURL == "" {
@@ -1529,14 +1490,14 @@ func (l *LoginService) GoogleWebLogin(
 	// 1. 使用授权码换取 ID token 和 access token
 	idToken, _, err := l.getGoogleTokensFromCode(ctx, code, redirectURI)
 	if err != nil {
-		l.logger.Errorf(ctx, "failed to exchange code for tokens: %w", err)
+		l.logger.Errorf(ctx, "failed to exchange code for tokens %s, error: %s", code, err)
 		return nil, xerror.Wrap(err)
 	}
 
 	// 2. 使用 Google 官方 SDK 验证 ID token 并获取 Google 用户信息
 	googleUserInfo, err := l.verifyGoogleIdToken(ctx, idToken)
 	if err != nil {
-		l.logger.Errorf(ctx, "failed to verify google id token: %w", err)
+		l.logger.Errorf(ctx, "failed to verify google id token: %s", err)
 		return nil, xerror.Wrap(err)
 	}
 

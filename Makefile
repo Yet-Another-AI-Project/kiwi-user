@@ -21,14 +21,14 @@ generate-api-swagger:
 build-staging-image:
 	docker rmi kiwi-user:staging || true
 	docker rmi crpi-by4agx6tziel0uqm.cn-shanghai.personal.cr.aliyuncs.com/kiwi/kiwi-user:staging || true
-	docker build -f build/Dockerfile --build-arg gitlab_user=${GITLAB_USER} --build-arg gitlab_access_token=${GITLAB_ACCESS_TOKEN} -t kiwi-user:staging .
+	docker build -f build/Dockerfile --build-arg github_user=${GITHUB_USER} --build-arg github_access_token=${GITHUB_ACCESS_TOKEN} -t kiwi-user:staging .
 	docker tag kiwi-user:staging crpi-by4agx6tziel0uqm.cn-shanghai.personal.cr.aliyuncs.com/kiwi/kiwi-user:staging
 	docker push crpi-by4agx6tziel0uqm.cn-shanghai.personal.cr.aliyuncs.com/kiwi/kiwi-user:staging
 
 build-production-image:
 	docker rmi kiwi-user:$(VERSION) || true
 	docker rmi crpi-by4agx6tziel0uqm.cn-shanghai.personal.cr.aliyuncs.com/kiwi/kiwi-user:$(VERSION) || true
-	docker build -f build/Dockerfile --build-arg gitlab_user=${GITLAB_USER} --build-arg gitlab_access_token=${GITLAB_ACCESS_TOKEN} -t kiwi-user:$(VERSION) .
+	docker build -f build/Dockerfile --build-arg github_user=${GITHUB_USER} --build-arg github_access_token=${GITHUB_ACCESS_TOKEN} -t kiwi-user:$(VERSION) .
 	docker tag kiwi-user:$(VERSION) crpi-by4agx6tziel0uqm.cn-shanghai.personal.cr.aliyuncs.com/kiwi/kiwi-user:$(VERSION)
 	docker push crpi-by4agx6tziel0uqm.cn-shanghai.personal.cr.aliyuncs.com/kiwi/kiwi-user:$(VERSION)
 
