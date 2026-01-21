@@ -29,6 +29,7 @@ func (Binding) Fields() []ent.Field {
 		field.Time("deleted_at").Optional(),
 		field.Enum("type").Values(convertStingerSliceToStringSlice(enum.GetAllBindingTypes())...),
 		field.String("identity").NotEmpty(),
+		field.String("email").Optional(),
 		field.Bool("verified").Default(false),
 		field.String("salt").Optional(),
 		field.String("user_id"),

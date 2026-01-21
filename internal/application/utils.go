@@ -35,6 +35,10 @@ func getUserInfo(
 		if binding.Type == enum.BindingTypePhone {
 			userInfo.Phone = binding.Identity
 		}
+
+		if binding.Type == enum.BindingTypeGoogle && userInfo.Email == "" {
+			userInfo.Email = binding.Email
+		}
 	}
 
 	// NOTE: override name if displayname is not empty, for UI back compatibility

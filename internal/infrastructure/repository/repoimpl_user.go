@@ -243,6 +243,7 @@ func (u *userImpl) Update(ctx context.Context, user *aggregate.UserAggregate) (*
 			bindingDO, err := db.Binding.Create().
 				SetType(binding.Type(bindingEntity.Type)).
 				SetIdentity(bindingEntity.Identity).
+				SetEmail(bindingEntity.Email).
 				SetVerified(bindingEntity.Verified).
 				SetSalt(bindingEntity.Salt).
 				SetUserID(user.User.ID).
@@ -256,6 +257,7 @@ func (u *userImpl) Update(ctx context.Context, user *aggregate.UserAggregate) (*
 			if _, err := db.Binding.UpdateOneID(bindingEntity.ID).
 				SetType(binding.Type(bindingEntity.Type)).
 				SetIdentity(bindingEntity.Identity).
+				SetEmail(bindingEntity.Email).
 				SetVerified(bindingEntity.Verified).
 				SetSalt(bindingEntity.Salt).
 				Save(ctx); err != nil {
@@ -359,6 +361,7 @@ func (u *userImpl) Create(ctx context.Context, user *aggregate.UserAggregate) (*
 			SetApplicationID(user.Application.ID).
 			SetType(binding.Type(bindingEntity.Type)).
 			SetIdentity(bindingEntity.Identity).
+			SetEmail(bindingEntity.Email).
 			SetVerified(bindingEntity.Verified).
 			SetSalt(bindingEntity.Salt).
 			SetUser(userDO).

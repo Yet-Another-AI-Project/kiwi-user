@@ -29,6 +29,8 @@ type Binding struct {
 	Type binding.Type `json:"type,omitempty"`
 	// Identity holds the value of the "identity" field.
 	Identity string `json:"identity,omitempty"`
+	// Email holds the value of the "email" field.
+	Email string `json:"email,omitempty"`
 	// Verified holds the value of the "verified" field.
 	Verified bool `json:"verified,omitempty"`
 	// Salt holds the value of the "salt" field.
@@ -70,7 +72,7 @@ func (*Binding) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case binding.FieldVerified:
 			values[i] = new(sql.NullBool)
-		case binding.FieldType, binding.FieldIdentity, binding.FieldSalt, binding.FieldUserID:
+		case binding.FieldType, binding.FieldIdentity, binding.FieldEmail, binding.FieldSalt, binding.FieldUserID:
 			values[i] = new(sql.NullString)
 		case binding.FieldCreatedAt, binding.FieldUpdatedAt, binding.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
@@ -126,6 +128,12 @@ func (b *Binding) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field identity", values[i])
 			} else if value.Valid {
 				b.Identity = value.String
+			}
+		case binding.FieldEmail:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field email", values[i])
+			} else if value.Valid {
+				b.Email = value.String
 			}
 		case binding.FieldVerified:
 			if value, ok := values[i].(*sql.NullBool); !ok {
@@ -206,6 +214,9 @@ func (b *Binding) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("identity=")
 	builder.WriteString(b.Identity)
+	builder.WriteString(", ")
+	builder.WriteString("email=")
+	builder.WriteString(b.Email)
 	builder.WriteString(", ")
 	builder.WriteString("verified=")
 	builder.WriteString(fmt.Sprintf("%v", b.Verified))

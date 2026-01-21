@@ -16,6 +16,7 @@ type UserInfo struct {
 	Name           string              `json:"name"`
 	Avatar         string              `json:"avatar"`
 	Phone          string              `json:"phone"`
+	Email          string              `json:"email"`
 	PersonalRole   string              `json:"personal_role"`
 	PersonalScopes []string            `json:"personal_scopes"`
 	CurrentOrgID   string              `json:"current_org_id"`

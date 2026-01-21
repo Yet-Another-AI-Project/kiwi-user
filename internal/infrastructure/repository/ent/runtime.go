@@ -65,7 +65,7 @@ func init() {
 	// binding.IdentityValidator is a validator for the "identity" field. It is called by the builders before save.
 	binding.IdentityValidator = bindingDescIdentity.Validators[0].(func(string) error)
 	// bindingDescVerified is the schema descriptor for verified field.
-	bindingDescVerified := bindingFields[6].Descriptor()
+	bindingDescVerified := bindingFields[7].Descriptor()
 	// binding.DefaultVerified holds the default value on creation for the verified field.
 	binding.DefaultVerified = bindingDescVerified.Default.(bool)
 	// bindingDescID is the schema descriptor for id field.

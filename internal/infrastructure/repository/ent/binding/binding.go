@@ -26,6 +26,8 @@ const (
 	FieldType = "type"
 	// FieldIdentity holds the string denoting the identity field in the database.
 	FieldIdentity = "identity"
+	// FieldEmail holds the string denoting the email field in the database.
+	FieldEmail = "email"
 	// FieldVerified holds the string denoting the verified field in the database.
 	FieldVerified = "verified"
 	// FieldSalt holds the string denoting the salt field in the database.
@@ -55,6 +57,7 @@ var Columns = []string{
 	FieldDeletedAt,
 	FieldType,
 	FieldIdentity,
+	FieldEmail,
 	FieldVerified,
 	FieldSalt,
 	FieldUserID,
@@ -146,6 +149,11 @@ func ByType(opts ...sql.OrderTermOption) OrderOption {
 // ByIdentity orders the results by the identity field.
 func ByIdentity(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldIdentity, opts...).ToFunc()
+}
+
+// ByEmail orders the results by the email field.
+func ByEmail(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldEmail, opts...).ToFunc()
 }
 
 // ByVerified orders the results by the verified field.

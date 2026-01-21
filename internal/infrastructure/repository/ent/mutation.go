@@ -1103,6 +1103,7 @@ type BindingMutation struct {
 	deleted_at     *time.Time
 	_type          *binding.Type
 	identity       *string
+	email          *string
 	verified       *bool
 	salt           *string
 	application_id *uuid.UUID
@@ -1411,6 +1412,55 @@ func (m *BindingMutation) ResetIdentity() {
 	m.identity = nil
 }
 
+// SetEmail sets the "email" field.
+func (m *BindingMutation) SetEmail(s string) {
+	m.email = &s
+}
+
+// Email returns the value of the "email" field in the mutation.
+func (m *BindingMutation) Email() (r string, exists bool) {
+	v := m.email
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEmail returns the old "email" field's value of the Binding entity.
+// If the Binding object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *BindingMutation) OldEmail(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEmail is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEmail requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEmail: %w", err)
+	}
+	return oldValue.Email, nil
+}
+
+// ClearEmail clears the value of the "email" field.
+func (m *BindingMutation) ClearEmail() {
+	m.email = nil
+	m.clearedFields[binding.FieldEmail] = struct{}{}
+}
+
+// EmailCleared returns if the "email" field was cleared in this mutation.
+func (m *BindingMutation) EmailCleared() bool {
+	_, ok := m.clearedFields[binding.FieldEmail]
+	return ok
+}
+
+// ResetEmail resets all changes to the "email" field.
+func (m *BindingMutation) ResetEmail() {
+	m.email = nil
+	delete(m.clearedFields, binding.FieldEmail)
+}
+
 // SetVerified sets the "verified" field.
 func (m *BindingMutation) SetVerified(b bool) {
 	m.verified = &b
@@ -1642,7 +1692,7 @@ func (m *BindingMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *BindingMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 10)
 	if m.created_at != nil {
 		fields = append(fields, binding.FieldCreatedAt)
 	}
@@ -1657,6 +1707,9 @@ func (m *BindingMutation) Fields() []string {
 	}
 	if m.identity != nil {
 		fields = append(fields, binding.FieldIdentity)
+	}
+	if m.email != nil {
+		fields = append(fields, binding.FieldEmail)
 	}
 	if m.verified != nil {
 		fields = append(fields, binding.FieldVerified)
@@ -1688,6 +1741,8 @@ func (m *BindingMutation) Field(name string) (ent.Value, bool) {
 		return m.GetType()
 	case binding.FieldIdentity:
 		return m.Identity()
+	case binding.FieldEmail:
+		return m.Email()
 	case binding.FieldVerified:
 		return m.Verified()
 	case binding.FieldSalt:
@@ -1715,6 +1770,8 @@ func (m *BindingMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldType(ctx)
 	case binding.FieldIdentity:
 		return m.OldIdentity(ctx)
+	case binding.FieldEmail:
+		return m.OldEmail(ctx)
 	case binding.FieldVerified:
 		return m.OldVerified(ctx)
 	case binding.FieldSalt:
@@ -1766,6 +1823,13 @@ func (m *BindingMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetIdentity(v)
+		return nil
+	case binding.FieldEmail:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEmail(v)
 		return nil
 	case binding.FieldVerified:
 		v, ok := value.(bool)
@@ -1828,6 +1892,9 @@ func (m *BindingMutation) ClearedFields() []string {
 	if m.FieldCleared(binding.FieldDeletedAt) {
 		fields = append(fields, binding.FieldDeletedAt)
 	}
+	if m.FieldCleared(binding.FieldEmail) {
+		fields = append(fields, binding.FieldEmail)
+	}
 	if m.FieldCleared(binding.FieldSalt) {
 		fields = append(fields, binding.FieldSalt)
 	}
@@ -1850,6 +1917,9 @@ func (m *BindingMutation) ClearField(name string) error {
 	switch name {
 	case binding.FieldDeletedAt:
 		m.ClearDeletedAt()
+		return nil
+	case binding.FieldEmail:
+		m.ClearEmail()
 		return nil
 	case binding.FieldSalt:
 		m.ClearSalt()
@@ -1879,6 +1949,9 @@ func (m *BindingMutation) ResetField(name string) error {
 		return nil
 	case binding.FieldIdentity:
 		m.ResetIdentity()
+		return nil
+	case binding.FieldEmail:
+		m.ResetEmail()
 		return nil
 	case binding.FieldVerified:
 		m.ResetVerified()

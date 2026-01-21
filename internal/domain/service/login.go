@@ -1516,6 +1516,7 @@ func (l *LoginService) GoogleWebLogin(
 			ApplicationID: application.Application.ID,
 			Type:          enum.BindingTypeGoogle,
 			Identity:      identity,
+			Email:         googleUserInfo.Email,
 			Verified:      true,
 		}
 
@@ -1594,6 +1595,13 @@ func (l *LoginService) GoogleWebLogin(
 					userAggregate.User.Avatar = googleUserInfo.Picture
 				}
 			}
+			// update google binding email
+			for _, binding := range userAggregate.Bindings {
+				if binding.Type == enum.BindingTypeGoogle {
+					binding.Email = googleUserInfo.Email
+				}
+			}
+
 			userAggregate, err = l.userRepository.Update(ctx, userAggregate)
 			if err != nil {
 				return xerror.Wrap(err)

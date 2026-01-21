@@ -84,6 +84,26 @@ func (bu *BindingUpdate) SetNillableIdentity(s *string) *BindingUpdate {
 	return bu
 }
 
+// SetEmail sets the "email" field.
+func (bu *BindingUpdate) SetEmail(s string) *BindingUpdate {
+	bu.mutation.SetEmail(s)
+	return bu
+}
+
+// SetNillableEmail sets the "email" field if the given value is not nil.
+func (bu *BindingUpdate) SetNillableEmail(s *string) *BindingUpdate {
+	if s != nil {
+		bu.SetEmail(*s)
+	}
+	return bu
+}
+
+// ClearEmail clears the value of the "email" field.
+func (bu *BindingUpdate) ClearEmail() *BindingUpdate {
+	bu.mutation.ClearEmail()
+	return bu
+}
+
 // SetVerified sets the "verified" field.
 func (bu *BindingUpdate) SetVerified(b bool) *BindingUpdate {
 	bu.mutation.SetVerified(b)
@@ -249,6 +269,12 @@ func (bu *BindingUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := bu.mutation.Identity(); ok {
 		_spec.SetField(binding.FieldIdentity, field.TypeString, value)
 	}
+	if value, ok := bu.mutation.Email(); ok {
+		_spec.SetField(binding.FieldEmail, field.TypeString, value)
+	}
+	if bu.mutation.EmailCleared() {
+		_spec.ClearField(binding.FieldEmail, field.TypeString)
+	}
 	if value, ok := bu.mutation.Verified(); ok {
 		_spec.SetField(binding.FieldVerified, field.TypeBool, value)
 	}
@@ -364,6 +390,26 @@ func (buo *BindingUpdateOne) SetNillableIdentity(s *string) *BindingUpdateOne {
 	if s != nil {
 		buo.SetIdentity(*s)
 	}
+	return buo
+}
+
+// SetEmail sets the "email" field.
+func (buo *BindingUpdateOne) SetEmail(s string) *BindingUpdateOne {
+	buo.mutation.SetEmail(s)
+	return buo
+}
+
+// SetNillableEmail sets the "email" field if the given value is not nil.
+func (buo *BindingUpdateOne) SetNillableEmail(s *string) *BindingUpdateOne {
+	if s != nil {
+		buo.SetEmail(*s)
+	}
+	return buo
+}
+
+// ClearEmail clears the value of the "email" field.
+func (buo *BindingUpdateOne) ClearEmail() *BindingUpdateOne {
+	buo.mutation.ClearEmail()
 	return buo
 }
 
@@ -561,6 +607,12 @@ func (buo *BindingUpdateOne) sqlSave(ctx context.Context) (_node *Binding, err e
 	}
 	if value, ok := buo.mutation.Identity(); ok {
 		_spec.SetField(binding.FieldIdentity, field.TypeString, value)
+	}
+	if value, ok := buo.mutation.Email(); ok {
+		_spec.SetField(binding.FieldEmail, field.TypeString, value)
+	}
+	if buo.mutation.EmailCleared() {
+		_spec.ClearField(binding.FieldEmail, field.TypeString)
 	}
 	if value, ok := buo.mutation.Verified(); ok {
 		_spec.SetField(binding.FieldVerified, field.TypeBool, value)

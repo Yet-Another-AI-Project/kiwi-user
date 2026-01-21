@@ -11,6 +11,7 @@ type BindingEntity struct {
 	ApplicationID uuid.UUID
 	Type          enum.BindingType
 	Identity      string
+	Email         string
 	Verified      bool
 	Salt          string
 }

@@ -76,6 +76,20 @@ func (bc *BindingCreate) SetIdentity(s string) *BindingCreate {
 	return bc
 }
 
+// SetEmail sets the "email" field.
+func (bc *BindingCreate) SetEmail(s string) *BindingCreate {
+	bc.mutation.SetEmail(s)
+	return bc
+}
+
+// SetNillableEmail sets the "email" field if the given value is not nil.
+func (bc *BindingCreate) SetNillableEmail(s *string) *BindingCreate {
+	if s != nil {
+		bc.SetEmail(*s)
+	}
+	return bc
+}
+
 // SetVerified sets the "verified" field.
 func (bc *BindingCreate) SetVerified(b bool) *BindingCreate {
 	bc.mutation.SetVerified(b)
@@ -283,6 +297,10 @@ func (bc *BindingCreate) createSpec() (*Binding, *sqlgraph.CreateSpec) {
 	if value, ok := bc.mutation.Identity(); ok {
 		_spec.SetField(binding.FieldIdentity, field.TypeString, value)
 		_node.Identity = value
+	}
+	if value, ok := bc.mutation.Email(); ok {
+		_spec.SetField(binding.FieldEmail, field.TypeString, value)
+		_node.Email = value
 	}
 	if value, ok := bc.mutation.Verified(); ok {
 		_spec.SetField(binding.FieldVerified, field.TypeBool, value)

@@ -61,6 +61,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
 		{Name: "type", Type: field.TypeEnum, Enums: []string{"wechat", "qy_wechat", "wxid", "phone", "password", "email", "google", "unknown"}},
 		{Name: "identity", Type: field.TypeString},
+		{Name: "email", Type: field.TypeString, Nullable: true},
 		{Name: "verified", Type: field.TypeBool, Default: false},
 		{Name: "salt", Type: field.TypeString, Nullable: true},
 		{Name: "application_id", Type: field.TypeUUID, Nullable: true},
@@ -74,7 +75,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "bindings_users_bindings",
-				Columns:    []*schema.Column{BindingsColumns[9]},
+				Columns:    []*schema.Column{BindingsColumns[10]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -93,7 +94,7 @@ var (
 			{
 				Name:    "binding_user_id_type",
 				Unique:  true,
-				Columns: []*schema.Column{BindingsColumns[9], BindingsColumns[4]},
+				Columns: []*schema.Column{BindingsColumns[10], BindingsColumns[4]},
 			},
 		},
 	}

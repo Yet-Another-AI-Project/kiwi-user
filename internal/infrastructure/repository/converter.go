@@ -67,6 +67,7 @@ func convertBindingDOToEntity(binding *ent.Binding) *entity.BindingEntity {
 		ID:       binding.ID,
 		Type:     enum.ParseBindingType(binding.Type.String()),
 		Identity: binding.Identity,
+		Email:    binding.Email,
 		Verified: binding.Verified,
 		Salt:     binding.Salt,
 	}
