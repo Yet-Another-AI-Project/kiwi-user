@@ -11,4 +11,12 @@ type PaymentConfig struct {
 	WechatNotifyURL      string                 `config:"wechat_notify_url"`
 	AESEncryptKey        string                 `config:"aes_encrypt_key"`
 	ServiceNotifyURL     map[string]interface{} `config:"service_notify_url"`
+
+	// Stripe configuration
+	StripeAPIKey         string `config:"stripe_api_key"`
+	StripeWebhookSecret  string `config:"stripe_webhook_secret"`
+	StripeSuccessURL     string `config:"stripe_success_url"`
+	StripeCancelURL      string `config:"stripe_cancel_url"`
+	StripeMonthlyPriceID string `config:"stripe_monthly_price_id"`
+	StripeYearlyPriceID  string `config:"stripe_yearly_price_id"`
 }

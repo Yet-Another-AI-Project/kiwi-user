@@ -15,6 +15,7 @@ var Module = fx.Provide(
 	service.NewOrganizationService,
 	service.NewBindingService,
 	service.NewPaymentService,
+	service.NewStripePaymentService,
 	service.NewOrganizationApplicationService,
 	service.NewVertificationCodeService,
 )

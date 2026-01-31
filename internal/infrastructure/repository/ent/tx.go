@@ -40,6 +40,8 @@ type Tx struct {
 	Role *RoleClient
 	// Scope is the client for interacting with the Scope builders.
 	Scope *ScopeClient
+	// StripeEvent is the client for interacting with the StripeEvent builders.
+	StripeEvent *StripeEventClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 	// WechatOpenID is the client for interacting with the WechatOpenID builders.
@@ -188,6 +190,7 @@ func (tx *Tx) init() {
 	tx.QyWechatUserID = NewQyWechatUserIDClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)
 	tx.Scope = NewScopeClient(tx.config)
+	tx.StripeEvent = NewStripeEventClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 	tx.WechatOpenID = NewWechatOpenIDClient(tx.config)
 }

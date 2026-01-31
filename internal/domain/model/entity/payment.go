@@ -16,6 +16,16 @@ type PaymentEntity struct {
 	Status      enum.PaymentStatus
 	CreatedAt   time.Time
 	PaidAt      time.Time
+
+	PaymentType        enum.PaymentType
+	SubscriptionID     string
+	SubscriptionStatus enum.SubscriptionStatus
+	Interval           enum.SubscriptionInterval
+	CurrentPeriodStart time.Time
+	CurrentPeriodEnd   time.Time
+	CustomerID         string
+	CustomerEmail      string
+	CheckoutSessionID  string
 }
 
 type PaymentChannelInfo struct {

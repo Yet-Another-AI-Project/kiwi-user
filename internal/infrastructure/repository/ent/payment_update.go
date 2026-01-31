@@ -228,6 +228,180 @@ func (pu *PaymentUpdate) ClearPaidAt() *PaymentUpdate {
 	return pu
 }
 
+// SetPaymentType sets the "payment_type" field.
+func (pu *PaymentUpdate) SetPaymentType(pt payment.PaymentType) *PaymentUpdate {
+	pu.mutation.SetPaymentType(pt)
+	return pu
+}
+
+// SetNillablePaymentType sets the "payment_type" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillablePaymentType(pt *payment.PaymentType) *PaymentUpdate {
+	if pt != nil {
+		pu.SetPaymentType(*pt)
+	}
+	return pu
+}
+
+// SetSubscriptionID sets the "subscription_id" field.
+func (pu *PaymentUpdate) SetSubscriptionID(s string) *PaymentUpdate {
+	pu.mutation.SetSubscriptionID(s)
+	return pu
+}
+
+// SetNillableSubscriptionID sets the "subscription_id" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableSubscriptionID(s *string) *PaymentUpdate {
+	if s != nil {
+		pu.SetSubscriptionID(*s)
+	}
+	return pu
+}
+
+// ClearSubscriptionID clears the value of the "subscription_id" field.
+func (pu *PaymentUpdate) ClearSubscriptionID() *PaymentUpdate {
+	pu.mutation.ClearSubscriptionID()
+	return pu
+}
+
+// SetSubscriptionStatus sets the "subscription_status" field.
+func (pu *PaymentUpdate) SetSubscriptionStatus(ps payment.SubscriptionStatus) *PaymentUpdate {
+	pu.mutation.SetSubscriptionStatus(ps)
+	return pu
+}
+
+// SetNillableSubscriptionStatus sets the "subscription_status" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableSubscriptionStatus(ps *payment.SubscriptionStatus) *PaymentUpdate {
+	if ps != nil {
+		pu.SetSubscriptionStatus(*ps)
+	}
+	return pu
+}
+
+// ClearSubscriptionStatus clears the value of the "subscription_status" field.
+func (pu *PaymentUpdate) ClearSubscriptionStatus() *PaymentUpdate {
+	pu.mutation.ClearSubscriptionStatus()
+	return pu
+}
+
+// SetInterval sets the "interval" field.
+func (pu *PaymentUpdate) SetInterval(pa payment.Interval) *PaymentUpdate {
+	pu.mutation.SetInterval(pa)
+	return pu
+}
+
+// SetNillableInterval sets the "interval" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableInterval(pa *payment.Interval) *PaymentUpdate {
+	if pa != nil {
+		pu.SetInterval(*pa)
+	}
+	return pu
+}
+
+// ClearInterval clears the value of the "interval" field.
+func (pu *PaymentUpdate) ClearInterval() *PaymentUpdate {
+	pu.mutation.ClearInterval()
+	return pu
+}
+
+// SetCurrentPeriodStart sets the "current_period_start" field.
+func (pu *PaymentUpdate) SetCurrentPeriodStart(t time.Time) *PaymentUpdate {
+	pu.mutation.SetCurrentPeriodStart(t)
+	return pu
+}
+
+// SetNillableCurrentPeriodStart sets the "current_period_start" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableCurrentPeriodStart(t *time.Time) *PaymentUpdate {
+	if t != nil {
+		pu.SetCurrentPeriodStart(*t)
+	}
+	return pu
+}
+
+// ClearCurrentPeriodStart clears the value of the "current_period_start" field.
+func (pu *PaymentUpdate) ClearCurrentPeriodStart() *PaymentUpdate {
+	pu.mutation.ClearCurrentPeriodStart()
+	return pu
+}
+
+// SetCurrentPeriodEnd sets the "current_period_end" field.
+func (pu *PaymentUpdate) SetCurrentPeriodEnd(t time.Time) *PaymentUpdate {
+	pu.mutation.SetCurrentPeriodEnd(t)
+	return pu
+}
+
+// SetNillableCurrentPeriodEnd sets the "current_period_end" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableCurrentPeriodEnd(t *time.Time) *PaymentUpdate {
+	if t != nil {
+		pu.SetCurrentPeriodEnd(*t)
+	}
+	return pu
+}
+
+// ClearCurrentPeriodEnd clears the value of the "current_period_end" field.
+func (pu *PaymentUpdate) ClearCurrentPeriodEnd() *PaymentUpdate {
+	pu.mutation.ClearCurrentPeriodEnd()
+	return pu
+}
+
+// SetCustomerID sets the "customer_id" field.
+func (pu *PaymentUpdate) SetCustomerID(s string) *PaymentUpdate {
+	pu.mutation.SetCustomerID(s)
+	return pu
+}
+
+// SetNillableCustomerID sets the "customer_id" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableCustomerID(s *string) *PaymentUpdate {
+	if s != nil {
+		pu.SetCustomerID(*s)
+	}
+	return pu
+}
+
+// ClearCustomerID clears the value of the "customer_id" field.
+func (pu *PaymentUpdate) ClearCustomerID() *PaymentUpdate {
+	pu.mutation.ClearCustomerID()
+	return pu
+}
+
+// SetCustomerEmail sets the "customer_email" field.
+func (pu *PaymentUpdate) SetCustomerEmail(s string) *PaymentUpdate {
+	pu.mutation.SetCustomerEmail(s)
+	return pu
+}
+
+// SetNillableCustomerEmail sets the "customer_email" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableCustomerEmail(s *string) *PaymentUpdate {
+	if s != nil {
+		pu.SetCustomerEmail(*s)
+	}
+	return pu
+}
+
+// ClearCustomerEmail clears the value of the "customer_email" field.
+func (pu *PaymentUpdate) ClearCustomerEmail() *PaymentUpdate {
+	pu.mutation.ClearCustomerEmail()
+	return pu
+}
+
+// SetCheckoutSessionID sets the "checkout_session_id" field.
+func (pu *PaymentUpdate) SetCheckoutSessionID(s string) *PaymentUpdate {
+	pu.mutation.SetCheckoutSessionID(s)
+	return pu
+}
+
+// SetNillableCheckoutSessionID sets the "checkout_session_id" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableCheckoutSessionID(s *string) *PaymentUpdate {
+	if s != nil {
+		pu.SetCheckoutSessionID(*s)
+	}
+	return pu
+}
+
+// ClearCheckoutSessionID clears the value of the "checkout_session_id" field.
+func (pu *PaymentUpdate) ClearCheckoutSessionID() *PaymentUpdate {
+	pu.mutation.ClearCheckoutSessionID()
+	return pu
+}
+
 // SetUser sets the "user" edge to the User entity.
 func (pu *PaymentUpdate) SetUser(u *User) *PaymentUpdate {
 	return pu.SetUserID(u.ID)
@@ -327,6 +501,21 @@ func (pu *PaymentUpdate) check() error {
 			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Payment.status": %w`, err)}
 		}
 	}
+	if v, ok := pu.mutation.PaymentType(); ok {
+		if err := payment.PaymentTypeValidator(v); err != nil {
+			return &ValidationError{Name: "payment_type", err: fmt.Errorf(`ent: validator failed for field "Payment.payment_type": %w`, err)}
+		}
+	}
+	if v, ok := pu.mutation.SubscriptionStatus(); ok {
+		if err := payment.SubscriptionStatusValidator(v); err != nil {
+			return &ValidationError{Name: "subscription_status", err: fmt.Errorf(`ent: validator failed for field "Payment.subscription_status": %w`, err)}
+		}
+	}
+	if v, ok := pu.mutation.Interval(); ok {
+		if err := payment.IntervalValidator(v); err != nil {
+			return &ValidationError{Name: "interval", err: fmt.Errorf(`ent: validator failed for field "Payment.interval": %w`, err)}
+		}
+	}
 	if pu.mutation.UserCleared() && len(pu.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "Payment.user"`)
 	}
@@ -392,6 +581,57 @@ func (pu *PaymentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if pu.mutation.PaidAtCleared() {
 		_spec.ClearField(payment.FieldPaidAt, field.TypeTime)
+	}
+	if value, ok := pu.mutation.PaymentType(); ok {
+		_spec.SetField(payment.FieldPaymentType, field.TypeEnum, value)
+	}
+	if value, ok := pu.mutation.SubscriptionID(); ok {
+		_spec.SetField(payment.FieldSubscriptionID, field.TypeString, value)
+	}
+	if pu.mutation.SubscriptionIDCleared() {
+		_spec.ClearField(payment.FieldSubscriptionID, field.TypeString)
+	}
+	if value, ok := pu.mutation.SubscriptionStatus(); ok {
+		_spec.SetField(payment.FieldSubscriptionStatus, field.TypeEnum, value)
+	}
+	if pu.mutation.SubscriptionStatusCleared() {
+		_spec.ClearField(payment.FieldSubscriptionStatus, field.TypeEnum)
+	}
+	if value, ok := pu.mutation.Interval(); ok {
+		_spec.SetField(payment.FieldInterval, field.TypeEnum, value)
+	}
+	if pu.mutation.IntervalCleared() {
+		_spec.ClearField(payment.FieldInterval, field.TypeEnum)
+	}
+	if value, ok := pu.mutation.CurrentPeriodStart(); ok {
+		_spec.SetField(payment.FieldCurrentPeriodStart, field.TypeTime, value)
+	}
+	if pu.mutation.CurrentPeriodStartCleared() {
+		_spec.ClearField(payment.FieldCurrentPeriodStart, field.TypeTime)
+	}
+	if value, ok := pu.mutation.CurrentPeriodEnd(); ok {
+		_spec.SetField(payment.FieldCurrentPeriodEnd, field.TypeTime, value)
+	}
+	if pu.mutation.CurrentPeriodEndCleared() {
+		_spec.ClearField(payment.FieldCurrentPeriodEnd, field.TypeTime)
+	}
+	if value, ok := pu.mutation.CustomerID(); ok {
+		_spec.SetField(payment.FieldCustomerID, field.TypeString, value)
+	}
+	if pu.mutation.CustomerIDCleared() {
+		_spec.ClearField(payment.FieldCustomerID, field.TypeString)
+	}
+	if value, ok := pu.mutation.CustomerEmail(); ok {
+		_spec.SetField(payment.FieldCustomerEmail, field.TypeString, value)
+	}
+	if pu.mutation.CustomerEmailCleared() {
+		_spec.ClearField(payment.FieldCustomerEmail, field.TypeString)
+	}
+	if value, ok := pu.mutation.CheckoutSessionID(); ok {
+		_spec.SetField(payment.FieldCheckoutSessionID, field.TypeString, value)
+	}
+	if pu.mutation.CheckoutSessionIDCleared() {
+		_spec.ClearField(payment.FieldCheckoutSessionID, field.TypeString)
 	}
 	if pu.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -641,6 +881,180 @@ func (puo *PaymentUpdateOne) ClearPaidAt() *PaymentUpdateOne {
 	return puo
 }
 
+// SetPaymentType sets the "payment_type" field.
+func (puo *PaymentUpdateOne) SetPaymentType(pt payment.PaymentType) *PaymentUpdateOne {
+	puo.mutation.SetPaymentType(pt)
+	return puo
+}
+
+// SetNillablePaymentType sets the "payment_type" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillablePaymentType(pt *payment.PaymentType) *PaymentUpdateOne {
+	if pt != nil {
+		puo.SetPaymentType(*pt)
+	}
+	return puo
+}
+
+// SetSubscriptionID sets the "subscription_id" field.
+func (puo *PaymentUpdateOne) SetSubscriptionID(s string) *PaymentUpdateOne {
+	puo.mutation.SetSubscriptionID(s)
+	return puo
+}
+
+// SetNillableSubscriptionID sets the "subscription_id" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableSubscriptionID(s *string) *PaymentUpdateOne {
+	if s != nil {
+		puo.SetSubscriptionID(*s)
+	}
+	return puo
+}
+
+// ClearSubscriptionID clears the value of the "subscription_id" field.
+func (puo *PaymentUpdateOne) ClearSubscriptionID() *PaymentUpdateOne {
+	puo.mutation.ClearSubscriptionID()
+	return puo
+}
+
+// SetSubscriptionStatus sets the "subscription_status" field.
+func (puo *PaymentUpdateOne) SetSubscriptionStatus(ps payment.SubscriptionStatus) *PaymentUpdateOne {
+	puo.mutation.SetSubscriptionStatus(ps)
+	return puo
+}
+
+// SetNillableSubscriptionStatus sets the "subscription_status" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableSubscriptionStatus(ps *payment.SubscriptionStatus) *PaymentUpdateOne {
+	if ps != nil {
+		puo.SetSubscriptionStatus(*ps)
+	}
+	return puo
+}
+
+// ClearSubscriptionStatus clears the value of the "subscription_status" field.
+func (puo *PaymentUpdateOne) ClearSubscriptionStatus() *PaymentUpdateOne {
+	puo.mutation.ClearSubscriptionStatus()
+	return puo
+}
+
+// SetInterval sets the "interval" field.
+func (puo *PaymentUpdateOne) SetInterval(pa payment.Interval) *PaymentUpdateOne {
+	puo.mutation.SetInterval(pa)
+	return puo
+}
+
+// SetNillableInterval sets the "interval" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableInterval(pa *payment.Interval) *PaymentUpdateOne {
+	if pa != nil {
+		puo.SetInterval(*pa)
+	}
+	return puo
+}
+
+// ClearInterval clears the value of the "interval" field.
+func (puo *PaymentUpdateOne) ClearInterval() *PaymentUpdateOne {
+	puo.mutation.ClearInterval()
+	return puo
+}
+
+// SetCurrentPeriodStart sets the "current_period_start" field.
+func (puo *PaymentUpdateOne) SetCurrentPeriodStart(t time.Time) *PaymentUpdateOne {
+	puo.mutation.SetCurrentPeriodStart(t)
+	return puo
+}
+
+// SetNillableCurrentPeriodStart sets the "current_period_start" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableCurrentPeriodStart(t *time.Time) *PaymentUpdateOne {
+	if t != nil {
+		puo.SetCurrentPeriodStart(*t)
+	}
+	return puo
+}
+
+// ClearCurrentPeriodStart clears the value of the "current_period_start" field.
+func (puo *PaymentUpdateOne) ClearCurrentPeriodStart() *PaymentUpdateOne {
+	puo.mutation.ClearCurrentPeriodStart()
+	return puo
+}
+
+// SetCurrentPeriodEnd sets the "current_period_end" field.
+func (puo *PaymentUpdateOne) SetCurrentPeriodEnd(t time.Time) *PaymentUpdateOne {
+	puo.mutation.SetCurrentPeriodEnd(t)
+	return puo
+}
+
+// SetNillableCurrentPeriodEnd sets the "current_period_end" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableCurrentPeriodEnd(t *time.Time) *PaymentUpdateOne {
+	if t != nil {
+		puo.SetCurrentPeriodEnd(*t)
+	}
+	return puo
+}
+
+// ClearCurrentPeriodEnd clears the value of the "current_period_end" field.
+func (puo *PaymentUpdateOne) ClearCurrentPeriodEnd() *PaymentUpdateOne {
+	puo.mutation.ClearCurrentPeriodEnd()
+	return puo
+}
+
+// SetCustomerID sets the "customer_id" field.
+func (puo *PaymentUpdateOne) SetCustomerID(s string) *PaymentUpdateOne {
+	puo.mutation.SetCustomerID(s)
+	return puo
+}
+
+// SetNillableCustomerID sets the "customer_id" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableCustomerID(s *string) *PaymentUpdateOne {
+	if s != nil {
+		puo.SetCustomerID(*s)
+	}
+	return puo
+}
+
+// ClearCustomerID clears the value of the "customer_id" field.
+func (puo *PaymentUpdateOne) ClearCustomerID() *PaymentUpdateOne {
+	puo.mutation.ClearCustomerID()
+	return puo
+}
+
+// SetCustomerEmail sets the "customer_email" field.
+func (puo *PaymentUpdateOne) SetCustomerEmail(s string) *PaymentUpdateOne {
+	puo.mutation.SetCustomerEmail(s)
+	return puo
+}
+
+// SetNillableCustomerEmail sets the "customer_email" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableCustomerEmail(s *string) *PaymentUpdateOne {
+	if s != nil {
+		puo.SetCustomerEmail(*s)
+	}
+	return puo
+}
+
+// ClearCustomerEmail clears the value of the "customer_email" field.
+func (puo *PaymentUpdateOne) ClearCustomerEmail() *PaymentUpdateOne {
+	puo.mutation.ClearCustomerEmail()
+	return puo
+}
+
+// SetCheckoutSessionID sets the "checkout_session_id" field.
+func (puo *PaymentUpdateOne) SetCheckoutSessionID(s string) *PaymentUpdateOne {
+	puo.mutation.SetCheckoutSessionID(s)
+	return puo
+}
+
+// SetNillableCheckoutSessionID sets the "checkout_session_id" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableCheckoutSessionID(s *string) *PaymentUpdateOne {
+	if s != nil {
+		puo.SetCheckoutSessionID(*s)
+	}
+	return puo
+}
+
+// ClearCheckoutSessionID clears the value of the "checkout_session_id" field.
+func (puo *PaymentUpdateOne) ClearCheckoutSessionID() *PaymentUpdateOne {
+	puo.mutation.ClearCheckoutSessionID()
+	return puo
+}
+
 // SetUser sets the "user" edge to the User entity.
 func (puo *PaymentUpdateOne) SetUser(u *User) *PaymentUpdateOne {
 	return puo.SetUserID(u.ID)
@@ -753,6 +1167,21 @@ func (puo *PaymentUpdateOne) check() error {
 			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Payment.status": %w`, err)}
 		}
 	}
+	if v, ok := puo.mutation.PaymentType(); ok {
+		if err := payment.PaymentTypeValidator(v); err != nil {
+			return &ValidationError{Name: "payment_type", err: fmt.Errorf(`ent: validator failed for field "Payment.payment_type": %w`, err)}
+		}
+	}
+	if v, ok := puo.mutation.SubscriptionStatus(); ok {
+		if err := payment.SubscriptionStatusValidator(v); err != nil {
+			return &ValidationError{Name: "subscription_status", err: fmt.Errorf(`ent: validator failed for field "Payment.subscription_status": %w`, err)}
+		}
+	}
+	if v, ok := puo.mutation.Interval(); ok {
+		if err := payment.IntervalValidator(v); err != nil {
+			return &ValidationError{Name: "interval", err: fmt.Errorf(`ent: validator failed for field "Payment.interval": %w`, err)}
+		}
+	}
 	if puo.mutation.UserCleared() && len(puo.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "Payment.user"`)
 	}
@@ -835,6 +1264,57 @@ func (puo *PaymentUpdateOne) sqlSave(ctx context.Context) (_node *Payment, err e
 	}
 	if puo.mutation.PaidAtCleared() {
 		_spec.ClearField(payment.FieldPaidAt, field.TypeTime)
+	}
+	if value, ok := puo.mutation.PaymentType(); ok {
+		_spec.SetField(payment.FieldPaymentType, field.TypeEnum, value)
+	}
+	if value, ok := puo.mutation.SubscriptionID(); ok {
+		_spec.SetField(payment.FieldSubscriptionID, field.TypeString, value)
+	}
+	if puo.mutation.SubscriptionIDCleared() {
+		_spec.ClearField(payment.FieldSubscriptionID, field.TypeString)
+	}
+	if value, ok := puo.mutation.SubscriptionStatus(); ok {
+		_spec.SetField(payment.FieldSubscriptionStatus, field.TypeEnum, value)
+	}
+	if puo.mutation.SubscriptionStatusCleared() {
+		_spec.ClearField(payment.FieldSubscriptionStatus, field.TypeEnum)
+	}
+	if value, ok := puo.mutation.Interval(); ok {
+		_spec.SetField(payment.FieldInterval, field.TypeEnum, value)
+	}
+	if puo.mutation.IntervalCleared() {
+		_spec.ClearField(payment.FieldInterval, field.TypeEnum)
+	}
+	if value, ok := puo.mutation.CurrentPeriodStart(); ok {
+		_spec.SetField(payment.FieldCurrentPeriodStart, field.TypeTime, value)
+	}
+	if puo.mutation.CurrentPeriodStartCleared() {
+		_spec.ClearField(payment.FieldCurrentPeriodStart, field.TypeTime)
+	}
+	if value, ok := puo.mutation.CurrentPeriodEnd(); ok {
+		_spec.SetField(payment.FieldCurrentPeriodEnd, field.TypeTime, value)
+	}
+	if puo.mutation.CurrentPeriodEndCleared() {
+		_spec.ClearField(payment.FieldCurrentPeriodEnd, field.TypeTime)
+	}
+	if value, ok := puo.mutation.CustomerID(); ok {
+		_spec.SetField(payment.FieldCustomerID, field.TypeString, value)
+	}
+	if puo.mutation.CustomerIDCleared() {
+		_spec.ClearField(payment.FieldCustomerID, field.TypeString)
+	}
+	if value, ok := puo.mutation.CustomerEmail(); ok {
+		_spec.SetField(payment.FieldCustomerEmail, field.TypeString, value)
+	}
+	if puo.mutation.CustomerEmailCleared() {
+		_spec.ClearField(payment.FieldCustomerEmail, field.TypeString)
+	}
+	if value, ok := puo.mutation.CheckoutSessionID(); ok {
+		_spec.SetField(payment.FieldCheckoutSessionID, field.TypeString, value)
+	}
+	if puo.mutation.CheckoutSessionIDCleared() {
+		_spec.ClearField(payment.FieldCheckoutSessionID, field.TypeString)
 	}
 	if puo.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{

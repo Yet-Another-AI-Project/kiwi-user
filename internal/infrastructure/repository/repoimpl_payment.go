@@ -101,6 +101,40 @@ func (p *paymentImpl) FindPendingPayments(ctx context.Context, status enum.Payme
 	return payments, nil
 }
 
+func (p *paymentImpl) FindBySubscriptionID(ctx context.Context, subscriptionID string) (*aggregate.PaymentAggregate, error) {
+	db := p.getEntClient(ctx)
+
+	paymentDO, err := db.Payment.Query().Where(payment.SubscriptionID(subscriptionID)).Only(ctx)
+	if err != nil && !ent.IsNotFound(err) {
+		return nil, err
+	}
+
+	if paymentDO == nil {
+		return nil, nil
+	}
+
+	return &aggregate.PaymentAggregate{
+		Payment: convertPaymentDOToEntity(paymentDO),
+	}, nil
+}
+
+func (p *paymentImpl) FindByCheckoutSessionID(ctx context.Context, sessionID string) (*aggregate.PaymentAggregate, error) {
+	db := p.getEntClient(ctx)
+
+	paymentDO, err := db.Payment.Query().Where(payment.CheckoutSessionID(sessionID)).Only(ctx)
+	if err != nil && !ent.IsNotFound(err) {
+		return nil, err
+	}
+
+	if paymentDO == nil {
+		return nil, nil
+	}
+
+	return &aggregate.PaymentAggregate{
+		Payment: convertPaymentDOToEntity(paymentDO),
+	}, nil
+}
+
 func NewPaymentImpl(db *Client) contract.IPaymentRepository {
 	return &paymentImpl{
 		baseImpl{

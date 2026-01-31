@@ -145,6 +145,132 @@ func (pc *PaymentCreate) SetNillablePaidAt(t *time.Time) *PaymentCreate {
 	return pc
 }
 
+// SetPaymentType sets the "payment_type" field.
+func (pc *PaymentCreate) SetPaymentType(pt payment.PaymentType) *PaymentCreate {
+	pc.mutation.SetPaymentType(pt)
+	return pc
+}
+
+// SetNillablePaymentType sets the "payment_type" field if the given value is not nil.
+func (pc *PaymentCreate) SetNillablePaymentType(pt *payment.PaymentType) *PaymentCreate {
+	if pt != nil {
+		pc.SetPaymentType(*pt)
+	}
+	return pc
+}
+
+// SetSubscriptionID sets the "subscription_id" field.
+func (pc *PaymentCreate) SetSubscriptionID(s string) *PaymentCreate {
+	pc.mutation.SetSubscriptionID(s)
+	return pc
+}
+
+// SetNillableSubscriptionID sets the "subscription_id" field if the given value is not nil.
+func (pc *PaymentCreate) SetNillableSubscriptionID(s *string) *PaymentCreate {
+	if s != nil {
+		pc.SetSubscriptionID(*s)
+	}
+	return pc
+}
+
+// SetSubscriptionStatus sets the "subscription_status" field.
+func (pc *PaymentCreate) SetSubscriptionStatus(ps payment.SubscriptionStatus) *PaymentCreate {
+	pc.mutation.SetSubscriptionStatus(ps)
+	return pc
+}
+
+// SetNillableSubscriptionStatus sets the "subscription_status" field if the given value is not nil.
+func (pc *PaymentCreate) SetNillableSubscriptionStatus(ps *payment.SubscriptionStatus) *PaymentCreate {
+	if ps != nil {
+		pc.SetSubscriptionStatus(*ps)
+	}
+	return pc
+}
+
+// SetInterval sets the "interval" field.
+func (pc *PaymentCreate) SetInterval(pa payment.Interval) *PaymentCreate {
+	pc.mutation.SetInterval(pa)
+	return pc
+}
+
+// SetNillableInterval sets the "interval" field if the given value is not nil.
+func (pc *PaymentCreate) SetNillableInterval(pa *payment.Interval) *PaymentCreate {
+	if pa != nil {
+		pc.SetInterval(*pa)
+	}
+	return pc
+}
+
+// SetCurrentPeriodStart sets the "current_period_start" field.
+func (pc *PaymentCreate) SetCurrentPeriodStart(t time.Time) *PaymentCreate {
+	pc.mutation.SetCurrentPeriodStart(t)
+	return pc
+}
+
+// SetNillableCurrentPeriodStart sets the "current_period_start" field if the given value is not nil.
+func (pc *PaymentCreate) SetNillableCurrentPeriodStart(t *time.Time) *PaymentCreate {
+	if t != nil {
+		pc.SetCurrentPeriodStart(*t)
+	}
+	return pc
+}
+
+// SetCurrentPeriodEnd sets the "current_period_end" field.
+func (pc *PaymentCreate) SetCurrentPeriodEnd(t time.Time) *PaymentCreate {
+	pc.mutation.SetCurrentPeriodEnd(t)
+	return pc
+}
+
+// SetNillableCurrentPeriodEnd sets the "current_period_end" field if the given value is not nil.
+func (pc *PaymentCreate) SetNillableCurrentPeriodEnd(t *time.Time) *PaymentCreate {
+	if t != nil {
+		pc.SetCurrentPeriodEnd(*t)
+	}
+	return pc
+}
+
+// SetCustomerID sets the "customer_id" field.
+func (pc *PaymentCreate) SetCustomerID(s string) *PaymentCreate {
+	pc.mutation.SetCustomerID(s)
+	return pc
+}
+
+// SetNillableCustomerID sets the "customer_id" field if the given value is not nil.
+func (pc *PaymentCreate) SetNillableCustomerID(s *string) *PaymentCreate {
+	if s != nil {
+		pc.SetCustomerID(*s)
+	}
+	return pc
+}
+
+// SetCustomerEmail sets the "customer_email" field.
+func (pc *PaymentCreate) SetCustomerEmail(s string) *PaymentCreate {
+	pc.mutation.SetCustomerEmail(s)
+	return pc
+}
+
+// SetNillableCustomerEmail sets the "customer_email" field if the given value is not nil.
+func (pc *PaymentCreate) SetNillableCustomerEmail(s *string) *PaymentCreate {
+	if s != nil {
+		pc.SetCustomerEmail(*s)
+	}
+	return pc
+}
+
+// SetCheckoutSessionID sets the "checkout_session_id" field.
+func (pc *PaymentCreate) SetCheckoutSessionID(s string) *PaymentCreate {
+	pc.mutation.SetCheckoutSessionID(s)
+	return pc
+}
+
+// SetNillableCheckoutSessionID sets the "checkout_session_id" field if the given value is not nil.
+func (pc *PaymentCreate) SetNillableCheckoutSessionID(s *string) *PaymentCreate {
+	if s != nil {
+		pc.SetCheckoutSessionID(*s)
+	}
+	return pc
+}
+
 // SetUser sets the "user" edge to the User entity.
 func (pc *PaymentCreate) SetUser(u *User) *PaymentCreate {
 	return pc.SetUserID(u.ID)
@@ -192,6 +318,10 @@ func (pc *PaymentCreate) defaults() {
 	if _, ok := pc.mutation.UpdatedAt(); !ok {
 		v := payment.DefaultUpdatedAt()
 		pc.mutation.SetUpdatedAt(v)
+	}
+	if _, ok := pc.mutation.PaymentType(); !ok {
+		v := payment.DefaultPaymentType
+		pc.mutation.SetPaymentType(v)
 	}
 }
 
@@ -275,6 +405,24 @@ func (pc *PaymentCreate) check() error {
 			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Payment.status": %w`, err)}
 		}
 	}
+	if _, ok := pc.mutation.PaymentType(); !ok {
+		return &ValidationError{Name: "payment_type", err: errors.New(`ent: missing required field "Payment.payment_type"`)}
+	}
+	if v, ok := pc.mutation.PaymentType(); ok {
+		if err := payment.PaymentTypeValidator(v); err != nil {
+			return &ValidationError{Name: "payment_type", err: fmt.Errorf(`ent: validator failed for field "Payment.payment_type": %w`, err)}
+		}
+	}
+	if v, ok := pc.mutation.SubscriptionStatus(); ok {
+		if err := payment.SubscriptionStatusValidator(v); err != nil {
+			return &ValidationError{Name: "subscription_status", err: fmt.Errorf(`ent: validator failed for field "Payment.subscription_status": %w`, err)}
+		}
+	}
+	if v, ok := pc.mutation.Interval(); ok {
+		if err := payment.IntervalValidator(v); err != nil {
+			return &ValidationError{Name: "interval", err: fmt.Errorf(`ent: validator failed for field "Payment.interval": %w`, err)}
+		}
+	}
 	if len(pc.mutation.UserIDs()) == 0 {
 		return &ValidationError{Name: "user", err: errors.New(`ent: missing required edge "Payment.user"`)}
 	}
@@ -355,6 +503,42 @@ func (pc *PaymentCreate) createSpec() (*Payment, *sqlgraph.CreateSpec) {
 	if value, ok := pc.mutation.PaidAt(); ok {
 		_spec.SetField(payment.FieldPaidAt, field.TypeTime, value)
 		_node.PaidAt = value
+	}
+	if value, ok := pc.mutation.PaymentType(); ok {
+		_spec.SetField(payment.FieldPaymentType, field.TypeEnum, value)
+		_node.PaymentType = value
+	}
+	if value, ok := pc.mutation.SubscriptionID(); ok {
+		_spec.SetField(payment.FieldSubscriptionID, field.TypeString, value)
+		_node.SubscriptionID = value
+	}
+	if value, ok := pc.mutation.SubscriptionStatus(); ok {
+		_spec.SetField(payment.FieldSubscriptionStatus, field.TypeEnum, value)
+		_node.SubscriptionStatus = value
+	}
+	if value, ok := pc.mutation.Interval(); ok {
+		_spec.SetField(payment.FieldInterval, field.TypeEnum, value)
+		_node.Interval = value
+	}
+	if value, ok := pc.mutation.CurrentPeriodStart(); ok {
+		_spec.SetField(payment.FieldCurrentPeriodStart, field.TypeTime, value)
+		_node.CurrentPeriodStart = value
+	}
+	if value, ok := pc.mutation.CurrentPeriodEnd(); ok {
+		_spec.SetField(payment.FieldCurrentPeriodEnd, field.TypeTime, value)
+		_node.CurrentPeriodEnd = value
+	}
+	if value, ok := pc.mutation.CustomerID(); ok {
+		_spec.SetField(payment.FieldCustomerID, field.TypeString, value)
+		_node.CustomerID = value
+	}
+	if value, ok := pc.mutation.CustomerEmail(); ok {
+		_spec.SetField(payment.FieldCustomerEmail, field.TypeString, value)
+		_node.CustomerEmail = value
+	}
+	if value, ok := pc.mutation.CheckoutSessionID(); ok {
+		_spec.SetField(payment.FieldCheckoutSessionID, field.TypeString, value)
+		_node.CheckoutSessionID = value
 	}
 	if nodes := pc.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

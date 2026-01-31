@@ -67,3 +67,41 @@ func (c *Controller) WechatPaymentCallback(ctx *gin.Context) (*dto.PaymentNotify
 
 	return response, nil
 }
+
+// CreateStripeCheckoutSession godoc
+// @Summary CreateStripeCheckoutSession
+// @Tags Payment
+// @Description Create a Stripe Checkout Session for subscription payment
+// @Accept  json
+// @Produce  json
+// @Param  request body dto.StripeCheckoutRequest true "create stripe checkout session request"
+// @Success 200 {object}  facade.BaseResponse{data=dto.StripeCheckoutResponse}
+// @Router /v1/payments/stripe/checkout [post]
+func (c *Controller) CreateStripeCheckoutSession(ctx *gin.Context) (*dto.StripeCheckoutResponse, *facade.Error) {
+	var request dto.StripeCheckoutRequest
+	if err := ctx.BindJSON(&request); err != nil {
+		return nil, facade.ErrBadRequest.Wrap(err)
+	}
+
+	response, err := c.paymentApplication.CreateStripeCheckoutSession(ctx.Request.Context(), request.Encrypt)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
+// StripeWebhook godoc
+// @Summary StripeWebhook
+// @Tags Payment
+// @Description Handle Stripe webhook events
+// @Accept  json
+// @Produce  json
+// @Success 200 {object}  facade.BaseResponse{data=dto.StripeWebhookResponse}
+// @Failure 400 {object} facade.BaseResponse{data=dto.StripeWebhookResponse}
+// @Router /v1/payments/stripe/webhook [post]
+func (c *Controller) StripeWebhook(ctx *gin.Context) (*dto.StripeWebhookResponse, *facade.Error) {
+	response, _ := c.paymentApplication.HandleStripeWebhook(ctx.Request.Context(), ctx.Request, ctx.Writer)
+
+	return response, nil
+}

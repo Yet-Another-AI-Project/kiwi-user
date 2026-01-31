@@ -17,6 +17,7 @@ import (
 	"kiwi-user/internal/infrastructure/repository/ent/role"
 	"kiwi-user/internal/infrastructure/repository/ent/schema"
 	"kiwi-user/internal/infrastructure/repository/ent/scope"
+	"kiwi-user/internal/infrastructure/repository/ent/stripeevent"
 	"kiwi-user/internal/infrastructure/repository/ent/user"
 	"kiwi-user/internal/infrastructure/repository/ent/wechatopenid"
 	"time"
@@ -390,6 +391,24 @@ func init() {
 	scopeDescID := scopeFields[0].Descriptor()
 	// scope.DefaultID holds the default value on creation for the id field.
 	scope.DefaultID = scopeDescID.Default.(func() uuid.UUID)
+	stripeeventFields := schema.StripeEvent{}.Fields()
+	_ = stripeeventFields
+	// stripeeventDescCreatedAt is the schema descriptor for created_at field.
+	stripeeventDescCreatedAt := stripeeventFields[0].Descriptor()
+	// stripeevent.DefaultCreatedAt holds the default value on creation for the created_at field.
+	stripeevent.DefaultCreatedAt = stripeeventDescCreatedAt.Default.(func() time.Time)
+	// stripeeventDescEventID is the schema descriptor for event_id field.
+	stripeeventDescEventID := stripeeventFields[1].Descriptor()
+	// stripeevent.EventIDValidator is a validator for the "event_id" field. It is called by the builders before save.
+	stripeevent.EventIDValidator = stripeeventDescEventID.Validators[0].(func(string) error)
+	// stripeeventDescEventType is the schema descriptor for event_type field.
+	stripeeventDescEventType := stripeeventFields[2].Descriptor()
+	// stripeevent.EventTypeValidator is a validator for the "event_type" field. It is called by the builders before save.
+	stripeevent.EventTypeValidator = stripeeventDescEventType.Validators[0].(func(string) error)
+	// stripeeventDescProcessed is the schema descriptor for processed field.
+	stripeeventDescProcessed := stripeeventFields[3].Descriptor()
+	// stripeevent.DefaultProcessed holds the default value on creation for the processed field.
+	stripeevent.DefaultProcessed = stripeeventDescProcessed.Default.(bool)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescCreatedAt is the schema descriptor for created_at field.

@@ -4,8 +4,8 @@ type PaymentRequestContent struct {
 	Description string `json:"description" binding:"required"`
 	Amount      Amount `json:"amount" binding:"required"`
 	UserID      string `json:"user_id" binding:"required"`
-	Channel     string `json:"channel" binding:"required"`  // e.g., "wechat", "alipay"
-	Platform    string `json:"platform" binding:"required"` // e.g., "miniprogram"
+	Channel     string `json:"channel" binding:"required"`
+	Platform    string `json:"platform" binding:"required"`
 	Service     string `json:"service" binding:"required"`
 }
 
@@ -15,7 +15,7 @@ type PaymentRequest struct {
 
 type Amount struct {
 	Total    int    `json:"total" binding:"required"`
-	Currency string `json:"currency,omitempty"` // Optional, e.g., "USD", "CNY", default is "CNY"
+	Currency string `json:"currency,omitempty"`
 }
 
 type PaymentResponse struct {
@@ -36,7 +36,7 @@ type WeChatPayResponse struct {
 type QueryPaymentStatusResponse struct {
 	TradeState     string `json:"trade_state"`
 	TradeStateDesc string `json:"trade_state_desc"`
-	SuccessTime    string `json:"success_time,omitempty"` //yyyy-MM-DDTHH:mm:ss+TIMEZONE
+	SuccessTime    string `json:"success_time,omitempty"`
 	TransactionID  string `json:"transaction_id,omitempty"`
 	Channel        string `json:"channel"`
 }
@@ -44,4 +44,19 @@ type QueryPaymentStatusResponse struct {
 type PaymentNotifyResponse struct {
 	Code string `json:"code"`
 	Msg  string `json:"massage"`
+}
+
+type StripeCheckoutRequest struct {
+	Encrypt string `json:"encrypt" binding:"required"`
+}
+
+type StripeCheckoutResponse struct {
+	CheckoutURL string `json:"checkout_url"`
+	SessionID   string `json:"session_id"`
+	OutTradeNo  string `json:"out_trade_no"`
+}
+
+type StripeWebhookResponse struct {
+	Received bool   `json:"received"`
+	Error    string `json:"error,omitempty"`
 }

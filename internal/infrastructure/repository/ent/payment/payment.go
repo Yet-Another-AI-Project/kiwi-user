@@ -43,6 +43,24 @@ const (
 	FieldStatus = "status"
 	// FieldPaidAt holds the string denoting the paid_at field in the database.
 	FieldPaidAt = "paid_at"
+	// FieldPaymentType holds the string denoting the payment_type field in the database.
+	FieldPaymentType = "payment_type"
+	// FieldSubscriptionID holds the string denoting the subscription_id field in the database.
+	FieldSubscriptionID = "subscription_id"
+	// FieldSubscriptionStatus holds the string denoting the subscription_status field in the database.
+	FieldSubscriptionStatus = "subscription_status"
+	// FieldInterval holds the string denoting the interval field in the database.
+	FieldInterval = "interval"
+	// FieldCurrentPeriodStart holds the string denoting the current_period_start field in the database.
+	FieldCurrentPeriodStart = "current_period_start"
+	// FieldCurrentPeriodEnd holds the string denoting the current_period_end field in the database.
+	FieldCurrentPeriodEnd = "current_period_end"
+	// FieldCustomerID holds the string denoting the customer_id field in the database.
+	FieldCustomerID = "customer_id"
+	// FieldCustomerEmail holds the string denoting the customer_email field in the database.
+	FieldCustomerEmail = "customer_email"
+	// FieldCheckoutSessionID holds the string denoting the checkout_session_id field in the database.
+	FieldCheckoutSessionID = "checkout_session_id"
 	// EdgeUser holds the string denoting the user edge name in mutations.
 	EdgeUser = "user"
 	// Table holds the table name of the payment in the database.
@@ -73,6 +91,15 @@ var Columns = []string{
 	FieldDescription,
 	FieldStatus,
 	FieldPaidAt,
+	FieldPaymentType,
+	FieldSubscriptionID,
+	FieldSubscriptionStatus,
+	FieldInterval,
+	FieldCurrentPeriodStart,
+	FieldCurrentPeriodEnd,
+	FieldCustomerID,
+	FieldCustomerEmail,
+	FieldCheckoutSessionID,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -112,6 +139,7 @@ type Channel string
 // Channel values.
 const (
 	ChannelWechat Channel = "wechat"
+	ChannelStripe Channel = "stripe"
 )
 
 func (c Channel) String() string {
@@ -121,7 +149,7 @@ func (c Channel) String() string {
 // ChannelValidator is a validator for the "channel" field enum values. It is called by the builders before save.
 func ChannelValidator(c Channel) error {
 	switch c {
-	case ChannelWechat:
+	case ChannelWechat, ChannelStripe:
 		return nil
 	default:
 		return fmt.Errorf("payment: invalid enum value for channel field: %q", c)
@@ -173,6 +201,80 @@ func StatusValidator(s Status) error {
 		return nil
 	default:
 		return fmt.Errorf("payment: invalid enum value for status field: %q", s)
+	}
+}
+
+// PaymentType defines the type for the "payment_type" enum field.
+type PaymentType string
+
+// PaymentTypeOneTime is the default value of the PaymentType enum.
+const DefaultPaymentType = PaymentTypeOneTime
+
+// PaymentType values.
+const (
+	PaymentTypeOneTime      PaymentType = "one_time"
+	PaymentTypeSubscription PaymentType = "subscription"
+)
+
+func (pt PaymentType) String() string {
+	return string(pt)
+}
+
+// PaymentTypeValidator is a validator for the "payment_type" field enum values. It is called by the builders before save.
+func PaymentTypeValidator(pt PaymentType) error {
+	switch pt {
+	case PaymentTypeOneTime, PaymentTypeSubscription:
+		return nil
+	default:
+		return fmt.Errorf("payment: invalid enum value for payment_type field: %q", pt)
+	}
+}
+
+// SubscriptionStatus defines the type for the "subscription_status" enum field.
+type SubscriptionStatus string
+
+// SubscriptionStatus values.
+const (
+	SubscriptionStatusActive   SubscriptionStatus = "active"
+	SubscriptionStatusPastDue  SubscriptionStatus = "past_due"
+	SubscriptionStatusCanceled SubscriptionStatus = "canceled"
+	SubscriptionStatusUnpaid   SubscriptionStatus = "unpaid"
+)
+
+func (ss SubscriptionStatus) String() string {
+	return string(ss)
+}
+
+// SubscriptionStatusValidator is a validator for the "subscription_status" field enum values. It is called by the builders before save.
+func SubscriptionStatusValidator(ss SubscriptionStatus) error {
+	switch ss {
+	case SubscriptionStatusActive, SubscriptionStatusPastDue, SubscriptionStatusCanceled, SubscriptionStatusUnpaid:
+		return nil
+	default:
+		return fmt.Errorf("payment: invalid enum value for subscription_status field: %q", ss)
+	}
+}
+
+// Interval defines the type for the "interval" enum field.
+type Interval string
+
+// Interval values.
+const (
+	IntervalMonthly Interval = "monthly"
+	IntervalYearly  Interval = "yearly"
+)
+
+func (i Interval) String() string {
+	return string(i)
+}
+
+// IntervalValidator is a validator for the "interval" field enum values. It is called by the builders before save.
+func IntervalValidator(i Interval) error {
+	switch i {
+	case IntervalMonthly, IntervalYearly:
+		return nil
+	default:
+		return fmt.Errorf("payment: invalid enum value for interval field: %q", i)
 	}
 }
 
@@ -252,6 +354,51 @@ func ByStatus(opts ...sql.OrderTermOption) OrderOption {
 // ByPaidAt orders the results by the paid_at field.
 func ByPaidAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPaidAt, opts...).ToFunc()
+}
+
+// ByPaymentType orders the results by the payment_type field.
+func ByPaymentType(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPaymentType, opts...).ToFunc()
+}
+
+// BySubscriptionID orders the results by the subscription_id field.
+func BySubscriptionID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldSubscriptionID, opts...).ToFunc()
+}
+
+// BySubscriptionStatus orders the results by the subscription_status field.
+func BySubscriptionStatus(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldSubscriptionStatus, opts...).ToFunc()
+}
+
+// ByInterval orders the results by the interval field.
+func ByInterval(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldInterval, opts...).ToFunc()
+}
+
+// ByCurrentPeriodStart orders the results by the current_period_start field.
+func ByCurrentPeriodStart(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCurrentPeriodStart, opts...).ToFunc()
+}
+
+// ByCurrentPeriodEnd orders the results by the current_period_end field.
+func ByCurrentPeriodEnd(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCurrentPeriodEnd, opts...).ToFunc()
+}
+
+// ByCustomerID orders the results by the customer_id field.
+func ByCustomerID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCustomerID, opts...).ToFunc()
+}
+
+// ByCustomerEmail orders the results by the customer_email field.
+func ByCustomerEmail(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCustomerEmail, opts...).ToFunc()
+}
+
+// ByCheckoutSessionID orders the results by the checkout_session_id field.
+func ByCheckoutSessionID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCheckoutSessionID, opts...).ToFunc()
 }
 
 // ByUserField orders the results by user field.

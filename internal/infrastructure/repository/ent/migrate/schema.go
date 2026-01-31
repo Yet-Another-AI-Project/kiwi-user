@@ -342,7 +342,7 @@ var (
 		{Name: "out_trade_no", Type: field.TypeString},
 		{Name: "transaction_id", Type: field.TypeString, Nullable: true},
 		{Name: "open_id", Type: field.TypeString, Nullable: true},
-		{Name: "channel", Type: field.TypeEnum, Enums: []string{"wechat"}},
+		{Name: "channel", Type: field.TypeEnum, Enums: []string{"wechat", "stripe"}},
 		{Name: "platform", Type: field.TypeEnum, Enums: []string{"miniprogram", "unknown"}},
 		{Name: "service", Type: field.TypeString},
 		{Name: "amount", Type: field.TypeInt},
@@ -350,6 +350,15 @@ var (
 		{Name: "description", Type: field.TypeString},
 		{Name: "status", Type: field.TypeEnum, Enums: []string{"NOTPAY", "SUCCESS", "CLOSED", "REFUND"}},
 		{Name: "paid_at", Type: field.TypeTime, Nullable: true},
+		{Name: "payment_type", Type: field.TypeEnum, Enums: []string{"one_time", "subscription"}, Default: "one_time"},
+		{Name: "subscription_id", Type: field.TypeString, Nullable: true},
+		{Name: "subscription_status", Type: field.TypeEnum, Nullable: true, Enums: []string{"active", "past_due", "canceled", "unpaid"}},
+		{Name: "interval", Type: field.TypeEnum, Nullable: true, Enums: []string{"monthly", "yearly"}},
+		{Name: "current_period_start", Type: field.TypeTime, Nullable: true},
+		{Name: "current_period_end", Type: field.TypeTime, Nullable: true},
+		{Name: "customer_id", Type: field.TypeString, Nullable: true},
+		{Name: "customer_email", Type: field.TypeString, Nullable: true},
+		{Name: "checkout_session_id", Type: field.TypeString, Nullable: true},
 		{Name: "user_id", Type: field.TypeString},
 	}
 	// PaymentsTable holds the schema information for the "payments" table.
@@ -360,7 +369,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "payments_users_payments",
-				Columns:    []*schema.Column{PaymentsColumns[14]},
+				Columns:    []*schema.Column{PaymentsColumns[23]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -370,6 +379,21 @@ var (
 				Name:    "payment_out_trade_no",
 				Unique:  true,
 				Columns: []*schema.Column{PaymentsColumns[3]},
+			},
+			{
+				Name:    "payment_subscription_id",
+				Unique:  false,
+				Columns: []*schema.Column{PaymentsColumns[15]},
+			},
+			{
+				Name:    "payment_customer_id",
+				Unique:  false,
+				Columns: []*schema.Column{PaymentsColumns[20]},
+			},
+			{
+				Name:    "payment_checkout_session_id",
+				Unique:  false,
+				Columns: []*schema.Column{PaymentsColumns[22]},
 			},
 		},
 	}
@@ -471,6 +495,33 @@ var (
 			},
 		},
 	}
+	// StripeEventsColumns holds the columns for the "stripe_events" table.
+	StripeEventsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "event_id", Type: field.TypeString, Unique: true},
+		{Name: "event_type", Type: field.TypeString},
+		{Name: "processed", Type: field.TypeBool, Default: false},
+		{Name: "processed_at", Type: field.TypeTime, Nullable: true},
+	}
+	// StripeEventsTable holds the schema information for the "stripe_events" table.
+	StripeEventsTable = &schema.Table{
+		Name:       "stripe_events",
+		Columns:    StripeEventsColumns,
+		PrimaryKey: []*schema.Column{StripeEventsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "stripeevent_event_id",
+				Unique:  true,
+				Columns: []*schema.Column{StripeEventsColumns[2]},
+			},
+			{
+				Name:    "stripeevent_event_type_processed",
+				Unique:  false,
+				Columns: []*schema.Column{StripeEventsColumns[3], StripeEventsColumns[4]},
+			},
+		},
+	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
@@ -569,6 +620,7 @@ var (
 		QyWechatUserIdsTable,
 		RolesTable,
 		ScopesTable,
+		StripeEventsTable,
 		UsersTable,
 		WechatOpenIdsTable,
 	}

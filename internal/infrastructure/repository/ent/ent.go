@@ -19,6 +19,7 @@ import (
 	"kiwi-user/internal/infrastructure/repository/ent/qywechatuserid"
 	"kiwi-user/internal/infrastructure/repository/ent/role"
 	"kiwi-user/internal/infrastructure/repository/ent/scope"
+	"kiwi-user/internal/infrastructure/repository/ent/stripeevent"
 	"kiwi-user/internal/infrastructure/repository/ent/user"
 	"kiwi-user/internal/infrastructure/repository/ent/wechatopenid"
 	"reflect"
@@ -100,6 +101,7 @@ func checkColumn(table, column string) error {
 			qywechatuserid.Table:          qywechatuserid.ValidColumn,
 			role.Table:                    role.ValidColumn,
 			scope.Table:                   scope.ValidColumn,
+			stripeevent.Table:             stripeevent.ValidColumn,
 			user.Table:                    user.ValidColumn,
 			wechatopenid.Table:            wechatopenid.ValidColumn,
 		})

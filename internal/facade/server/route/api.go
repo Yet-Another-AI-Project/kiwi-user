@@ -54,12 +54,15 @@ func (route *Route) RegisterApiV1(gin *gin.Engine) {
 		user.POST("/logout", userAuth, RequireUserIDHandler(route.apiController.Logout))
 	}
 
-	// payment := v1.Group("/payments")
-	// {
-	// 	payment.POST("", NormalHandler(route.apiController.CreatePayment))
-	// 	payment.GET("/:out-trade-no/status", NormalHandler(route.apiController.QueryPaymentStatus))
-	// 	payment.POST("/wechat/notify", NormalHandler(route.apiController.WechatPaymentCallback))
-	// }
+	payment := v1.Group("/payments")
+	{
+		payment.POST("", NormalHandler(route.apiController.CreatePayment))
+		payment.GET("/:out-trade-no/status", NormalHandler(route.apiController.QueryPaymentStatus))
+		payment.POST("/wechat/notify", NormalHandler(route.apiController.WechatPaymentCallback))
+		// Stripe subscription payments
+		payment.POST("/stripe/checkout", NormalHandler(route.apiController.CreateStripeCheckoutSession))
+		payment.POST("/stripe/webhook", NormalHandler(route.apiController.StripeWebhook))
+	}
 
 	// internal apis
 	internal := gin.Group("/internal")

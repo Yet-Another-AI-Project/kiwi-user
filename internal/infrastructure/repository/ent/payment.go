@@ -46,6 +46,24 @@ type Payment struct {
 	Status payment.Status `json:"status,omitempty"`
 	// PaidAt holds the value of the "paid_at" field.
 	PaidAt time.Time `json:"paid_at,omitempty"`
+	// PaymentType holds the value of the "payment_type" field.
+	PaymentType payment.PaymentType `json:"payment_type,omitempty"`
+	// SubscriptionID holds the value of the "subscription_id" field.
+	SubscriptionID string `json:"subscription_id,omitempty"`
+	// SubscriptionStatus holds the value of the "subscription_status" field.
+	SubscriptionStatus payment.SubscriptionStatus `json:"subscription_status,omitempty"`
+	// Interval holds the value of the "interval" field.
+	Interval payment.Interval `json:"interval,omitempty"`
+	// CurrentPeriodStart holds the value of the "current_period_start" field.
+	CurrentPeriodStart time.Time `json:"current_period_start,omitempty"`
+	// CurrentPeriodEnd holds the value of the "current_period_end" field.
+	CurrentPeriodEnd time.Time `json:"current_period_end,omitempty"`
+	// CustomerID holds the value of the "customer_id" field.
+	CustomerID string `json:"customer_id,omitempty"`
+	// CustomerEmail holds the value of the "customer_email" field.
+	CustomerEmail string `json:"customer_email,omitempty"`
+	// CheckoutSessionID holds the value of the "checkout_session_id" field.
+	CheckoutSessionID string `json:"checkout_session_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PaymentQuery when eager-loading is set.
 	Edges        PaymentEdges `json:"edges"`
@@ -79,9 +97,9 @@ func (*Payment) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case payment.FieldID, payment.FieldAmount:
 			values[i] = new(sql.NullInt64)
-		case payment.FieldOutTradeNo, payment.FieldUserID, payment.FieldTransactionID, payment.FieldOpenID, payment.FieldChannel, payment.FieldPlatform, payment.FieldService, payment.FieldCurrency, payment.FieldDescription, payment.FieldStatus:
+		case payment.FieldOutTradeNo, payment.FieldUserID, payment.FieldTransactionID, payment.FieldOpenID, payment.FieldChannel, payment.FieldPlatform, payment.FieldService, payment.FieldCurrency, payment.FieldDescription, payment.FieldStatus, payment.FieldPaymentType, payment.FieldSubscriptionID, payment.FieldSubscriptionStatus, payment.FieldInterval, payment.FieldCustomerID, payment.FieldCustomerEmail, payment.FieldCheckoutSessionID:
 			values[i] = new(sql.NullString)
-		case payment.FieldCreatedAt, payment.FieldUpdatedAt, payment.FieldPaidAt:
+		case payment.FieldCreatedAt, payment.FieldUpdatedAt, payment.FieldPaidAt, payment.FieldCurrentPeriodStart, payment.FieldCurrentPeriodEnd:
 			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -188,6 +206,60 @@ func (pa *Payment) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				pa.PaidAt = value.Time
 			}
+		case payment.FieldPaymentType:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field payment_type", values[i])
+			} else if value.Valid {
+				pa.PaymentType = payment.PaymentType(value.String)
+			}
+		case payment.FieldSubscriptionID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field subscription_id", values[i])
+			} else if value.Valid {
+				pa.SubscriptionID = value.String
+			}
+		case payment.FieldSubscriptionStatus:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field subscription_status", values[i])
+			} else if value.Valid {
+				pa.SubscriptionStatus = payment.SubscriptionStatus(value.String)
+			}
+		case payment.FieldInterval:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field interval", values[i])
+			} else if value.Valid {
+				pa.Interval = payment.Interval(value.String)
+			}
+		case payment.FieldCurrentPeriodStart:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field current_period_start", values[i])
+			} else if value.Valid {
+				pa.CurrentPeriodStart = value.Time
+			}
+		case payment.FieldCurrentPeriodEnd:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field current_period_end", values[i])
+			} else if value.Valid {
+				pa.CurrentPeriodEnd = value.Time
+			}
+		case payment.FieldCustomerID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field customer_id", values[i])
+			} else if value.Valid {
+				pa.CustomerID = value.String
+			}
+		case payment.FieldCustomerEmail:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field customer_email", values[i])
+			} else if value.Valid {
+				pa.CustomerEmail = value.String
+			}
+		case payment.FieldCheckoutSessionID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field checkout_session_id", values[i])
+			} else if value.Valid {
+				pa.CheckoutSessionID = value.String
+			}
 		default:
 			pa.selectValues.Set(columns[i], values[i])
 		}
@@ -270,6 +342,33 @@ func (pa *Payment) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("paid_at=")
 	builder.WriteString(pa.PaidAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("payment_type=")
+	builder.WriteString(fmt.Sprintf("%v", pa.PaymentType))
+	builder.WriteString(", ")
+	builder.WriteString("subscription_id=")
+	builder.WriteString(pa.SubscriptionID)
+	builder.WriteString(", ")
+	builder.WriteString("subscription_status=")
+	builder.WriteString(fmt.Sprintf("%v", pa.SubscriptionStatus))
+	builder.WriteString(", ")
+	builder.WriteString("interval=")
+	builder.WriteString(fmt.Sprintf("%v", pa.Interval))
+	builder.WriteString(", ")
+	builder.WriteString("current_period_start=")
+	builder.WriteString(pa.CurrentPeriodStart.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("current_period_end=")
+	builder.WriteString(pa.CurrentPeriodEnd.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("customer_id=")
+	builder.WriteString(pa.CustomerID)
+	builder.WriteString(", ")
+	builder.WriteString("customer_email=")
+	builder.WriteString(pa.CustomerEmail)
+	builder.WriteString(", ")
+	builder.WriteString("checkout_session_id=")
+	builder.WriteString(pa.CheckoutSessionID)
 	builder.WriteByte(')')
 	return builder.String()
 }

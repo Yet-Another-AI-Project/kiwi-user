@@ -45,6 +45,9 @@ type Role func(*sql.Selector)
 // Scope is the predicate function for scope builders.
 type Scope func(*sql.Selector)
 
+// StripeEvent is the predicate function for stripeevent builders.
+type StripeEvent func(*sql.Selector)
+
 // User is the predicate function for user builders.
 type User func(*sql.Selector)
 

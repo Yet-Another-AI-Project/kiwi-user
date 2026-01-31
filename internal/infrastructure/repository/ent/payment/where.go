@@ -110,6 +110,36 @@ func PaidAt(v time.Time) predicate.Payment {
 	return predicate.Payment(sql.FieldEQ(FieldPaidAt, v))
 }
 
+// SubscriptionID applies equality check predicate on the "subscription_id" field. It's identical to SubscriptionIDEQ.
+func SubscriptionID(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldEQ(FieldSubscriptionID, v))
+}
+
+// CurrentPeriodStart applies equality check predicate on the "current_period_start" field. It's identical to CurrentPeriodStartEQ.
+func CurrentPeriodStart(v time.Time) predicate.Payment {
+	return predicate.Payment(sql.FieldEQ(FieldCurrentPeriodStart, v))
+}
+
+// CurrentPeriodEnd applies equality check predicate on the "current_period_end" field. It's identical to CurrentPeriodEndEQ.
+func CurrentPeriodEnd(v time.Time) predicate.Payment {
+	return predicate.Payment(sql.FieldEQ(FieldCurrentPeriodEnd, v))
+}
+
+// CustomerID applies equality check predicate on the "customer_id" field. It's identical to CustomerIDEQ.
+func CustomerID(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldEQ(FieldCustomerID, v))
+}
+
+// CustomerEmail applies equality check predicate on the "customer_email" field. It's identical to CustomerEmailEQ.
+func CustomerEmail(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldEQ(FieldCustomerEmail, v))
+}
+
+// CheckoutSessionID applies equality check predicate on the "checkout_session_id" field. It's identical to CheckoutSessionIDEQ.
+func CheckoutSessionID(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldEQ(FieldCheckoutSessionID, v))
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v time.Time) predicate.Payment {
 	return predicate.Payment(sql.FieldEQ(FieldCreatedAt, v))
@@ -813,6 +843,486 @@ func PaidAtIsNil() predicate.Payment {
 // PaidAtNotNil applies the NotNil predicate on the "paid_at" field.
 func PaidAtNotNil() predicate.Payment {
 	return predicate.Payment(sql.FieldNotNull(FieldPaidAt))
+}
+
+// PaymentTypeEQ applies the EQ predicate on the "payment_type" field.
+func PaymentTypeEQ(v PaymentType) predicate.Payment {
+	return predicate.Payment(sql.FieldEQ(FieldPaymentType, v))
+}
+
+// PaymentTypeNEQ applies the NEQ predicate on the "payment_type" field.
+func PaymentTypeNEQ(v PaymentType) predicate.Payment {
+	return predicate.Payment(sql.FieldNEQ(FieldPaymentType, v))
+}
+
+// PaymentTypeIn applies the In predicate on the "payment_type" field.
+func PaymentTypeIn(vs ...PaymentType) predicate.Payment {
+	return predicate.Payment(sql.FieldIn(FieldPaymentType, vs...))
+}
+
+// PaymentTypeNotIn applies the NotIn predicate on the "payment_type" field.
+func PaymentTypeNotIn(vs ...PaymentType) predicate.Payment {
+	return predicate.Payment(sql.FieldNotIn(FieldPaymentType, vs...))
+}
+
+// SubscriptionIDEQ applies the EQ predicate on the "subscription_id" field.
+func SubscriptionIDEQ(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldEQ(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDNEQ applies the NEQ predicate on the "subscription_id" field.
+func SubscriptionIDNEQ(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldNEQ(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDIn applies the In predicate on the "subscription_id" field.
+func SubscriptionIDIn(vs ...string) predicate.Payment {
+	return predicate.Payment(sql.FieldIn(FieldSubscriptionID, vs...))
+}
+
+// SubscriptionIDNotIn applies the NotIn predicate on the "subscription_id" field.
+func SubscriptionIDNotIn(vs ...string) predicate.Payment {
+	return predicate.Payment(sql.FieldNotIn(FieldSubscriptionID, vs...))
+}
+
+// SubscriptionIDGT applies the GT predicate on the "subscription_id" field.
+func SubscriptionIDGT(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldGT(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDGTE applies the GTE predicate on the "subscription_id" field.
+func SubscriptionIDGTE(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldGTE(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDLT applies the LT predicate on the "subscription_id" field.
+func SubscriptionIDLT(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldLT(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDLTE applies the LTE predicate on the "subscription_id" field.
+func SubscriptionIDLTE(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldLTE(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDContains applies the Contains predicate on the "subscription_id" field.
+func SubscriptionIDContains(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldContains(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDHasPrefix applies the HasPrefix predicate on the "subscription_id" field.
+func SubscriptionIDHasPrefix(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldHasPrefix(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDHasSuffix applies the HasSuffix predicate on the "subscription_id" field.
+func SubscriptionIDHasSuffix(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldHasSuffix(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDIsNil applies the IsNil predicate on the "subscription_id" field.
+func SubscriptionIDIsNil() predicate.Payment {
+	return predicate.Payment(sql.FieldIsNull(FieldSubscriptionID))
+}
+
+// SubscriptionIDNotNil applies the NotNil predicate on the "subscription_id" field.
+func SubscriptionIDNotNil() predicate.Payment {
+	return predicate.Payment(sql.FieldNotNull(FieldSubscriptionID))
+}
+
+// SubscriptionIDEqualFold applies the EqualFold predicate on the "subscription_id" field.
+func SubscriptionIDEqualFold(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldEqualFold(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDContainsFold applies the ContainsFold predicate on the "subscription_id" field.
+func SubscriptionIDContainsFold(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldContainsFold(FieldSubscriptionID, v))
+}
+
+// SubscriptionStatusEQ applies the EQ predicate on the "subscription_status" field.
+func SubscriptionStatusEQ(v SubscriptionStatus) predicate.Payment {
+	return predicate.Payment(sql.FieldEQ(FieldSubscriptionStatus, v))
+}
+
+// SubscriptionStatusNEQ applies the NEQ predicate on the "subscription_status" field.
+func SubscriptionStatusNEQ(v SubscriptionStatus) predicate.Payment {
+	return predicate.Payment(sql.FieldNEQ(FieldSubscriptionStatus, v))
+}
+
+// SubscriptionStatusIn applies the In predicate on the "subscription_status" field.
+func SubscriptionStatusIn(vs ...SubscriptionStatus) predicate.Payment {
+	return predicate.Payment(sql.FieldIn(FieldSubscriptionStatus, vs...))
+}
+
+// SubscriptionStatusNotIn applies the NotIn predicate on the "subscription_status" field.
+func SubscriptionStatusNotIn(vs ...SubscriptionStatus) predicate.Payment {
+	return predicate.Payment(sql.FieldNotIn(FieldSubscriptionStatus, vs...))
+}
+
+// SubscriptionStatusIsNil applies the IsNil predicate on the "subscription_status" field.
+func SubscriptionStatusIsNil() predicate.Payment {
+	return predicate.Payment(sql.FieldIsNull(FieldSubscriptionStatus))
+}
+
+// SubscriptionStatusNotNil applies the NotNil predicate on the "subscription_status" field.
+func SubscriptionStatusNotNil() predicate.Payment {
+	return predicate.Payment(sql.FieldNotNull(FieldSubscriptionStatus))
+}
+
+// IntervalEQ applies the EQ predicate on the "interval" field.
+func IntervalEQ(v Interval) predicate.Payment {
+	return predicate.Payment(sql.FieldEQ(FieldInterval, v))
+}
+
+// IntervalNEQ applies the NEQ predicate on the "interval" field.
+func IntervalNEQ(v Interval) predicate.Payment {
+	return predicate.Payment(sql.FieldNEQ(FieldInterval, v))
+}
+
+// IntervalIn applies the In predicate on the "interval" field.
+func IntervalIn(vs ...Interval) predicate.Payment {
+	return predicate.Payment(sql.FieldIn(FieldInterval, vs...))
+}
+
+// IntervalNotIn applies the NotIn predicate on the "interval" field.
+func IntervalNotIn(vs ...Interval) predicate.Payment {
+	return predicate.Payment(sql.FieldNotIn(FieldInterval, vs...))
+}
+
+// IntervalIsNil applies the IsNil predicate on the "interval" field.
+func IntervalIsNil() predicate.Payment {
+	return predicate.Payment(sql.FieldIsNull(FieldInterval))
+}
+
+// IntervalNotNil applies the NotNil predicate on the "interval" field.
+func IntervalNotNil() predicate.Payment {
+	return predicate.Payment(sql.FieldNotNull(FieldInterval))
+}
+
+// CurrentPeriodStartEQ applies the EQ predicate on the "current_period_start" field.
+func CurrentPeriodStartEQ(v time.Time) predicate.Payment {
+	return predicate.Payment(sql.FieldEQ(FieldCurrentPeriodStart, v))
+}
+
+// CurrentPeriodStartNEQ applies the NEQ predicate on the "current_period_start" field.
+func CurrentPeriodStartNEQ(v time.Time) predicate.Payment {
+	return predicate.Payment(sql.FieldNEQ(FieldCurrentPeriodStart, v))
+}
+
+// CurrentPeriodStartIn applies the In predicate on the "current_period_start" field.
+func CurrentPeriodStartIn(vs ...time.Time) predicate.Payment {
+	return predicate.Payment(sql.FieldIn(FieldCurrentPeriodStart, vs...))
+}
+
+// CurrentPeriodStartNotIn applies the NotIn predicate on the "current_period_start" field.
+func CurrentPeriodStartNotIn(vs ...time.Time) predicate.Payment {
+	return predicate.Payment(sql.FieldNotIn(FieldCurrentPeriodStart, vs...))
+}
+
+// CurrentPeriodStartGT applies the GT predicate on the "current_period_start" field.
+func CurrentPeriodStartGT(v time.Time) predicate.Payment {
+	return predicate.Payment(sql.FieldGT(FieldCurrentPeriodStart, v))
+}
+
+// CurrentPeriodStartGTE applies the GTE predicate on the "current_period_start" field.
+func CurrentPeriodStartGTE(v time.Time) predicate.Payment {
+	return predicate.Payment(sql.FieldGTE(FieldCurrentPeriodStart, v))
+}
+
+// CurrentPeriodStartLT applies the LT predicate on the "current_period_start" field.
+func CurrentPeriodStartLT(v time.Time) predicate.Payment {
+	return predicate.Payment(sql.FieldLT(FieldCurrentPeriodStart, v))
+}
+
+// CurrentPeriodStartLTE applies the LTE predicate on the "current_period_start" field.
+func CurrentPeriodStartLTE(v time.Time) predicate.Payment {
+	return predicate.Payment(sql.FieldLTE(FieldCurrentPeriodStart, v))
+}
+
+// CurrentPeriodStartIsNil applies the IsNil predicate on the "current_period_start" field.
+func CurrentPeriodStartIsNil() predicate.Payment {
+	return predicate.Payment(sql.FieldIsNull(FieldCurrentPeriodStart))
+}
+
+// CurrentPeriodStartNotNil applies the NotNil predicate on the "current_period_start" field.
+func CurrentPeriodStartNotNil() predicate.Payment {
+	return predicate.Payment(sql.FieldNotNull(FieldCurrentPeriodStart))
+}
+
+// CurrentPeriodEndEQ applies the EQ predicate on the "current_period_end" field.
+func CurrentPeriodEndEQ(v time.Time) predicate.Payment {
+	return predicate.Payment(sql.FieldEQ(FieldCurrentPeriodEnd, v))
+}
+
+// CurrentPeriodEndNEQ applies the NEQ predicate on the "current_period_end" field.
+func CurrentPeriodEndNEQ(v time.Time) predicate.Payment {
+	return predicate.Payment(sql.FieldNEQ(FieldCurrentPeriodEnd, v))
+}
+
+// CurrentPeriodEndIn applies the In predicate on the "current_period_end" field.
+func CurrentPeriodEndIn(vs ...time.Time) predicate.Payment {
+	return predicate.Payment(sql.FieldIn(FieldCurrentPeriodEnd, vs...))
+}
+
+// CurrentPeriodEndNotIn applies the NotIn predicate on the "current_period_end" field.
+func CurrentPeriodEndNotIn(vs ...time.Time) predicate.Payment {
+	return predicate.Payment(sql.FieldNotIn(FieldCurrentPeriodEnd, vs...))
+}
+
+// CurrentPeriodEndGT applies the GT predicate on the "current_period_end" field.
+func CurrentPeriodEndGT(v time.Time) predicate.Payment {
+	return predicate.Payment(sql.FieldGT(FieldCurrentPeriodEnd, v))
+}
+
+// CurrentPeriodEndGTE applies the GTE predicate on the "current_period_end" field.
+func CurrentPeriodEndGTE(v time.Time) predicate.Payment {
+	return predicate.Payment(sql.FieldGTE(FieldCurrentPeriodEnd, v))
+}
+
+// CurrentPeriodEndLT applies the LT predicate on the "current_period_end" field.
+func CurrentPeriodEndLT(v time.Time) predicate.Payment {
+	return predicate.Payment(sql.FieldLT(FieldCurrentPeriodEnd, v))
+}
+
+// CurrentPeriodEndLTE applies the LTE predicate on the "current_period_end" field.
+func CurrentPeriodEndLTE(v time.Time) predicate.Payment {
+	return predicate.Payment(sql.FieldLTE(FieldCurrentPeriodEnd, v))
+}
+
+// CurrentPeriodEndIsNil applies the IsNil predicate on the "current_period_end" field.
+func CurrentPeriodEndIsNil() predicate.Payment {
+	return predicate.Payment(sql.FieldIsNull(FieldCurrentPeriodEnd))
+}
+
+// CurrentPeriodEndNotNil applies the NotNil predicate on the "current_period_end" field.
+func CurrentPeriodEndNotNil() predicate.Payment {
+	return predicate.Payment(sql.FieldNotNull(FieldCurrentPeriodEnd))
+}
+
+// CustomerIDEQ applies the EQ predicate on the "customer_id" field.
+func CustomerIDEQ(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldEQ(FieldCustomerID, v))
+}
+
+// CustomerIDNEQ applies the NEQ predicate on the "customer_id" field.
+func CustomerIDNEQ(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldNEQ(FieldCustomerID, v))
+}
+
+// CustomerIDIn applies the In predicate on the "customer_id" field.
+func CustomerIDIn(vs ...string) predicate.Payment {
+	return predicate.Payment(sql.FieldIn(FieldCustomerID, vs...))
+}
+
+// CustomerIDNotIn applies the NotIn predicate on the "customer_id" field.
+func CustomerIDNotIn(vs ...string) predicate.Payment {
+	return predicate.Payment(sql.FieldNotIn(FieldCustomerID, vs...))
+}
+
+// CustomerIDGT applies the GT predicate on the "customer_id" field.
+func CustomerIDGT(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldGT(FieldCustomerID, v))
+}
+
+// CustomerIDGTE applies the GTE predicate on the "customer_id" field.
+func CustomerIDGTE(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldGTE(FieldCustomerID, v))
+}
+
+// CustomerIDLT applies the LT predicate on the "customer_id" field.
+func CustomerIDLT(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldLT(FieldCustomerID, v))
+}
+
+// CustomerIDLTE applies the LTE predicate on the "customer_id" field.
+func CustomerIDLTE(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldLTE(FieldCustomerID, v))
+}
+
+// CustomerIDContains applies the Contains predicate on the "customer_id" field.
+func CustomerIDContains(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldContains(FieldCustomerID, v))
+}
+
+// CustomerIDHasPrefix applies the HasPrefix predicate on the "customer_id" field.
+func CustomerIDHasPrefix(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldHasPrefix(FieldCustomerID, v))
+}
+
+// CustomerIDHasSuffix applies the HasSuffix predicate on the "customer_id" field.
+func CustomerIDHasSuffix(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldHasSuffix(FieldCustomerID, v))
+}
+
+// CustomerIDIsNil applies the IsNil predicate on the "customer_id" field.
+func CustomerIDIsNil() predicate.Payment {
+	return predicate.Payment(sql.FieldIsNull(FieldCustomerID))
+}
+
+// CustomerIDNotNil applies the NotNil predicate on the "customer_id" field.
+func CustomerIDNotNil() predicate.Payment {
+	return predicate.Payment(sql.FieldNotNull(FieldCustomerID))
+}
+
+// CustomerIDEqualFold applies the EqualFold predicate on the "customer_id" field.
+func CustomerIDEqualFold(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldEqualFold(FieldCustomerID, v))
+}
+
+// CustomerIDContainsFold applies the ContainsFold predicate on the "customer_id" field.
+func CustomerIDContainsFold(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldContainsFold(FieldCustomerID, v))
+}
+
+// CustomerEmailEQ applies the EQ predicate on the "customer_email" field.
+func CustomerEmailEQ(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldEQ(FieldCustomerEmail, v))
+}
+
+// CustomerEmailNEQ applies the NEQ predicate on the "customer_email" field.
+func CustomerEmailNEQ(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldNEQ(FieldCustomerEmail, v))
+}
+
+// CustomerEmailIn applies the In predicate on the "customer_email" field.
+func CustomerEmailIn(vs ...string) predicate.Payment {
+	return predicate.Payment(sql.FieldIn(FieldCustomerEmail, vs...))
+}
+
+// CustomerEmailNotIn applies the NotIn predicate on the "customer_email" field.
+func CustomerEmailNotIn(vs ...string) predicate.Payment {
+	return predicate.Payment(sql.FieldNotIn(FieldCustomerEmail, vs...))
+}
+
+// CustomerEmailGT applies the GT predicate on the "customer_email" field.
+func CustomerEmailGT(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldGT(FieldCustomerEmail, v))
+}
+
+// CustomerEmailGTE applies the GTE predicate on the "customer_email" field.
+func CustomerEmailGTE(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldGTE(FieldCustomerEmail, v))
+}
+
+// CustomerEmailLT applies the LT predicate on the "customer_email" field.
+func CustomerEmailLT(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldLT(FieldCustomerEmail, v))
+}
+
+// CustomerEmailLTE applies the LTE predicate on the "customer_email" field.
+func CustomerEmailLTE(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldLTE(FieldCustomerEmail, v))
+}
+
+// CustomerEmailContains applies the Contains predicate on the "customer_email" field.
+func CustomerEmailContains(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldContains(FieldCustomerEmail, v))
+}
+
+// CustomerEmailHasPrefix applies the HasPrefix predicate on the "customer_email" field.
+func CustomerEmailHasPrefix(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldHasPrefix(FieldCustomerEmail, v))
+}
+
+// CustomerEmailHasSuffix applies the HasSuffix predicate on the "customer_email" field.
+func CustomerEmailHasSuffix(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldHasSuffix(FieldCustomerEmail, v))
+}
+
+// CustomerEmailIsNil applies the IsNil predicate on the "customer_email" field.
+func CustomerEmailIsNil() predicate.Payment {
+	return predicate.Payment(sql.FieldIsNull(FieldCustomerEmail))
+}
+
+// CustomerEmailNotNil applies the NotNil predicate on the "customer_email" field.
+func CustomerEmailNotNil() predicate.Payment {
+	return predicate.Payment(sql.FieldNotNull(FieldCustomerEmail))
+}
+
+// CustomerEmailEqualFold applies the EqualFold predicate on the "customer_email" field.
+func CustomerEmailEqualFold(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldEqualFold(FieldCustomerEmail, v))
+}
+
+// CustomerEmailContainsFold applies the ContainsFold predicate on the "customer_email" field.
+func CustomerEmailContainsFold(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldContainsFold(FieldCustomerEmail, v))
+}
+
+// CheckoutSessionIDEQ applies the EQ predicate on the "checkout_session_id" field.
+func CheckoutSessionIDEQ(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldEQ(FieldCheckoutSessionID, v))
+}
+
+// CheckoutSessionIDNEQ applies the NEQ predicate on the "checkout_session_id" field.
+func CheckoutSessionIDNEQ(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldNEQ(FieldCheckoutSessionID, v))
+}
+
+// CheckoutSessionIDIn applies the In predicate on the "checkout_session_id" field.
+func CheckoutSessionIDIn(vs ...string) predicate.Payment {
+	return predicate.Payment(sql.FieldIn(FieldCheckoutSessionID, vs...))
+}
+
+// CheckoutSessionIDNotIn applies the NotIn predicate on the "checkout_session_id" field.
+func CheckoutSessionIDNotIn(vs ...string) predicate.Payment {
+	return predicate.Payment(sql.FieldNotIn(FieldCheckoutSessionID, vs...))
+}
+
+// CheckoutSessionIDGT applies the GT predicate on the "checkout_session_id" field.
+func CheckoutSessionIDGT(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldGT(FieldCheckoutSessionID, v))
+}
+
+// CheckoutSessionIDGTE applies the GTE predicate on the "checkout_session_id" field.
+func CheckoutSessionIDGTE(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldGTE(FieldCheckoutSessionID, v))
+}
+
+// CheckoutSessionIDLT applies the LT predicate on the "checkout_session_id" field.
+func CheckoutSessionIDLT(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldLT(FieldCheckoutSessionID, v))
+}
+
+// CheckoutSessionIDLTE applies the LTE predicate on the "checkout_session_id" field.
+func CheckoutSessionIDLTE(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldLTE(FieldCheckoutSessionID, v))
+}
+
+// CheckoutSessionIDContains applies the Contains predicate on the "checkout_session_id" field.
+func CheckoutSessionIDContains(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldContains(FieldCheckoutSessionID, v))
+}
+
+// CheckoutSessionIDHasPrefix applies the HasPrefix predicate on the "checkout_session_id" field.
+func CheckoutSessionIDHasPrefix(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldHasPrefix(FieldCheckoutSessionID, v))
+}
+
+// CheckoutSessionIDHasSuffix applies the HasSuffix predicate on the "checkout_session_id" field.
+func CheckoutSessionIDHasSuffix(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldHasSuffix(FieldCheckoutSessionID, v))
+}
+
+// CheckoutSessionIDIsNil applies the IsNil predicate on the "checkout_session_id" field.
+func CheckoutSessionIDIsNil() predicate.Payment {
+	return predicate.Payment(sql.FieldIsNull(FieldCheckoutSessionID))
+}
+
+// CheckoutSessionIDNotNil applies the NotNil predicate on the "checkout_session_id" field.
+func CheckoutSessionIDNotNil() predicate.Payment {
+	return predicate.Payment(sql.FieldNotNull(FieldCheckoutSessionID))
+}
+
+// CheckoutSessionIDEqualFold applies the EqualFold predicate on the "checkout_session_id" field.
+func CheckoutSessionIDEqualFold(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldEqualFold(FieldCheckoutSessionID, v))
+}
+
+// CheckoutSessionIDContainsFold applies the ContainsFold predicate on the "checkout_session_id" field.
+func CheckoutSessionIDContainsFold(v string) predicate.Payment {
+	return predicate.Payment(sql.FieldContainsFold(FieldCheckoutSessionID, v))
 }
 
 // HasUser applies the HasEdge predicate on the "user" edge.

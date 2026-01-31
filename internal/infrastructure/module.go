@@ -219,6 +219,13 @@ var Module = fx.Provide(
 	),
 
 	fx.Annotate(
+		repository.NewStripeEventImpl,
+		fx.As(new(contract.IStripeEventRepository)),
+		fx.As(new(contract.IStripeEventReadRepository)),
+		fx.As(new(contract.IStripeEventWriteRepository)),
+	),
+
+	fx.Annotate(
 		repository.NewMailVertifyCodeImpl,
 		fx.As(new(contract.IMailVertifyCodeRepository)),
 		fx.As(new(contract.IMailVertifyCodeReadRepository)),

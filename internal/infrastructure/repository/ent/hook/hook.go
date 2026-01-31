@@ -164,6 +164,18 @@ func (f ScopeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ScopeMutation", m)
 }
 
+// The StripeEventFunc type is an adapter to allow the use of ordinary
+// function as StripeEvent mutator.
+type StripeEventFunc func(context.Context, *ent.StripeEventMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f StripeEventFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.StripeEventMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.StripeEventMutation", m)
+}
+
 // The UserFunc type is an adapter to allow the use of ordinary
 // function as User mutator.
 type UserFunc func(context.Context, *ent.UserMutation) (ent.Value, error)

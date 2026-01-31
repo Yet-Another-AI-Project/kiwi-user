@@ -24,6 +24,7 @@ import (
 	"kiwi-user/internal/infrastructure/repository/ent/qywechatuserid"
 	"kiwi-user/internal/infrastructure/repository/ent/role"
 	"kiwi-user/internal/infrastructure/repository/ent/scope"
+	"kiwi-user/internal/infrastructure/repository/ent/stripeevent"
 	"kiwi-user/internal/infrastructure/repository/ent/user"
 	"kiwi-user/internal/infrastructure/repository/ent/wechatopenid"
 
@@ -67,6 +68,8 @@ type Client struct {
 	Role *RoleClient
 	// Scope is the client for interacting with the Scope builders.
 	Scope *ScopeClient
+	// StripeEvent is the client for interacting with the StripeEvent builders.
+	StripeEvent *StripeEventClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 	// WechatOpenID is the client for interacting with the WechatOpenID builders.
@@ -95,6 +98,7 @@ func (c *Client) init() {
 	c.QyWechatUserID = NewQyWechatUserIDClient(c.config)
 	c.Role = NewRoleClient(c.config)
 	c.Scope = NewScopeClient(c.config)
+	c.StripeEvent = NewStripeEventClient(c.config)
 	c.User = NewUserClient(c.config)
 	c.WechatOpenID = NewWechatOpenIDClient(c.config)
 }
@@ -202,6 +206,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		QyWechatUserID:          NewQyWechatUserIDClient(cfg),
 		Role:                    NewRoleClient(cfg),
 		Scope:                   NewScopeClient(cfg),
+		StripeEvent:             NewStripeEventClient(cfg),
 		User:                    NewUserClient(cfg),
 		WechatOpenID:            NewWechatOpenIDClient(cfg),
 	}, nil
@@ -236,6 +241,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		QyWechatUserID:          NewQyWechatUserIDClient(cfg),
 		Role:                    NewRoleClient(cfg),
 		Scope:                   NewScopeClient(cfg),
+		StripeEvent:             NewStripeEventClient(cfg),
 		User:                    NewUserClient(cfg),
 		WechatOpenID:            NewWechatOpenIDClient(cfg),
 	}, nil
@@ -269,8 +275,8 @@ func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
 		c.Application, c.Binding, c.BindingVerify, c.Device, c.MailVertifyCode,
 		c.Organization, c.OrganizationApplication, c.OrganizationRequest,
-		c.OrganizationUser, c.Payment, c.QyWechatUserID, c.Role, c.Scope, c.User,
-		c.WechatOpenID,
+		c.OrganizationUser, c.Payment, c.QyWechatUserID, c.Role, c.Scope,
+		c.StripeEvent, c.User, c.WechatOpenID,
 	} {
 		n.Use(hooks...)
 	}
@@ -282,8 +288,8 @@ func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
 		c.Application, c.Binding, c.BindingVerify, c.Device, c.MailVertifyCode,
 		c.Organization, c.OrganizationApplication, c.OrganizationRequest,
-		c.OrganizationUser, c.Payment, c.QyWechatUserID, c.Role, c.Scope, c.User,
-		c.WechatOpenID,
+		c.OrganizationUser, c.Payment, c.QyWechatUserID, c.Role, c.Scope,
+		c.StripeEvent, c.User, c.WechatOpenID,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -318,6 +324,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Role.mutate(ctx, m)
 	case *ScopeMutation:
 		return c.Scope.mutate(ctx, m)
+	case *StripeEventMutation:
+		return c.StripeEvent.mutate(ctx, m)
 	case *UserMutation:
 		return c.User.mutate(ctx, m)
 	case *WechatOpenIDMutation:
@@ -2360,6 +2368,139 @@ func (c *ScopeClient) mutate(ctx context.Context, m *ScopeMutation) (Value, erro
 	}
 }
 
+// StripeEventClient is a client for the StripeEvent schema.
+type StripeEventClient struct {
+	config
+}
+
+// NewStripeEventClient returns a client for the StripeEvent from the given config.
+func NewStripeEventClient(c config) *StripeEventClient {
+	return &StripeEventClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `stripeevent.Hooks(f(g(h())))`.
+func (c *StripeEventClient) Use(hooks ...Hook) {
+	c.hooks.StripeEvent = append(c.hooks.StripeEvent, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `stripeevent.Intercept(f(g(h())))`.
+func (c *StripeEventClient) Intercept(interceptors ...Interceptor) {
+	c.inters.StripeEvent = append(c.inters.StripeEvent, interceptors...)
+}
+
+// Create returns a builder for creating a StripeEvent entity.
+func (c *StripeEventClient) Create() *StripeEventCreate {
+	mutation := newStripeEventMutation(c.config, OpCreate)
+	return &StripeEventCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of StripeEvent entities.
+func (c *StripeEventClient) CreateBulk(builders ...*StripeEventCreate) *StripeEventCreateBulk {
+	return &StripeEventCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *StripeEventClient) MapCreateBulk(slice any, setFunc func(*StripeEventCreate, int)) *StripeEventCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &StripeEventCreateBulk{err: fmt.Errorf("calling to StripeEventClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*StripeEventCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &StripeEventCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for StripeEvent.
+func (c *StripeEventClient) Update() *StripeEventUpdate {
+	mutation := newStripeEventMutation(c.config, OpUpdate)
+	return &StripeEventUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *StripeEventClient) UpdateOne(se *StripeEvent) *StripeEventUpdateOne {
+	mutation := newStripeEventMutation(c.config, OpUpdateOne, withStripeEvent(se))
+	return &StripeEventUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *StripeEventClient) UpdateOneID(id int) *StripeEventUpdateOne {
+	mutation := newStripeEventMutation(c.config, OpUpdateOne, withStripeEventID(id))
+	return &StripeEventUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for StripeEvent.
+func (c *StripeEventClient) Delete() *StripeEventDelete {
+	mutation := newStripeEventMutation(c.config, OpDelete)
+	return &StripeEventDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *StripeEventClient) DeleteOne(se *StripeEvent) *StripeEventDeleteOne {
+	return c.DeleteOneID(se.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *StripeEventClient) DeleteOneID(id int) *StripeEventDeleteOne {
+	builder := c.Delete().Where(stripeevent.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &StripeEventDeleteOne{builder}
+}
+
+// Query returns a query builder for StripeEvent.
+func (c *StripeEventClient) Query() *StripeEventQuery {
+	return &StripeEventQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeStripeEvent},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a StripeEvent entity by its id.
+func (c *StripeEventClient) Get(ctx context.Context, id int) (*StripeEvent, error) {
+	return c.Query().Where(stripeevent.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *StripeEventClient) GetX(ctx context.Context, id int) *StripeEvent {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *StripeEventClient) Hooks() []Hook {
+	return c.hooks.StripeEvent
+}
+
+// Interceptors returns the client interceptors.
+func (c *StripeEventClient) Interceptors() []Interceptor {
+	return c.inters.StripeEvent
+}
+
+func (c *StripeEventClient) mutate(ctx context.Context, m *StripeEventMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&StripeEventCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&StripeEventUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&StripeEventUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&StripeEventDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown StripeEvent mutation op: %q", m.Op())
+	}
+}
+
 // UserClient is a client for the User schema.
 type UserClient struct {
 	config
@@ -2775,12 +2916,12 @@ type (
 	hooks struct {
 		Application, Binding, BindingVerify, Device, MailVertifyCode, Organization,
 		OrganizationApplication, OrganizationRequest, OrganizationUser, Payment,
-		QyWechatUserID, Role, Scope, User, WechatOpenID []ent.Hook
+		QyWechatUserID, Role, Scope, StripeEvent, User, WechatOpenID []ent.Hook
 	}
 	inters struct {
 		Application, Binding, BindingVerify, Device, MailVertifyCode, Organization,
 		OrganizationApplication, OrganizationRequest, OrganizationUser, Payment,
-		QyWechatUserID, Role, Scope, User, WechatOpenID []ent.Interceptor
+		QyWechatUserID, Role, Scope, StripeEvent, User, WechatOpenID []ent.Interceptor
 	}
 )
 

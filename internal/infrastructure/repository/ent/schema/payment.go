@@ -34,12 +34,31 @@ func (Payment) Fields() []ent.Field {
 		field.String("description").NotEmpty(),
 		field.Enum("status").Values(convertStingerSliceToStringSlice(enum.GetAllPaymentStatus())...),
 		field.Time("paid_at").Optional(),
+
+		field.Enum("payment_type").
+			Values(convertStingerSliceToStringSlice(enum.GetAllPaymentType())...).
+			Default(string(enum.PaymentTypeOneTime)),
+		field.String("subscription_id").Optional(),
+		field.Enum("subscription_status").
+			Values(convertStingerSliceToStringSlice(enum.GetAllSubscriptionStatus())...).
+			Optional(),
+		field.Enum("interval").
+			Values(convertStingerSliceToStringSlice(enum.GetAllSubscriptionInterval())...).
+			Optional(),
+		field.Time("current_period_start").Optional(),
+		field.Time("current_period_end").Optional(),
+		field.String("customer_id").Optional(),
+		field.String("customer_email").Optional(),
+		field.String("checkout_session_id").Optional(),
 	}
 }
 
 func (Payment) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("out_trade_no").Unique(),
+		index.Fields("subscription_id"),
+		index.Fields("customer_id"),
+		index.Fields("checkout_session_id"),
 	}
 }
 

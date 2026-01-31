@@ -20,6 +20,7 @@ type PaymentApplication struct {
 	userReadRepository    contract.IUserReadRepository
 	paymentReadRepository contract.IPaymentReadRepository
 	paymentService        *service.PaymentService
+	stripePaymentService  *service.StripePaymentService
 
 	logger logger.ILogger
 }
@@ -28,6 +29,7 @@ func NewPaymentApplication(
 	userReadRepository contract.IUserReadRepository,
 	paymentReadRepository contract.IPaymentReadRepository,
 	paymentService *service.PaymentService,
+	stripePaymentService *service.StripePaymentService,
 	logger logger.ILogger,
 ) *PaymentApplication {
 
@@ -35,6 +37,7 @@ func NewPaymentApplication(
 		userReadRepository:    userReadRepository,
 		paymentReadRepository: paymentReadRepository,
 		paymentService:        paymentService,
+		stripePaymentService:  stripePaymentService,
 		logger:                logger,
 	}
 }
@@ -127,4 +130,47 @@ func (p *PaymentApplication) HandleWechatPaymentCallback(ctx context.Context, re
 	}
 
 	return successResponse, nil
+}
+
+func (p *PaymentApplication) CreateStripeCheckoutSession(ctx context.Context, encrypt string) (*dto.StripeCheckoutResponse, *facade.Error) {
+	if p.stripePaymentService == nil {
+		return nil, facade.ErrServerInternal.Wrap(xerror.New("stripe payment service not enabled"))
+	}
+
+	response, err := p.stripePaymentService.CreateCheckoutSession(ctx, encrypt)
+	if err != nil {
+		p.logger.Errorf(ctx, "CreateStripeCheckoutSession failed: %v", err)
+		return nil, facade.ErrServerInternal.Wrap(err)
+	}
+
+	return &dto.StripeCheckoutResponse{
+		CheckoutURL: response.CheckoutURL,
+		SessionID:   response.SessionID,
+		OutTradeNo:  response.OutTradeNo,
+	}, nil
+}
+
+func (p *PaymentApplication) HandleStripeWebhook(ctx context.Context, req *http.Request, w http.ResponseWriter) (*dto.StripeWebhookResponse, *facade.Error) {
+	if p.stripePaymentService == nil {
+		w.WriteHeader(http.StatusServiceUnavailable)
+		return &dto.StripeWebhookResponse{
+			Received: false,
+			Error:    "stripe payment service not enabled",
+		}, facade.ErrServerInternal.Wrap(xerror.New("stripe payment service not enabled"))
+	}
+
+	err := p.stripePaymentService.HandleWebhook(ctx, req)
+	if err != nil {
+		p.logger.Errorf(ctx, "HandleStripeWebhook failed: %v", err)
+		w.WriteHeader(http.StatusBadRequest)
+		return &dto.StripeWebhookResponse{
+			Received: false,
+			Error:    err.Error(),
+		}, facade.ErrBadRequest.Wrap(err)
+	}
+
+	w.WriteHeader(http.StatusOK)
+	return &dto.StripeWebhookResponse{
+		Received: true,
+	}, nil
 }

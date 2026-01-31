@@ -14,6 +14,7 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/posthog/posthog-go v1.2.24
 	github.com/redis/go-redis/v9 v9.12.1
+	github.com/stripe/stripe-go/v82 v82.5.1
 	github.com/wechatpay-apiv3/wechatpay-go v0.2.20
 	go.uber.org/fx v1.23.0
 	golang.org/x/crypto v0.41.0
