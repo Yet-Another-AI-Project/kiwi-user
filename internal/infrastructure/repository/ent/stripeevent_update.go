@@ -56,6 +56,46 @@ func (seu *StripeEventUpdate) SetNillableEventType(s *string) *StripeEventUpdate
 	return seu
 }
 
+// SetSubscriptionID sets the "subscription_id" field.
+func (seu *StripeEventUpdate) SetSubscriptionID(s string) *StripeEventUpdate {
+	seu.mutation.SetSubscriptionID(s)
+	return seu
+}
+
+// SetNillableSubscriptionID sets the "subscription_id" field if the given value is not nil.
+func (seu *StripeEventUpdate) SetNillableSubscriptionID(s *string) *StripeEventUpdate {
+	if s != nil {
+		seu.SetSubscriptionID(*s)
+	}
+	return seu
+}
+
+// ClearSubscriptionID clears the value of the "subscription_id" field.
+func (seu *StripeEventUpdate) ClearSubscriptionID() *StripeEventUpdate {
+	seu.mutation.ClearSubscriptionID()
+	return seu
+}
+
+// SetUserID sets the "user_id" field.
+func (seu *StripeEventUpdate) SetUserID(s string) *StripeEventUpdate {
+	seu.mutation.SetUserID(s)
+	return seu
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (seu *StripeEventUpdate) SetNillableUserID(s *string) *StripeEventUpdate {
+	if s != nil {
+		seu.SetUserID(*s)
+	}
+	return seu
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (seu *StripeEventUpdate) ClearUserID() *StripeEventUpdate {
+	seu.mutation.ClearUserID()
+	return seu
+}
+
 // SetProcessed sets the "processed" field.
 func (seu *StripeEventUpdate) SetProcessed(b bool) *StripeEventUpdate {
 	seu.mutation.SetProcessed(b)
@@ -155,6 +195,18 @@ func (seu *StripeEventUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := seu.mutation.EventType(); ok {
 		_spec.SetField(stripeevent.FieldEventType, field.TypeString, value)
 	}
+	if value, ok := seu.mutation.SubscriptionID(); ok {
+		_spec.SetField(stripeevent.FieldSubscriptionID, field.TypeString, value)
+	}
+	if seu.mutation.SubscriptionIDCleared() {
+		_spec.ClearField(stripeevent.FieldSubscriptionID, field.TypeString)
+	}
+	if value, ok := seu.mutation.UserID(); ok {
+		_spec.SetField(stripeevent.FieldUserID, field.TypeString, value)
+	}
+	if seu.mutation.UserIDCleared() {
+		_spec.ClearField(stripeevent.FieldUserID, field.TypeString)
+	}
 	if value, ok := seu.mutation.Processed(); ok {
 		_spec.SetField(stripeevent.FieldProcessed, field.TypeBool, value)
 	}
@@ -209,6 +261,46 @@ func (seuo *StripeEventUpdateOne) SetNillableEventType(s *string) *StripeEventUp
 	if s != nil {
 		seuo.SetEventType(*s)
 	}
+	return seuo
+}
+
+// SetSubscriptionID sets the "subscription_id" field.
+func (seuo *StripeEventUpdateOne) SetSubscriptionID(s string) *StripeEventUpdateOne {
+	seuo.mutation.SetSubscriptionID(s)
+	return seuo
+}
+
+// SetNillableSubscriptionID sets the "subscription_id" field if the given value is not nil.
+func (seuo *StripeEventUpdateOne) SetNillableSubscriptionID(s *string) *StripeEventUpdateOne {
+	if s != nil {
+		seuo.SetSubscriptionID(*s)
+	}
+	return seuo
+}
+
+// ClearSubscriptionID clears the value of the "subscription_id" field.
+func (seuo *StripeEventUpdateOne) ClearSubscriptionID() *StripeEventUpdateOne {
+	seuo.mutation.ClearSubscriptionID()
+	return seuo
+}
+
+// SetUserID sets the "user_id" field.
+func (seuo *StripeEventUpdateOne) SetUserID(s string) *StripeEventUpdateOne {
+	seuo.mutation.SetUserID(s)
+	return seuo
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (seuo *StripeEventUpdateOne) SetNillableUserID(s *string) *StripeEventUpdateOne {
+	if s != nil {
+		seuo.SetUserID(*s)
+	}
+	return seuo
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (seuo *StripeEventUpdateOne) ClearUserID() *StripeEventUpdateOne {
+	seuo.mutation.ClearUserID()
 	return seuo
 }
 
@@ -340,6 +432,18 @@ func (seuo *StripeEventUpdateOne) sqlSave(ctx context.Context) (_node *StripeEve
 	}
 	if value, ok := seuo.mutation.EventType(); ok {
 		_spec.SetField(stripeevent.FieldEventType, field.TypeString, value)
+	}
+	if value, ok := seuo.mutation.SubscriptionID(); ok {
+		_spec.SetField(stripeevent.FieldSubscriptionID, field.TypeString, value)
+	}
+	if seuo.mutation.SubscriptionIDCleared() {
+		_spec.ClearField(stripeevent.FieldSubscriptionID, field.TypeString)
+	}
+	if value, ok := seuo.mutation.UserID(); ok {
+		_spec.SetField(stripeevent.FieldUserID, field.TypeString, value)
+	}
+	if seuo.mutation.UserIDCleared() {
+		_spec.ClearField(stripeevent.FieldUserID, field.TypeString)
 	}
 	if value, ok := seuo.mutation.Processed(); ok {
 		_spec.SetField(stripeevent.FieldProcessed, field.TypeBool, value)

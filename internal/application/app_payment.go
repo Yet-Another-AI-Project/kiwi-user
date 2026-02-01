@@ -6,12 +6,14 @@ import (
 	"kiwi-user/internal/domain/model/enum"
 	"kiwi-user/internal/domain/service"
 	"kiwi-user/internal/facade/dto"
+	"kiwi-user/internal/infrastructure/payment/stripe"
 	"net/http"
 	"time"
 
 	"github.com/avast/retry-go"
 
 	"github.com/Yet-Another-AI-Project/kiwi-lib/server/facade"
+	libutils "github.com/Yet-Another-AI-Project/kiwi-lib/tools/utils"
 	"github.com/futurxlab/golanggraph/logger"
 	"github.com/futurxlab/golanggraph/xerror"
 )
@@ -19,7 +21,8 @@ import (
 type PaymentApplication struct {
 	userReadRepository    contract.IUserReadRepository
 	paymentReadRepository contract.IPaymentReadRepository
-	paymentService        *service.PaymentService
+	stripeClient          *stripe.StripeClient
+	paymentService        *service.WechatPaymentService
 	stripePaymentService  *service.StripePaymentService
 
 	logger logger.ILogger
@@ -28,8 +31,9 @@ type PaymentApplication struct {
 func NewPaymentApplication(
 	userReadRepository contract.IUserReadRepository,
 	paymentReadRepository contract.IPaymentReadRepository,
-	paymentService *service.PaymentService,
+	paymentService *service.WechatPaymentService,
 	stripePaymentService *service.StripePaymentService,
+	stripeClient *stripe.StripeClient,
 	logger logger.ILogger,
 ) *PaymentApplication {
 
@@ -38,11 +42,12 @@ func NewPaymentApplication(
 		paymentReadRepository: paymentReadRepository,
 		paymentService:        paymentService,
 		stripePaymentService:  stripePaymentService,
+		stripeClient:          stripeClient,
 		logger:                logger,
 	}
 }
 
-func (p *PaymentApplication) CreatePayment(ctx context.Context, encrypt string) (*dto.PaymentResponse, *facade.Error) {
+func (p *PaymentApplication) CreateWechatPayment(ctx context.Context, encrypt string) (*dto.WechatPaymentResponse, *facade.Error) {
 	if p.paymentService == nil {
 		return nil, facade.ErrServerInternal.Wrap(xerror.New("payment service not enabled"))
 	}
@@ -52,7 +57,7 @@ func (p *PaymentApplication) CreatePayment(ctx context.Context, encrypt string) 
 		return nil, facade.ErrServerInternal.Wrap(err)
 	}
 
-	return &dto.PaymentResponse{
+	return &dto.WechatPaymentResponse{
 		OutTradeNo: paymentEntity.OutTradeNo,
 		Channel:    string(paymentEntity.ChannelInfo.Channel),
 		WeChatPayDetails: dto.WeChatPayResponse{
@@ -87,7 +92,7 @@ func (p *PaymentApplication) GetPaymentStatus(ctx context.Context, OutTradeNo st
 		TradeState:     string(paymentAggregate.Payment.Status),
 		TradeStateDesc: paymentAggregate.Payment.Status.String(),
 		SuccessTime:    paymentAggregate.Payment.PaidAt.String(),
-		TransactionID:  paymentAggregate.Payment.ChannelInfo.TransactionID,
+		TransactionID:  paymentAggregate.Payment.ChannelInfo.WeChatTransactionID,
 		Channel:        string(paymentAggregate.Payment.ChannelInfo.Channel),
 	}, nil
 }
@@ -150,27 +155,64 @@ func (p *PaymentApplication) CreateStripeCheckoutSession(ctx context.Context, en
 	}, nil
 }
 
-func (p *PaymentApplication) HandleStripeWebhook(ctx context.Context, req *http.Request, w http.ResponseWriter) (*dto.StripeWebhookResponse, *facade.Error) {
+func (p *PaymentApplication) HandleStripeWebhook(ctx context.Context, body []byte, sig string) (*dto.StripeWebhookResponse, *facade.Error) {
 	if p.stripePaymentService == nil {
-		w.WriteHeader(http.StatusServiceUnavailable)
-		return &dto.StripeWebhookResponse{
-			Received: false,
-			Error:    "stripe payment service not enabled",
-		}, facade.ErrServerInternal.Wrap(xerror.New("stripe payment service not enabled"))
+		return nil, facade.ErrServerInternal.Wrap(xerror.New("stripe payment service not enabled"))
 	}
 
-	err := p.stripePaymentService.HandleWebhook(ctx, req)
+	event, err := p.stripeClient.VerifyWebhookSignature(body, sig)
 	if err != nil {
-		p.logger.Errorf(ctx, "HandleStripeWebhook failed: %v", err)
-		w.WriteHeader(http.StatusBadRequest)
-		return &dto.StripeWebhookResponse{
-			Received: false,
-			Error:    err.Error(),
-		}, facade.ErrBadRequest.Wrap(err)
+		return nil, facade.ErrServerInternal.Wrap(err)
 	}
 
-	w.WriteHeader(http.StatusOK)
+	paymentAggregate, err := p.stripePaymentService.HandleWebhook(ctx, event)
+	if err != nil {
+		return nil, facade.ErrBadRequest.Wrap(err)
+	}
+
+	notifyCtx := context.WithoutCancel(ctx)
+	libutils.SafeGo(notifyCtx, p.logger, func() {
+		// send notification to business service
+		if err := retry.Do(
+			func() error {
+
+				if paymentAggregate == nil {
+					return nil
+				}
+
+				return p.stripePaymentService.SendNotification(notifyCtx, paymentAggregate, event)
+
+			},
+			retry.Delay(2*time.Second),
+			retry.Attempts(10),
+			retry.DelayType(retry.BackOffDelay),
+			retry.OnRetry(func(n uint, err error) {
+				p.logger.Warnf(notifyCtx, "SendNotification failed and will retry, attempt: %d, error: %w", n, err)
+			}),
+		); err != nil {
+			p.logger.Errorf(notifyCtx, "SendNotification failed: %w", err)
+		}
+	})
+
 	return &dto.StripeWebhookResponse{
 		Received: true,
+	}, nil
+}
+
+func (p *PaymentApplication) CancelStripeSubscription(ctx context.Context, encrypt string) (*dto.StripeCancelSubscriptionResponse, *facade.Error) {
+	if p.stripePaymentService == nil {
+		return nil, facade.ErrServerInternal.Wrap(xerror.New("stripe payment service not enabled"))
+	}
+
+	paymentAggregate, err := p.stripePaymentService.CancelSubscription(ctx, encrypt)
+	if err != nil {
+		p.logger.Errorf(ctx, "CancelStripeSubscription failed: %v", err)
+		return nil, facade.ErrServerInternal.Wrap(err)
+	}
+
+	return &dto.StripeCancelSubscriptionResponse{
+		Success:        true,
+		Message:        "",
+		SubscriptionID: paymentAggregate.Payment.ChannelInfo.StripeSubscriptionID,
 	}, nil
 }

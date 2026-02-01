@@ -21,7 +21,7 @@ import (
 	"github.com/futurxlab/golanggraph/xerror"
 )
 
-type PaymentService struct {
+type WechatPaymentService struct {
 	httpClient        *xhttp.Client
 	paymentRepository contract.IPaymentRepository
 	userRepository    contract.IUserRepository
@@ -31,7 +31,7 @@ type PaymentService struct {
 	WechatPayClient wechatpay.WechatPayClient
 }
 
-type PaymentStatus struct {
+type WechatPaymentStatus struct {
 	TradeState     string    `json:"trade_state"`
 	TradeStateDesc string    `json:"trade_state_desc"`
 	SuccessTime    time.Time `json:"success_time,omitempty"`
@@ -51,13 +51,13 @@ type PrepayResponse struct {
 	Wechat WechatPrepayResponse
 }
 
-func NewPaymentService(
+func NewWechatPaymentService(
 	config *config.Config,
 	paymentRepository contract.IPaymentRepository,
 	userRepository contract.IUserRepository,
-	httpClient *xhttp.Client) (*PaymentService, error) {
+	httpClient *xhttp.Client) (*WechatPaymentService, error) {
 
-	service := &PaymentService{
+	service := &WechatPaymentService{
 		paymentRepository: paymentRepository,
 		userRepository:    userRepository,
 		httpClient:        httpClient,
@@ -90,7 +90,7 @@ func NewPaymentService(
 	return service, nil
 }
 
-func (service *PaymentService) CreatePayment(ctx context.Context, encrypt string) (*entity.PaymentEntity, *PrepayResponse, error) {
+func (service *WechatPaymentService) CreatePayment(ctx context.Context, encrypt string) (*entity.PaymentEntity, *PrepayResponse, error) {
 	decryptData, err := aes.AESDecrypt(encrypt, []byte(service.AESKey))
 	if err != nil {
 		return nil, nil, xerror.Wrap(err)
@@ -119,8 +119,8 @@ func (service *PaymentService) CreatePayment(ctx context.Context, encrypt string
 	payment := &entity.PaymentEntity{
 		UserID: paymentRequest.UserID,
 		ChannelInfo: entity.PaymentChannelInfo{
-			Channel:  enum.PaymentChannel(paymentRequest.Channel),
-			Platform: enum.WechatOpenIDPlatform(paymentRequest.Platform),
+			Channel:        enum.PaymentChannel(paymentRequest.Channel),
+			WechatPlatform: enum.WechatOpenIDPlatform(paymentRequest.Platform),
 		},
 		Service:     paymentRequest.Service,
 		Amount:      paymentRequest.Amount.Total,
@@ -131,7 +131,7 @@ func (service *PaymentService) CreatePayment(ctx context.Context, encrypt string
 	outTradeNo := utils.GnerateOutTradeNo(service.WechatPayClient.MchID)
 
 	if payment.ChannelInfo.Channel == enum.PaymentChannelWechat {
-		wechatOpenID, err := service.userRepository.FindWechatOpenIDByUserAndPlatform(ctx, payment.UserID, string(payment.ChannelInfo.Platform))
+		wechatOpenID, err := service.userRepository.FindWechatOpenIDByUserAndPlatform(ctx, payment.UserID, string(payment.ChannelInfo.WechatPlatform))
 		if err != nil {
 			return nil, nil, xerror.Wrap(err)
 		}
@@ -155,7 +155,7 @@ func (service *PaymentService) CreatePayment(ctx context.Context, encrypt string
 		payment.OutTradeNo = outTradeNo
 		payment.Status = enum.PaymentStatusNotPay
 		payment.CreatedAt = time.Now()
-		payment.ChannelInfo.OpenID = wechatOpenID.OpenID
+		payment.ChannelInfo.WeChatOpenID = wechatOpenID.OpenID
 
 		_, err = service.paymentRepository.Create(ctx, &aggregate.PaymentAggregate{
 			Payment: payment,
@@ -172,7 +172,7 @@ func (service *PaymentService) CreatePayment(ctx context.Context, encrypt string
 	return nil, nil, xerror.New("unsupported payment channel")
 }
 
-func (service *PaymentService) UpdatePaymentStatus(ctx context.Context, paymentAggregate *aggregate.PaymentAggregate) (*aggregate.PaymentAggregate, error) {
+func (service *WechatPaymentService) UpdatePaymentStatus(ctx context.Context, paymentAggregate *aggregate.PaymentAggregate) (*aggregate.PaymentAggregate, error) {
 	_, err := service.paymentRepository.Update(ctx, paymentAggregate)
 	if err != nil {
 		return nil, xerror.Wrap(err)
@@ -181,7 +181,7 @@ func (service *PaymentService) UpdatePaymentStatus(ctx context.Context, paymentA
 	return paymentAggregate, nil
 }
 
-func (service *PaymentService) createWechatPayment(ctx context.Context, description string, outTradeNo string, amount int, currency string, openid string) (*WechatPrepayResponse, error) {
+func (service *WechatPaymentService) createWechatPayment(ctx context.Context, description string, outTradeNo string, amount int, currency string, openid string) (*WechatPrepayResponse, error) {
 	resp, err := service.WechatPayClient.CreatePayment(ctx, outTradeNo, description, openid, currency, amount)
 	if err != nil {
 		return nil, xerror.Wrap(err)
@@ -197,7 +197,7 @@ func (service *PaymentService) createWechatPayment(ctx context.Context, descript
 	}, nil
 }
 
-func (service *PaymentService) GetPaymentStatus(ctx context.Context, paymentAggregate *aggregate.PaymentAggregate) (*aggregate.PaymentAggregate, error) {
+func (service *WechatPaymentService) GetPaymentStatus(ctx context.Context, paymentAggregate *aggregate.PaymentAggregate) (*aggregate.PaymentAggregate, error) {
 	transaction, err := service.WechatPayClient.QueryPayment(ctx, paymentAggregate.Payment.OutTradeNo)
 	if err != nil {
 		return nil, xerror.Wrap(err)
@@ -209,7 +209,7 @@ func (service *PaymentService) GetPaymentStatus(ctx context.Context, paymentAggr
 		case "SUCCESS":
 			paymentAggregate.Payment.Status = enum.PaymentStatusSuccess
 			if transaction.TransactionId != nil {
-				paymentAggregate.Payment.ChannelInfo.TransactionID = *transaction.TransactionId
+				paymentAggregate.Payment.ChannelInfo.WeChatTransactionID = *transaction.TransactionId
 			}
 			if transaction.SuccessTime != nil {
 				successTime, parseErr := time.Parse(time.RFC3339, *transaction.SuccessTime)
@@ -237,7 +237,7 @@ func (service *PaymentService) GetPaymentStatus(ctx context.Context, paymentAggr
 	return paymentAggregate, nil
 }
 
-func (service *PaymentService) HandlePaymentNotify(ctx context.Context, req *http.Request) (*aggregate.PaymentAggregate, error) {
+func (service *WechatPaymentService) HandlePaymentNotify(ctx context.Context, req *http.Request) (*aggregate.PaymentAggregate, error) {
 	notify, err := service.WechatPayClient.ParseRequest(ctx, req)
 	if err != nil {
 		return nil, xerror.Wrap(err)
@@ -255,7 +255,7 @@ func (service *PaymentService) HandlePaymentNotify(ctx context.Context, req *htt
 	switch notify.TradeState {
 	case "SUCCESS":
 		paymentAggregate.Payment.Status = enum.PaymentStatusSuccess
-		paymentAggregate.Payment.ChannelInfo.TransactionID = notify.TransactionID
+		paymentAggregate.Payment.ChannelInfo.WeChatTransactionID = notify.TransactionID
 		paymentAggregate.Payment.PaidAt = notify.SuccessTime
 	case "CLOSED":
 		paymentAggregate.Payment.Status = enum.PaymentStatusClosed
@@ -275,7 +275,7 @@ func (service *PaymentService) HandlePaymentNotify(ctx context.Context, req *htt
 	return paymentAggregate, nil
 }
 
-func (service *PaymentService) SendNotification(paymentAggregate *aggregate.PaymentAggregate) error {
+func (service *WechatPaymentService) SendNotification(paymentAggregate *aggregate.PaymentAggregate) error {
 	var notifyURL string
 	if urlValue, ok := service.ServiceNotifyURL[string(paymentAggregate.Payment.Service)]; ok {
 		notifyURL = urlValue.(string)
@@ -285,7 +285,7 @@ func (service *PaymentService) SendNotification(paymentAggregate *aggregate.Paym
 
 	payloadData := map[string]interface{}{
 		"order_no":     paymentAggregate.Payment.OutTradeNo,
-		"pay_order_no": paymentAggregate.Payment.ChannelInfo.TransactionID,
+		"pay_order_no": paymentAggregate.Payment.ChannelInfo.WeChatTransactionID,
 		"amount":       int64(paymentAggregate.Payment.Amount),
 		"pay_time":     paymentAggregate.Payment.PaidAt.Format(time.RFC3339),
 		"pay_state":    string(paymentAggregate.Payment.Status),

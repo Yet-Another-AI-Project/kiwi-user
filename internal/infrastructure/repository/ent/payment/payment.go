@@ -23,14 +23,8 @@ const (
 	FieldOutTradeNo = "out_trade_no"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
-	// FieldTransactionID holds the string denoting the transaction_id field in the database.
-	FieldTransactionID = "transaction_id"
-	// FieldOpenID holds the string denoting the open_id field in the database.
-	FieldOpenID = "open_id"
 	// FieldChannel holds the string denoting the channel field in the database.
 	FieldChannel = "channel"
-	// FieldPlatform holds the string denoting the platform field in the database.
-	FieldPlatform = "platform"
 	// FieldService holds the string denoting the service field in the database.
 	FieldService = "service"
 	// FieldAmount holds the string denoting the amount field in the database.
@@ -45,22 +39,30 @@ const (
 	FieldPaidAt = "paid_at"
 	// FieldPaymentType holds the string denoting the payment_type field in the database.
 	FieldPaymentType = "payment_type"
-	// FieldSubscriptionID holds the string denoting the subscription_id field in the database.
-	FieldSubscriptionID = "subscription_id"
-	// FieldSubscriptionStatus holds the string denoting the subscription_status field in the database.
-	FieldSubscriptionStatus = "subscription_status"
-	// FieldInterval holds the string denoting the interval field in the database.
-	FieldInterval = "interval"
-	// FieldCurrentPeriodStart holds the string denoting the current_period_start field in the database.
-	FieldCurrentPeriodStart = "current_period_start"
-	// FieldCurrentPeriodEnd holds the string denoting the current_period_end field in the database.
-	FieldCurrentPeriodEnd = "current_period_end"
-	// FieldCustomerID holds the string denoting the customer_id field in the database.
-	FieldCustomerID = "customer_id"
-	// FieldCustomerEmail holds the string denoting the customer_email field in the database.
-	FieldCustomerEmail = "customer_email"
-	// FieldCheckoutSessionID holds the string denoting the checkout_session_id field in the database.
-	FieldCheckoutSessionID = "checkout_session_id"
+	// FieldWechatPlatform holds the string denoting the wechat_platform field in the database.
+	FieldWechatPlatform = "wechat_platform"
+	// FieldWechatOpenID holds the string denoting the wechat_open_id field in the database.
+	FieldWechatOpenID = "wechat_open_id"
+	// FieldWechatTransactionID holds the string denoting the wechat_transaction_id field in the database.
+	FieldWechatTransactionID = "wechat_transaction_id"
+	// FieldStripeSubscriptionID holds the string denoting the stripe_subscription_id field in the database.
+	FieldStripeSubscriptionID = "stripe_subscription_id"
+	// FieldStripeSubscriptionStatus holds the string denoting the stripe_subscription_status field in the database.
+	FieldStripeSubscriptionStatus = "stripe_subscription_status"
+	// FieldStripeInterval holds the string denoting the stripe_interval field in the database.
+	FieldStripeInterval = "stripe_interval"
+	// FieldStripeCurrentPeriodStart holds the string denoting the stripe_current_period_start field in the database.
+	FieldStripeCurrentPeriodStart = "stripe_current_period_start"
+	// FieldStripeCurrentPeriodEnd holds the string denoting the stripe_current_period_end field in the database.
+	FieldStripeCurrentPeriodEnd = "stripe_current_period_end"
+	// FieldStripeCustomerID holds the string denoting the stripe_customer_id field in the database.
+	FieldStripeCustomerID = "stripe_customer_id"
+	// FieldStripeCustomerEmail holds the string denoting the stripe_customer_email field in the database.
+	FieldStripeCustomerEmail = "stripe_customer_email"
+	// FieldStripeCheckoutSessionID holds the string denoting the stripe_checkout_session_id field in the database.
+	FieldStripeCheckoutSessionID = "stripe_checkout_session_id"
+	// FieldStripeInvoiceID holds the string denoting the stripe_invoice_id field in the database.
+	FieldStripeInvoiceID = "stripe_invoice_id"
 	// EdgeUser holds the string denoting the user edge name in mutations.
 	EdgeUser = "user"
 	// Table holds the table name of the payment in the database.
@@ -81,10 +83,7 @@ var Columns = []string{
 	FieldUpdatedAt,
 	FieldOutTradeNo,
 	FieldUserID,
-	FieldTransactionID,
-	FieldOpenID,
 	FieldChannel,
-	FieldPlatform,
 	FieldService,
 	FieldAmount,
 	FieldCurrency,
@@ -92,14 +91,18 @@ var Columns = []string{
 	FieldStatus,
 	FieldPaidAt,
 	FieldPaymentType,
-	FieldSubscriptionID,
-	FieldSubscriptionStatus,
-	FieldInterval,
-	FieldCurrentPeriodStart,
-	FieldCurrentPeriodEnd,
-	FieldCustomerID,
-	FieldCustomerEmail,
-	FieldCheckoutSessionID,
+	FieldWechatPlatform,
+	FieldWechatOpenID,
+	FieldWechatTransactionID,
+	FieldStripeSubscriptionID,
+	FieldStripeSubscriptionStatus,
+	FieldStripeInterval,
+	FieldStripeCurrentPeriodStart,
+	FieldStripeCurrentPeriodEnd,
+	FieldStripeCustomerID,
+	FieldStripeCustomerEmail,
+	FieldStripeCheckoutSessionID,
+	FieldStripeInvoiceID,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -156,29 +159,6 @@ func ChannelValidator(c Channel) error {
 	}
 }
 
-// Platform defines the type for the "platform" enum field.
-type Platform string
-
-// Platform values.
-const (
-	PlatformMiniprogram Platform = "miniprogram"
-	PlatformUnknown     Platform = "unknown"
-)
-
-func (pl Platform) String() string {
-	return string(pl)
-}
-
-// PlatformValidator is a validator for the "platform" field enum values. It is called by the builders before save.
-func PlatformValidator(pl Platform) error {
-	switch pl {
-	case PlatformMiniprogram, PlatformUnknown:
-		return nil
-	default:
-		return fmt.Errorf("payment: invalid enum value for platform field: %q", pl)
-	}
-}
-
 // Status defines the type for the "status" enum field.
 type Status string
 
@@ -230,54 +210,6 @@ func PaymentTypeValidator(pt PaymentType) error {
 	}
 }
 
-// SubscriptionStatus defines the type for the "subscription_status" enum field.
-type SubscriptionStatus string
-
-// SubscriptionStatus values.
-const (
-	SubscriptionStatusActive   SubscriptionStatus = "active"
-	SubscriptionStatusPastDue  SubscriptionStatus = "past_due"
-	SubscriptionStatusCanceled SubscriptionStatus = "canceled"
-	SubscriptionStatusUnpaid   SubscriptionStatus = "unpaid"
-)
-
-func (ss SubscriptionStatus) String() string {
-	return string(ss)
-}
-
-// SubscriptionStatusValidator is a validator for the "subscription_status" field enum values. It is called by the builders before save.
-func SubscriptionStatusValidator(ss SubscriptionStatus) error {
-	switch ss {
-	case SubscriptionStatusActive, SubscriptionStatusPastDue, SubscriptionStatusCanceled, SubscriptionStatusUnpaid:
-		return nil
-	default:
-		return fmt.Errorf("payment: invalid enum value for subscription_status field: %q", ss)
-	}
-}
-
-// Interval defines the type for the "interval" enum field.
-type Interval string
-
-// Interval values.
-const (
-	IntervalMonthly Interval = "monthly"
-	IntervalYearly  Interval = "yearly"
-)
-
-func (i Interval) String() string {
-	return string(i)
-}
-
-// IntervalValidator is a validator for the "interval" field enum values. It is called by the builders before save.
-func IntervalValidator(i Interval) error {
-	switch i {
-	case IntervalMonthly, IntervalYearly:
-		return nil
-	default:
-		return fmt.Errorf("payment: invalid enum value for interval field: %q", i)
-	}
-}
-
 // OrderOption defines the ordering options for the Payment queries.
 type OrderOption func(*sql.Selector)
 
@@ -306,24 +238,9 @@ func ByUserID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUserID, opts...).ToFunc()
 }
 
-// ByTransactionID orders the results by the transaction_id field.
-func ByTransactionID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldTransactionID, opts...).ToFunc()
-}
-
-// ByOpenID orders the results by the open_id field.
-func ByOpenID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldOpenID, opts...).ToFunc()
-}
-
 // ByChannel orders the results by the channel field.
 func ByChannel(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldChannel, opts...).ToFunc()
-}
-
-// ByPlatform orders the results by the platform field.
-func ByPlatform(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldPlatform, opts...).ToFunc()
 }
 
 // ByService orders the results by the service field.
@@ -361,44 +278,64 @@ func ByPaymentType(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPaymentType, opts...).ToFunc()
 }
 
-// BySubscriptionID orders the results by the subscription_id field.
-func BySubscriptionID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldSubscriptionID, opts...).ToFunc()
+// ByWechatPlatform orders the results by the wechat_platform field.
+func ByWechatPlatform(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldWechatPlatform, opts...).ToFunc()
 }
 
-// BySubscriptionStatus orders the results by the subscription_status field.
-func BySubscriptionStatus(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldSubscriptionStatus, opts...).ToFunc()
+// ByWechatOpenID orders the results by the wechat_open_id field.
+func ByWechatOpenID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldWechatOpenID, opts...).ToFunc()
 }
 
-// ByInterval orders the results by the interval field.
-func ByInterval(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldInterval, opts...).ToFunc()
+// ByWechatTransactionID orders the results by the wechat_transaction_id field.
+func ByWechatTransactionID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldWechatTransactionID, opts...).ToFunc()
 }
 
-// ByCurrentPeriodStart orders the results by the current_period_start field.
-func ByCurrentPeriodStart(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCurrentPeriodStart, opts...).ToFunc()
+// ByStripeSubscriptionID orders the results by the stripe_subscription_id field.
+func ByStripeSubscriptionID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStripeSubscriptionID, opts...).ToFunc()
 }
 
-// ByCurrentPeriodEnd orders the results by the current_period_end field.
-func ByCurrentPeriodEnd(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCurrentPeriodEnd, opts...).ToFunc()
+// ByStripeSubscriptionStatus orders the results by the stripe_subscription_status field.
+func ByStripeSubscriptionStatus(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStripeSubscriptionStatus, opts...).ToFunc()
 }
 
-// ByCustomerID orders the results by the customer_id field.
-func ByCustomerID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCustomerID, opts...).ToFunc()
+// ByStripeInterval orders the results by the stripe_interval field.
+func ByStripeInterval(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStripeInterval, opts...).ToFunc()
 }
 
-// ByCustomerEmail orders the results by the customer_email field.
-func ByCustomerEmail(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCustomerEmail, opts...).ToFunc()
+// ByStripeCurrentPeriodStart orders the results by the stripe_current_period_start field.
+func ByStripeCurrentPeriodStart(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStripeCurrentPeriodStart, opts...).ToFunc()
 }
 
-// ByCheckoutSessionID orders the results by the checkout_session_id field.
-func ByCheckoutSessionID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCheckoutSessionID, opts...).ToFunc()
+// ByStripeCurrentPeriodEnd orders the results by the stripe_current_period_end field.
+func ByStripeCurrentPeriodEnd(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStripeCurrentPeriodEnd, opts...).ToFunc()
+}
+
+// ByStripeCustomerID orders the results by the stripe_customer_id field.
+func ByStripeCustomerID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStripeCustomerID, opts...).ToFunc()
+}
+
+// ByStripeCustomerEmail orders the results by the stripe_customer_email field.
+func ByStripeCustomerEmail(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStripeCustomerEmail, opts...).ToFunc()
+}
+
+// ByStripeCheckoutSessionID orders the results by the stripe_checkout_session_id field.
+func ByStripeCheckoutSessionID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStripeCheckoutSessionID, opts...).ToFunc()
+}
+
+// ByStripeInvoiceID orders the results by the stripe_invoice_id field.
+func ByStripeInvoiceID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStripeInvoiceID, opts...).ToFunc()
 }
 
 // ByUserField orders the results by user field.

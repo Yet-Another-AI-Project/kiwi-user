@@ -5,6 +5,7 @@ import (
 	"kiwi-user/config"
 	"kiwi-user/internal/domain/contract"
 	"kiwi-user/internal/infrastructure/jwt"
+	"kiwi-user/internal/infrastructure/payment/stripe"
 	"kiwi-user/internal/infrastructure/repository"
 	"net/http"
 	"time"
@@ -125,6 +126,17 @@ func newOSSClient(cfg *config.Config) (*oss.AliyunOss, error) {
 	return oss.NewAliyunOss(cfg.OSS.Endpoint, cfg.OSS.AccessKeyID, cfg.OSS.AccessKeySecret)
 }
 
+func newStripeClient(cfg *config.Config) *stripe.StripeClient {
+	return stripe.NewStripeClient(
+		cfg.Payment.StripeAPIKey,
+		cfg.Payment.StripeWebhookSecret,
+		cfg.Payment.StripeSuccessURL,
+		cfg.Payment.StripeCancelURL,
+		cfg.Payment.StripeMonthlyPriceID,
+		cfg.Payment.StripeYearlyPriceID,
+	)
+}
+
 var Module = fx.Provide(
 	// oss client
 	newOSSClient,
@@ -241,6 +253,9 @@ var Module = fx.Provide(
 	// captcha
 	newCaptchaClient,
 	cache.NewMemCache,
+
+	// stripe client
+	newStripeClient,
 
 	// redis
 	fx.Annotate(

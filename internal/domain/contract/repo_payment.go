@@ -12,6 +12,7 @@ type IPaymentReadRepository interface {
 	FindPendingPayments(ctx context.Context, status enum.PaymentStatus, createdBefore time.Time) ([]*aggregate.PaymentAggregate, error)
 	FindBySubscriptionID(ctx context.Context, subscriptionID string) (*aggregate.PaymentAggregate, error)
 	FindByCheckoutSessionID(ctx context.Context, sessionID string) (*aggregate.PaymentAggregate, error)
+	FindActiveSubscriptionByUserIDAndService(ctx context.Context, userID string, service string) (*aggregate.PaymentAggregate, error)
 }
 
 type IPaymentWriteRepository interface {

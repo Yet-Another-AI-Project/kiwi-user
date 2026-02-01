@@ -5,8 +5,8 @@ type PaymentRequestContent struct {
 	Amount      Amount `json:"amount" binding:"required"`
 	UserID      string `json:"user_id" binding:"required"`
 	Channel     string `json:"channel" binding:"required"`
-	Platform    string `json:"platform" binding:"required"`
 	Service     string `json:"service" binding:"required"`
+	Platform    string `json:"platform"`
 }
 
 type PaymentRequest struct {
@@ -18,7 +18,7 @@ type Amount struct {
 	Currency string `json:"currency,omitempty"`
 }
 
-type PaymentResponse struct {
+type WechatPaymentResponse struct {
 	OutTradeNo       string            `json:"out_trade_no"`
 	Channel          string            `json:"channel"`
 	WeChatPayDetails WeChatPayResponse `json:"wechat_pay_details,omitempty"`
@@ -59,4 +59,14 @@ type StripeCheckoutResponse struct {
 type StripeWebhookResponse struct {
 	Received bool   `json:"received"`
 	Error    string `json:"error,omitempty"`
+}
+
+type StripeCancelSubscriptionRequest struct {
+	Encrypt string `json:"encrypt" binding:"required"`
+}
+
+type StripeCancelSubscriptionResponse struct {
+	Success        bool   `json:"success"`
+	Message        string `json:"message,omitempty"`
+	SubscriptionID string `json:"subscription_id,omitempty"`
 }

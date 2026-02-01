@@ -12,7 +12,6 @@ type IStripeEventReadRepository interface {
 
 type IStripeEventWriteRepository interface {
 	Create(ctx context.Context, event *entity.StripeEventEntity) (*entity.StripeEventEntity, error)
-	MarkProcessed(ctx context.Context, eventID string) error
 }
 
 type IStripeEventRepository interface {

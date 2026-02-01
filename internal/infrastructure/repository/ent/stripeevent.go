@@ -23,6 +23,10 @@ type StripeEvent struct {
 	EventID string `json:"event_id,omitempty"`
 	// EventType holds the value of the "event_type" field.
 	EventType string `json:"event_type,omitempty"`
+	// SubscriptionID holds the value of the "subscription_id" field.
+	SubscriptionID string `json:"subscription_id,omitempty"`
+	// UserID holds the value of the "user_id" field.
+	UserID string `json:"user_id,omitempty"`
 	// Processed holds the value of the "processed" field.
 	Processed bool `json:"processed,omitempty"`
 	// ProcessedAt holds the value of the "processed_at" field.
@@ -39,7 +43,7 @@ func (*StripeEvent) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullBool)
 		case stripeevent.FieldID:
 			values[i] = new(sql.NullInt64)
-		case stripeevent.FieldEventID, stripeevent.FieldEventType:
+		case stripeevent.FieldEventID, stripeevent.FieldEventType, stripeevent.FieldSubscriptionID, stripeevent.FieldUserID:
 			values[i] = new(sql.NullString)
 		case stripeevent.FieldCreatedAt, stripeevent.FieldProcessedAt:
 			values[i] = new(sql.NullTime)
@@ -81,6 +85,18 @@ func (se *StripeEvent) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field event_type", values[i])
 			} else if value.Valid {
 				se.EventType = value.String
+			}
+		case stripeevent.FieldSubscriptionID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field subscription_id", values[i])
+			} else if value.Valid {
+				se.SubscriptionID = value.String
+			}
+		case stripeevent.FieldUserID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field user_id", values[i])
+			} else if value.Valid {
+				se.UserID = value.String
 			}
 		case stripeevent.FieldProcessed:
 			if value, ok := values[i].(*sql.NullBool); !ok {
@@ -138,6 +154,12 @@ func (se *StripeEvent) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("event_type=")
 	builder.WriteString(se.EventType)
+	builder.WriteString(", ")
+	builder.WriteString("subscription_id=")
+	builder.WriteString(se.SubscriptionID)
+	builder.WriteString(", ")
+	builder.WriteString("user_id=")
+	builder.WriteString(se.UserID)
 	builder.WriteString(", ")
 	builder.WriteString("processed=")
 	builder.WriteString(fmt.Sprintf("%v", se.Processed))

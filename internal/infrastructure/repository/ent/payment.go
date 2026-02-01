@@ -26,14 +26,8 @@ type Payment struct {
 	OutTradeNo string `json:"out_trade_no,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID string `json:"user_id,omitempty"`
-	// TransactionID holds the value of the "transaction_id" field.
-	TransactionID string `json:"transaction_id,omitempty"`
-	// OpenID holds the value of the "open_id" field.
-	OpenID string `json:"open_id,omitempty"`
 	// Channel holds the value of the "channel" field.
 	Channel payment.Channel `json:"channel,omitempty"`
-	// Platform holds the value of the "platform" field.
-	Platform payment.Platform `json:"platform,omitempty"`
 	// Service holds the value of the "service" field.
 	Service string `json:"service,omitempty"`
 	// Amount holds the value of the "amount" field.
@@ -48,22 +42,30 @@ type Payment struct {
 	PaidAt time.Time `json:"paid_at,omitempty"`
 	// PaymentType holds the value of the "payment_type" field.
 	PaymentType payment.PaymentType `json:"payment_type,omitempty"`
-	// SubscriptionID holds the value of the "subscription_id" field.
-	SubscriptionID string `json:"subscription_id,omitempty"`
-	// SubscriptionStatus holds the value of the "subscription_status" field.
-	SubscriptionStatus payment.SubscriptionStatus `json:"subscription_status,omitempty"`
-	// Interval holds the value of the "interval" field.
-	Interval payment.Interval `json:"interval,omitempty"`
-	// CurrentPeriodStart holds the value of the "current_period_start" field.
-	CurrentPeriodStart time.Time `json:"current_period_start,omitempty"`
-	// CurrentPeriodEnd holds the value of the "current_period_end" field.
-	CurrentPeriodEnd time.Time `json:"current_period_end,omitempty"`
-	// CustomerID holds the value of the "customer_id" field.
-	CustomerID string `json:"customer_id,omitempty"`
-	// CustomerEmail holds the value of the "customer_email" field.
-	CustomerEmail string `json:"customer_email,omitempty"`
-	// CheckoutSessionID holds the value of the "checkout_session_id" field.
-	CheckoutSessionID string `json:"checkout_session_id,omitempty"`
+	// WechatPlatform holds the value of the "wechat_platform" field.
+	WechatPlatform string `json:"wechat_platform,omitempty"`
+	// WechatOpenID holds the value of the "wechat_open_id" field.
+	WechatOpenID string `json:"wechat_open_id,omitempty"`
+	// WechatTransactionID holds the value of the "wechat_transaction_id" field.
+	WechatTransactionID string `json:"wechat_transaction_id,omitempty"`
+	// StripeSubscriptionID holds the value of the "stripe_subscription_id" field.
+	StripeSubscriptionID string `json:"stripe_subscription_id,omitempty"`
+	// StripeSubscriptionStatus holds the value of the "stripe_subscription_status" field.
+	StripeSubscriptionStatus string `json:"stripe_subscription_status,omitempty"`
+	// StripeInterval holds the value of the "stripe_interval" field.
+	StripeInterval string `json:"stripe_interval,omitempty"`
+	// StripeCurrentPeriodStart holds the value of the "stripe_current_period_start" field.
+	StripeCurrentPeriodStart time.Time `json:"stripe_current_period_start,omitempty"`
+	// StripeCurrentPeriodEnd holds the value of the "stripe_current_period_end" field.
+	StripeCurrentPeriodEnd time.Time `json:"stripe_current_period_end,omitempty"`
+	// StripeCustomerID holds the value of the "stripe_customer_id" field.
+	StripeCustomerID string `json:"stripe_customer_id,omitempty"`
+	// StripeCustomerEmail holds the value of the "stripe_customer_email" field.
+	StripeCustomerEmail string `json:"stripe_customer_email,omitempty"`
+	// StripeCheckoutSessionID holds the value of the "stripe_checkout_session_id" field.
+	StripeCheckoutSessionID string `json:"stripe_checkout_session_id,omitempty"`
+	// StripeInvoiceID holds the value of the "stripe_invoice_id" field.
+	StripeInvoiceID string `json:"stripe_invoice_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PaymentQuery when eager-loading is set.
 	Edges        PaymentEdges `json:"edges"`
@@ -97,9 +99,9 @@ func (*Payment) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case payment.FieldID, payment.FieldAmount:
 			values[i] = new(sql.NullInt64)
-		case payment.FieldOutTradeNo, payment.FieldUserID, payment.FieldTransactionID, payment.FieldOpenID, payment.FieldChannel, payment.FieldPlatform, payment.FieldService, payment.FieldCurrency, payment.FieldDescription, payment.FieldStatus, payment.FieldPaymentType, payment.FieldSubscriptionID, payment.FieldSubscriptionStatus, payment.FieldInterval, payment.FieldCustomerID, payment.FieldCustomerEmail, payment.FieldCheckoutSessionID:
+		case payment.FieldOutTradeNo, payment.FieldUserID, payment.FieldChannel, payment.FieldService, payment.FieldCurrency, payment.FieldDescription, payment.FieldStatus, payment.FieldPaymentType, payment.FieldWechatPlatform, payment.FieldWechatOpenID, payment.FieldWechatTransactionID, payment.FieldStripeSubscriptionID, payment.FieldStripeSubscriptionStatus, payment.FieldStripeInterval, payment.FieldStripeCustomerID, payment.FieldStripeCustomerEmail, payment.FieldStripeCheckoutSessionID, payment.FieldStripeInvoiceID:
 			values[i] = new(sql.NullString)
-		case payment.FieldCreatedAt, payment.FieldUpdatedAt, payment.FieldPaidAt, payment.FieldCurrentPeriodStart, payment.FieldCurrentPeriodEnd:
+		case payment.FieldCreatedAt, payment.FieldUpdatedAt, payment.FieldPaidAt, payment.FieldStripeCurrentPeriodStart, payment.FieldStripeCurrentPeriodEnd:
 			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -146,29 +148,11 @@ func (pa *Payment) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				pa.UserID = value.String
 			}
-		case payment.FieldTransactionID:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field transaction_id", values[i])
-			} else if value.Valid {
-				pa.TransactionID = value.String
-			}
-		case payment.FieldOpenID:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field open_id", values[i])
-			} else if value.Valid {
-				pa.OpenID = value.String
-			}
 		case payment.FieldChannel:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field channel", values[i])
 			} else if value.Valid {
 				pa.Channel = payment.Channel(value.String)
-			}
-		case payment.FieldPlatform:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field platform", values[i])
-			} else if value.Valid {
-				pa.Platform = payment.Platform(value.String)
 			}
 		case payment.FieldService:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -212,53 +196,77 @@ func (pa *Payment) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				pa.PaymentType = payment.PaymentType(value.String)
 			}
-		case payment.FieldSubscriptionID:
+		case payment.FieldWechatPlatform:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field subscription_id", values[i])
+				return fmt.Errorf("unexpected type %T for field wechat_platform", values[i])
 			} else if value.Valid {
-				pa.SubscriptionID = value.String
+				pa.WechatPlatform = value.String
 			}
-		case payment.FieldSubscriptionStatus:
+		case payment.FieldWechatOpenID:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field subscription_status", values[i])
+				return fmt.Errorf("unexpected type %T for field wechat_open_id", values[i])
 			} else if value.Valid {
-				pa.SubscriptionStatus = payment.SubscriptionStatus(value.String)
+				pa.WechatOpenID = value.String
 			}
-		case payment.FieldInterval:
+		case payment.FieldWechatTransactionID:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field interval", values[i])
+				return fmt.Errorf("unexpected type %T for field wechat_transaction_id", values[i])
 			} else if value.Valid {
-				pa.Interval = payment.Interval(value.String)
+				pa.WechatTransactionID = value.String
 			}
-		case payment.FieldCurrentPeriodStart:
+		case payment.FieldStripeSubscriptionID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field stripe_subscription_id", values[i])
+			} else if value.Valid {
+				pa.StripeSubscriptionID = value.String
+			}
+		case payment.FieldStripeSubscriptionStatus:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field stripe_subscription_status", values[i])
+			} else if value.Valid {
+				pa.StripeSubscriptionStatus = value.String
+			}
+		case payment.FieldStripeInterval:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field stripe_interval", values[i])
+			} else if value.Valid {
+				pa.StripeInterval = value.String
+			}
+		case payment.FieldStripeCurrentPeriodStart:
 			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field current_period_start", values[i])
+				return fmt.Errorf("unexpected type %T for field stripe_current_period_start", values[i])
 			} else if value.Valid {
-				pa.CurrentPeriodStart = value.Time
+				pa.StripeCurrentPeriodStart = value.Time
 			}
-		case payment.FieldCurrentPeriodEnd:
+		case payment.FieldStripeCurrentPeriodEnd:
 			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field current_period_end", values[i])
+				return fmt.Errorf("unexpected type %T for field stripe_current_period_end", values[i])
 			} else if value.Valid {
-				pa.CurrentPeriodEnd = value.Time
+				pa.StripeCurrentPeriodEnd = value.Time
 			}
-		case payment.FieldCustomerID:
+		case payment.FieldStripeCustomerID:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field customer_id", values[i])
+				return fmt.Errorf("unexpected type %T for field stripe_customer_id", values[i])
 			} else if value.Valid {
-				pa.CustomerID = value.String
+				pa.StripeCustomerID = value.String
 			}
-		case payment.FieldCustomerEmail:
+		case payment.FieldStripeCustomerEmail:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field customer_email", values[i])
+				return fmt.Errorf("unexpected type %T for field stripe_customer_email", values[i])
 			} else if value.Valid {
-				pa.CustomerEmail = value.String
+				pa.StripeCustomerEmail = value.String
 			}
-		case payment.FieldCheckoutSessionID:
+		case payment.FieldStripeCheckoutSessionID:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field checkout_session_id", values[i])
+				return fmt.Errorf("unexpected type %T for field stripe_checkout_session_id", values[i])
 			} else if value.Valid {
-				pa.CheckoutSessionID = value.String
+				pa.StripeCheckoutSessionID = value.String
+			}
+		case payment.FieldStripeInvoiceID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field stripe_invoice_id", values[i])
+			} else if value.Valid {
+				pa.StripeInvoiceID = value.String
 			}
 		default:
 			pa.selectValues.Set(columns[i], values[i])
@@ -313,17 +321,8 @@ func (pa *Payment) String() string {
 	builder.WriteString("user_id=")
 	builder.WriteString(pa.UserID)
 	builder.WriteString(", ")
-	builder.WriteString("transaction_id=")
-	builder.WriteString(pa.TransactionID)
-	builder.WriteString(", ")
-	builder.WriteString("open_id=")
-	builder.WriteString(pa.OpenID)
-	builder.WriteString(", ")
 	builder.WriteString("channel=")
 	builder.WriteString(fmt.Sprintf("%v", pa.Channel))
-	builder.WriteString(", ")
-	builder.WriteString("platform=")
-	builder.WriteString(fmt.Sprintf("%v", pa.Platform))
 	builder.WriteString(", ")
 	builder.WriteString("service=")
 	builder.WriteString(pa.Service)
@@ -346,29 +345,41 @@ func (pa *Payment) String() string {
 	builder.WriteString("payment_type=")
 	builder.WriteString(fmt.Sprintf("%v", pa.PaymentType))
 	builder.WriteString(", ")
-	builder.WriteString("subscription_id=")
-	builder.WriteString(pa.SubscriptionID)
+	builder.WriteString("wechat_platform=")
+	builder.WriteString(pa.WechatPlatform)
 	builder.WriteString(", ")
-	builder.WriteString("subscription_status=")
-	builder.WriteString(fmt.Sprintf("%v", pa.SubscriptionStatus))
+	builder.WriteString("wechat_open_id=")
+	builder.WriteString(pa.WechatOpenID)
 	builder.WriteString(", ")
-	builder.WriteString("interval=")
-	builder.WriteString(fmt.Sprintf("%v", pa.Interval))
+	builder.WriteString("wechat_transaction_id=")
+	builder.WriteString(pa.WechatTransactionID)
 	builder.WriteString(", ")
-	builder.WriteString("current_period_start=")
-	builder.WriteString(pa.CurrentPeriodStart.Format(time.ANSIC))
+	builder.WriteString("stripe_subscription_id=")
+	builder.WriteString(pa.StripeSubscriptionID)
 	builder.WriteString(", ")
-	builder.WriteString("current_period_end=")
-	builder.WriteString(pa.CurrentPeriodEnd.Format(time.ANSIC))
+	builder.WriteString("stripe_subscription_status=")
+	builder.WriteString(pa.StripeSubscriptionStatus)
 	builder.WriteString(", ")
-	builder.WriteString("customer_id=")
-	builder.WriteString(pa.CustomerID)
+	builder.WriteString("stripe_interval=")
+	builder.WriteString(pa.StripeInterval)
 	builder.WriteString(", ")
-	builder.WriteString("customer_email=")
-	builder.WriteString(pa.CustomerEmail)
+	builder.WriteString("stripe_current_period_start=")
+	builder.WriteString(pa.StripeCurrentPeriodStart.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("checkout_session_id=")
-	builder.WriteString(pa.CheckoutSessionID)
+	builder.WriteString("stripe_current_period_end=")
+	builder.WriteString(pa.StripeCurrentPeriodEnd.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("stripe_customer_id=")
+	builder.WriteString(pa.StripeCustomerID)
+	builder.WriteString(", ")
+	builder.WriteString("stripe_customer_email=")
+	builder.WriteString(pa.StripeCustomerEmail)
+	builder.WriteString(", ")
+	builder.WriteString("stripe_checkout_session_id=")
+	builder.WriteString(pa.StripeCheckoutSessionID)
+	builder.WriteString(", ")
+	builder.WriteString("stripe_invoice_id=")
+	builder.WriteString(pa.StripeInvoiceID)
 	builder.WriteByte(')')
 	return builder.String()
 }

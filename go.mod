@@ -4,7 +4,7 @@ go 1.25
 
 require (
 	entgo.io/ent v0.14.3
-	github.com/Yet-Another-AI-Project/kiwi-lib v0.0.0-20260117113424-d174c35ed584
+	github.com/Yet-Another-AI-Project/kiwi-lib v0.0.0-20260201060824-4468c04b84f9
 	github.com/avast/retry-go v3.0.0+incompatible
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/futurxlab/golanggraph v0.0.9
@@ -14,7 +14,7 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/posthog/posthog-go v1.2.24
 	github.com/redis/go-redis/v9 v9.12.1
-	github.com/stripe/stripe-go/v82 v82.5.1
+	github.com/stripe/stripe-go/v84 v84.3.0
 	github.com/wechatpay-apiv3/wechatpay-go v0.2.20
 	go.uber.org/fx v1.23.0
 	golang.org/x/crypto v0.41.0

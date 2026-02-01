@@ -46,6 +46,34 @@ func (sec *StripeEventCreate) SetEventType(s string) *StripeEventCreate {
 	return sec
 }
 
+// SetSubscriptionID sets the "subscription_id" field.
+func (sec *StripeEventCreate) SetSubscriptionID(s string) *StripeEventCreate {
+	sec.mutation.SetSubscriptionID(s)
+	return sec
+}
+
+// SetNillableSubscriptionID sets the "subscription_id" field if the given value is not nil.
+func (sec *StripeEventCreate) SetNillableSubscriptionID(s *string) *StripeEventCreate {
+	if s != nil {
+		sec.SetSubscriptionID(*s)
+	}
+	return sec
+}
+
+// SetUserID sets the "user_id" field.
+func (sec *StripeEventCreate) SetUserID(s string) *StripeEventCreate {
+	sec.mutation.SetUserID(s)
+	return sec
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (sec *StripeEventCreate) SetNillableUserID(s *string) *StripeEventCreate {
+	if s != nil {
+		sec.SetUserID(*s)
+	}
+	return sec
+}
+
 // SetProcessed sets the "processed" field.
 func (sec *StripeEventCreate) SetProcessed(b bool) *StripeEventCreate {
 	sec.mutation.SetProcessed(b)
@@ -180,6 +208,14 @@ func (sec *StripeEventCreate) createSpec() (*StripeEvent, *sqlgraph.CreateSpec) 
 	if value, ok := sec.mutation.EventType(); ok {
 		_spec.SetField(stripeevent.FieldEventType, field.TypeString, value)
 		_node.EventType = value
+	}
+	if value, ok := sec.mutation.SubscriptionID(); ok {
+		_spec.SetField(stripeevent.FieldSubscriptionID, field.TypeString, value)
+		_node.SubscriptionID = value
+	}
+	if value, ok := sec.mutation.UserID(); ok {
+		_spec.SetField(stripeevent.FieldUserID, field.TypeString, value)
+		_node.UserID = value
 	}
 	if value, ok := sec.mutation.Processed(); ok {
 		_spec.SetField(stripeevent.FieldProcessed, field.TypeBool, value)

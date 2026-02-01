@@ -312,19 +312,19 @@ func init() {
 	// payment.UserIDValidator is a validator for the "user_id" field. It is called by the builders before save.
 	payment.UserIDValidator = paymentDescUserID.Validators[0].(func(string) error)
 	// paymentDescService is the schema descriptor for service field.
-	paymentDescService := paymentFields[8].Descriptor()
+	paymentDescService := paymentFields[5].Descriptor()
 	// payment.ServiceValidator is a validator for the "service" field. It is called by the builders before save.
 	payment.ServiceValidator = paymentDescService.Validators[0].(func(string) error)
 	// paymentDescAmount is the schema descriptor for amount field.
-	paymentDescAmount := paymentFields[9].Descriptor()
+	paymentDescAmount := paymentFields[6].Descriptor()
 	// payment.AmountValidator is a validator for the "amount" field. It is called by the builders before save.
 	payment.AmountValidator = paymentDescAmount.Validators[0].(func(int) error)
 	// paymentDescCurrency is the schema descriptor for currency field.
-	paymentDescCurrency := paymentFields[10].Descriptor()
+	paymentDescCurrency := paymentFields[7].Descriptor()
 	// payment.CurrencyValidator is a validator for the "currency" field. It is called by the builders before save.
 	payment.CurrencyValidator = paymentDescCurrency.Validators[0].(func(string) error)
 	// paymentDescDescription is the schema descriptor for description field.
-	paymentDescDescription := paymentFields[11].Descriptor()
+	paymentDescDescription := paymentFields[8].Descriptor()
 	// payment.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	payment.DescriptionValidator = paymentDescDescription.Validators[0].(func(string) error)
 	qywechatuseridFields := schema.QyWechatUserID{}.Fields()
@@ -406,7 +406,7 @@ func init() {
 	// stripeevent.EventTypeValidator is a validator for the "event_type" field. It is called by the builders before save.
 	stripeevent.EventTypeValidator = stripeeventDescEventType.Validators[0].(func(string) error)
 	// stripeeventDescProcessed is the schema descriptor for processed field.
-	stripeeventDescProcessed := stripeeventFields[3].Descriptor()
+	stripeeventDescProcessed := stripeeventFields[5].Descriptor()
 	// stripeevent.DefaultProcessed holds the default value on creation for the processed field.
 	stripeevent.DefaultProcessed = stripeeventDescProcessed.Default.(bool)
 	userFields := schema.User{}.Fields()

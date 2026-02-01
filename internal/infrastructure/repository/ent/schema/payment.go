@@ -24,10 +24,7 @@ func (Payment) Fields() []ent.Field {
 			UpdateDefault(time.Now),
 		field.String("out_trade_no").NotEmpty(),
 		field.String("user_id").NotEmpty(),
-		field.String("transaction_id").Optional(),
-		field.String("open_id").Optional(),
 		field.Enum("channel").Values(convertStingerSliceToStringSlice(enum.GetAllPaymentChannel())...),
-		field.Enum("platform").Values(convertStingerSliceToStringSlice(enum.GetAllWechatOpenIDPlatform())...),
 		field.String("service").NotEmpty(),
 		field.Int("amount").Positive(),
 		field.String("currency").NotEmpty(),
@@ -35,30 +32,37 @@ func (Payment) Fields() []ent.Field {
 		field.Enum("status").Values(convertStingerSliceToStringSlice(enum.GetAllPaymentStatus())...),
 		field.Time("paid_at").Optional(),
 
+		// channel info
 		field.Enum("payment_type").
 			Values(convertStingerSliceToStringSlice(enum.GetAllPaymentType())...).
 			Default(string(enum.PaymentTypeOneTime)),
-		field.String("subscription_id").Optional(),
-		field.Enum("subscription_status").
-			Values(convertStingerSliceToStringSlice(enum.GetAllSubscriptionStatus())...).
+		field.String("wechat_platform").Optional(),
+		field.String("wechat_open_id").Optional(),
+		field.String("wechat_transaction_id").Optional(),
+		field.String("stripe_subscription_id").Optional(),
+		field.String("stripe_subscription_status").Optional(),
+		field.String("stripe_interval").Optional(),
+		field.Time("stripe_current_period_start").
 			Optional(),
-		field.Enum("interval").
-			Values(convertStingerSliceToStringSlice(enum.GetAllSubscriptionInterval())...).
+		field.Time("stripe_current_period_end").
 			Optional(),
-		field.Time("current_period_start").Optional(),
-		field.Time("current_period_end").Optional(),
-		field.String("customer_id").Optional(),
-		field.String("customer_email").Optional(),
-		field.String("checkout_session_id").Optional(),
+		field.String("stripe_customer_id").
+			Optional(),
+		field.String("stripe_customer_email").
+			Optional(),
+		field.String("stripe_checkout_session_id").
+			Optional(),
+		field.String("stripe_invoice_id").
+			Optional(),
 	}
 }
 
 func (Payment) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("out_trade_no").Unique(),
-		index.Fields("subscription_id"),
-		index.Fields("customer_id"),
-		index.Fields("checkout_session_id"),
+		index.Fields("stripe_subscription_id"),
+		index.Fields("stripe_customer_id"),
+		index.Fields("stripe_checkout_session_id"),
 	}
 }
 

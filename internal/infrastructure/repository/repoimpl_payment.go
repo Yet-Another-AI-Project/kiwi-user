@@ -36,16 +36,28 @@ func (p *paymentImpl) Create(ctx context.Context, paymentAggregate *aggregate.Pa
 
 	paymentDO, err := db.Payment.Create().
 		SetOutTradeNo(paymentAggregate.Payment.OutTradeNo).
-		SetChannel(payment.Channel(paymentAggregate.Payment.ChannelInfo.Channel.String())).
-		SetPlatform(payment.Platform(paymentAggregate.Payment.ChannelInfo.Platform.String())).
-		SetService(paymentAggregate.Payment.Service).
 		SetUserID(paymentAggregate.Payment.UserID).
-		SetOpenID(paymentAggregate.Payment.ChannelInfo.OpenID).
-		SetAmount(paymentAggregate.Payment.Amount).
+		SetService(paymentAggregate.Payment.Service).
 		SetCurrency(paymentAggregate.Payment.Currency).
 		SetStatus(payment.Status(paymentAggregate.Payment.Status.String())).
+		SetAmount(paymentAggregate.Payment.Amount).
 		SetDescription(paymentAggregate.Payment.Description).
-		SetCreatedAt(paymentAggregate.Payment.CreatedAt).
+		SetPaidAt(paymentAggregate.Payment.PaidAt).
+		SetPaymentType(payment.PaymentType(paymentAggregate.Payment.PaymentType.String())).
+		// channel info
+		SetChannel(payment.Channel(paymentAggregate.Payment.ChannelInfo.Channel.String())).
+		SetPaymentType(payment.PaymentType(paymentAggregate.Payment.PaymentType.String())).
+		SetWechatTransactionID(paymentAggregate.Payment.ChannelInfo.WeChatTransactionID).
+		SetWechatPlatform(paymentAggregate.Payment.ChannelInfo.WechatPlatform.String()).
+		SetWechatOpenID(paymentAggregate.Payment.ChannelInfo.WeChatOpenID).
+		SetStripeSubscriptionID(paymentAggregate.Payment.ChannelInfo.StripeSubscriptionID).
+		SetStripeSubscriptionStatus(paymentAggregate.Payment.ChannelInfo.StripeSubscriptionStatus.String()).
+		SetStripeInterval(paymentAggregate.Payment.ChannelInfo.StripeInterval.String()).
+		SetStripeCurrentPeriodStart(paymentAggregate.Payment.ChannelInfo.StripeCurrentPeriodStart).
+		SetStripeCurrentPeriodEnd(paymentAggregate.Payment.ChannelInfo.StripeCurrentPeriodEnd).
+		SetStripeCustomerID(paymentAggregate.Payment.ChannelInfo.StripeCustomerID).
+		SetStripeCustomerEmail(paymentAggregate.Payment.ChannelInfo.StripeCustomerEmail).
+		SetStripeCheckoutSessionID(paymentAggregate.Payment.ChannelInfo.StripeCheckoutSessionID).
 		Save(ctx)
 
 	if err != nil {
@@ -63,9 +75,20 @@ func (p *paymentImpl) Update(ctx context.Context, paymentAggregate *aggregate.Pa
 	_, err := db.Payment.Update().
 		Where(
 			payment.OutTradeNo(paymentAggregate.Payment.OutTradeNo),
-			payment.StatusNEQ(payment.StatusNOTPAY),
 		).
-		SetTransactionID(paymentAggregate.Payment.ChannelInfo.TransactionID).
+		// channel info
+		SetWechatTransactionID(paymentAggregate.Payment.ChannelInfo.WeChatTransactionID).
+		SetWechatOpenID(paymentAggregate.Payment.ChannelInfo.WeChatOpenID).
+		SetWechatPlatform(paymentAggregate.Payment.ChannelInfo.WechatPlatform.String()).
+		SetStripeSubscriptionID(paymentAggregate.Payment.ChannelInfo.StripeSubscriptionID).
+		SetStripeSubscriptionStatus(paymentAggregate.Payment.ChannelInfo.StripeSubscriptionStatus.String()).
+		SetStripeInterval(paymentAggregate.Payment.ChannelInfo.StripeInterval.String()).
+		SetStripeCurrentPeriodStart(paymentAggregate.Payment.ChannelInfo.StripeCurrentPeriodStart).
+		SetStripeCurrentPeriodEnd(paymentAggregate.Payment.ChannelInfo.StripeCurrentPeriodEnd).
+		SetStripeCustomerID(paymentAggregate.Payment.ChannelInfo.StripeCustomerID).
+		SetStripeCustomerEmail(paymentAggregate.Payment.ChannelInfo.StripeCustomerEmail).
+		SetStripeCheckoutSessionID(paymentAggregate.Payment.ChannelInfo.StripeCheckoutSessionID).
+		// status
 		SetStatus(payment.Status(paymentAggregate.Payment.Status.String())).
 		SetPaidAt(paymentAggregate.Payment.PaidAt).
 		Save(ctx)
@@ -104,7 +127,7 @@ func (p *paymentImpl) FindPendingPayments(ctx context.Context, status enum.Payme
 func (p *paymentImpl) FindBySubscriptionID(ctx context.Context, subscriptionID string) (*aggregate.PaymentAggregate, error) {
 	db := p.getEntClient(ctx)
 
-	paymentDO, err := db.Payment.Query().Where(payment.SubscriptionID(subscriptionID)).Only(ctx)
+	paymentDO, err := db.Payment.Query().Where(payment.StripeSubscriptionID(subscriptionID)).Only(ctx)
 	if err != nil && !ent.IsNotFound(err) {
 		return nil, err
 	}
@@ -121,7 +144,31 @@ func (p *paymentImpl) FindBySubscriptionID(ctx context.Context, subscriptionID s
 func (p *paymentImpl) FindByCheckoutSessionID(ctx context.Context, sessionID string) (*aggregate.PaymentAggregate, error) {
 	db := p.getEntClient(ctx)
 
-	paymentDO, err := db.Payment.Query().Where(payment.CheckoutSessionID(sessionID)).Only(ctx)
+	paymentDO, err := db.Payment.Query().Where(payment.StripeCheckoutSessionID(sessionID)).Only(ctx)
+	if err != nil && !ent.IsNotFound(err) {
+		return nil, err
+	}
+
+	if paymentDO == nil {
+		return nil, nil
+	}
+
+	return &aggregate.PaymentAggregate{
+		Payment: convertPaymentDOToEntity(paymentDO),
+	}, nil
+}
+
+func (p *paymentImpl) FindActiveSubscriptionByUserIDAndService(ctx context.Context, userID string, service string) (*aggregate.PaymentAggregate, error) {
+	db := p.getEntClient(ctx)
+
+	paymentDO, err := db.Payment.Query().
+		Where(
+			payment.UserID(userID),
+			payment.Service(service),
+			payment.StripeSubscriptionStatusEQ(enum.SubscriptionStatusActive.String()),
+		).
+		Order(ent.Desc(payment.FieldCreatedAt)).
+		First(ctx)
 	if err != nil && !ent.IsNotFound(err) {
 		return nil, err
 	}

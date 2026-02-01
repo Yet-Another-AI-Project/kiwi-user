@@ -8076,38 +8076,39 @@ func (m *OrganizationUserMutation) ResetEdge(name string) error {
 // PaymentMutation represents an operation that mutates the Payment nodes in the graph.
 type PaymentMutation struct {
 	config
-	op                   Op
-	typ                  string
-	id                   *int
-	created_at           *time.Time
-	updated_at           *time.Time
-	out_trade_no         *string
-	transaction_id       *string
-	open_id              *string
-	channel              *payment.Channel
-	platform             *payment.Platform
-	service              *string
-	amount               *int
-	addamount            *int
-	currency             *string
-	description          *string
-	status               *payment.Status
-	paid_at              *time.Time
-	payment_type         *payment.PaymentType
-	subscription_id      *string
-	subscription_status  *payment.SubscriptionStatus
-	interval             *payment.Interval
-	current_period_start *time.Time
-	current_period_end   *time.Time
-	customer_id          *string
-	customer_email       *string
-	checkout_session_id  *string
-	clearedFields        map[string]struct{}
-	user                 *string
-	cleareduser          bool
-	done                 bool
-	oldValue             func(context.Context) (*Payment, error)
-	predicates           []predicate.Payment
+	op                          Op
+	typ                         string
+	id                          *int
+	created_at                  *time.Time
+	updated_at                  *time.Time
+	out_trade_no                *string
+	channel                     *payment.Channel
+	service                     *string
+	amount                      *int
+	addamount                   *int
+	currency                    *string
+	description                 *string
+	status                      *payment.Status
+	paid_at                     *time.Time
+	payment_type                *payment.PaymentType
+	wechat_platform             *string
+	wechat_open_id              *string
+	wechat_transaction_id       *string
+	stripe_subscription_id      *string
+	stripe_subscription_status  *string
+	stripe_interval             *string
+	stripe_current_period_start *time.Time
+	stripe_current_period_end   *time.Time
+	stripe_customer_id          *string
+	stripe_customer_email       *string
+	stripe_checkout_session_id  *string
+	stripe_invoice_id           *string
+	clearedFields               map[string]struct{}
+	user                        *string
+	cleareduser                 bool
+	done                        bool
+	oldValue                    func(context.Context) (*Payment, error)
+	predicates                  []predicate.Payment
 }
 
 var _ ent.Mutation = (*PaymentMutation)(nil)
@@ -8352,104 +8353,6 @@ func (m *PaymentMutation) ResetUserID() {
 	m.user = nil
 }
 
-// SetTransactionID sets the "transaction_id" field.
-func (m *PaymentMutation) SetTransactionID(s string) {
-	m.transaction_id = &s
-}
-
-// TransactionID returns the value of the "transaction_id" field in the mutation.
-func (m *PaymentMutation) TransactionID() (r string, exists bool) {
-	v := m.transaction_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldTransactionID returns the old "transaction_id" field's value of the Payment entity.
-// If the Payment object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PaymentMutation) OldTransactionID(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldTransactionID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldTransactionID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldTransactionID: %w", err)
-	}
-	return oldValue.TransactionID, nil
-}
-
-// ClearTransactionID clears the value of the "transaction_id" field.
-func (m *PaymentMutation) ClearTransactionID() {
-	m.transaction_id = nil
-	m.clearedFields[payment.FieldTransactionID] = struct{}{}
-}
-
-// TransactionIDCleared returns if the "transaction_id" field was cleared in this mutation.
-func (m *PaymentMutation) TransactionIDCleared() bool {
-	_, ok := m.clearedFields[payment.FieldTransactionID]
-	return ok
-}
-
-// ResetTransactionID resets all changes to the "transaction_id" field.
-func (m *PaymentMutation) ResetTransactionID() {
-	m.transaction_id = nil
-	delete(m.clearedFields, payment.FieldTransactionID)
-}
-
-// SetOpenID sets the "open_id" field.
-func (m *PaymentMutation) SetOpenID(s string) {
-	m.open_id = &s
-}
-
-// OpenID returns the value of the "open_id" field in the mutation.
-func (m *PaymentMutation) OpenID() (r string, exists bool) {
-	v := m.open_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldOpenID returns the old "open_id" field's value of the Payment entity.
-// If the Payment object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PaymentMutation) OldOpenID(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldOpenID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldOpenID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldOpenID: %w", err)
-	}
-	return oldValue.OpenID, nil
-}
-
-// ClearOpenID clears the value of the "open_id" field.
-func (m *PaymentMutation) ClearOpenID() {
-	m.open_id = nil
-	m.clearedFields[payment.FieldOpenID] = struct{}{}
-}
-
-// OpenIDCleared returns if the "open_id" field was cleared in this mutation.
-func (m *PaymentMutation) OpenIDCleared() bool {
-	_, ok := m.clearedFields[payment.FieldOpenID]
-	return ok
-}
-
-// ResetOpenID resets all changes to the "open_id" field.
-func (m *PaymentMutation) ResetOpenID() {
-	m.open_id = nil
-	delete(m.clearedFields, payment.FieldOpenID)
-}
-
 // SetChannel sets the "channel" field.
 func (m *PaymentMutation) SetChannel(pa payment.Channel) {
 	m.channel = &pa
@@ -8484,42 +8387,6 @@ func (m *PaymentMutation) OldChannel(ctx context.Context) (v payment.Channel, er
 // ResetChannel resets all changes to the "channel" field.
 func (m *PaymentMutation) ResetChannel() {
 	m.channel = nil
-}
-
-// SetPlatform sets the "platform" field.
-func (m *PaymentMutation) SetPlatform(pa payment.Platform) {
-	m.platform = &pa
-}
-
-// Platform returns the value of the "platform" field in the mutation.
-func (m *PaymentMutation) Platform() (r payment.Platform, exists bool) {
-	v := m.platform
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldPlatform returns the old "platform" field's value of the Payment entity.
-// If the Payment object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PaymentMutation) OldPlatform(ctx context.Context) (v payment.Platform, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPlatform is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPlatform requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPlatform: %w", err)
-	}
-	return oldValue.Platform, nil
-}
-
-// ResetPlatform resets all changes to the "platform" field.
-func (m *PaymentMutation) ResetPlatform() {
-	m.platform = nil
 }
 
 // SetService sets the "service" field.
@@ -8807,396 +8674,592 @@ func (m *PaymentMutation) ResetPaymentType() {
 	m.payment_type = nil
 }
 
-// SetSubscriptionID sets the "subscription_id" field.
-func (m *PaymentMutation) SetSubscriptionID(s string) {
-	m.subscription_id = &s
+// SetWechatPlatform sets the "wechat_platform" field.
+func (m *PaymentMutation) SetWechatPlatform(s string) {
+	m.wechat_platform = &s
 }
 
-// SubscriptionID returns the value of the "subscription_id" field in the mutation.
-func (m *PaymentMutation) SubscriptionID() (r string, exists bool) {
-	v := m.subscription_id
+// WechatPlatform returns the value of the "wechat_platform" field in the mutation.
+func (m *PaymentMutation) WechatPlatform() (r string, exists bool) {
+	v := m.wechat_platform
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldSubscriptionID returns the old "subscription_id" field's value of the Payment entity.
+// OldWechatPlatform returns the old "wechat_platform" field's value of the Payment entity.
 // If the Payment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PaymentMutation) OldSubscriptionID(ctx context.Context) (v string, err error) {
+func (m *PaymentMutation) OldWechatPlatform(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldSubscriptionID is only allowed on UpdateOne operations")
+		return v, errors.New("OldWechatPlatform is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldSubscriptionID requires an ID field in the mutation")
+		return v, errors.New("OldWechatPlatform requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldSubscriptionID: %w", err)
+		return v, fmt.Errorf("querying old value for OldWechatPlatform: %w", err)
 	}
-	return oldValue.SubscriptionID, nil
+	return oldValue.WechatPlatform, nil
 }
 
-// ClearSubscriptionID clears the value of the "subscription_id" field.
-func (m *PaymentMutation) ClearSubscriptionID() {
-	m.subscription_id = nil
-	m.clearedFields[payment.FieldSubscriptionID] = struct{}{}
+// ClearWechatPlatform clears the value of the "wechat_platform" field.
+func (m *PaymentMutation) ClearWechatPlatform() {
+	m.wechat_platform = nil
+	m.clearedFields[payment.FieldWechatPlatform] = struct{}{}
 }
 
-// SubscriptionIDCleared returns if the "subscription_id" field was cleared in this mutation.
-func (m *PaymentMutation) SubscriptionIDCleared() bool {
-	_, ok := m.clearedFields[payment.FieldSubscriptionID]
+// WechatPlatformCleared returns if the "wechat_platform" field was cleared in this mutation.
+func (m *PaymentMutation) WechatPlatformCleared() bool {
+	_, ok := m.clearedFields[payment.FieldWechatPlatform]
 	return ok
 }
 
-// ResetSubscriptionID resets all changes to the "subscription_id" field.
-func (m *PaymentMutation) ResetSubscriptionID() {
-	m.subscription_id = nil
-	delete(m.clearedFields, payment.FieldSubscriptionID)
+// ResetWechatPlatform resets all changes to the "wechat_platform" field.
+func (m *PaymentMutation) ResetWechatPlatform() {
+	m.wechat_platform = nil
+	delete(m.clearedFields, payment.FieldWechatPlatform)
 }
 
-// SetSubscriptionStatus sets the "subscription_status" field.
-func (m *PaymentMutation) SetSubscriptionStatus(ps payment.SubscriptionStatus) {
-	m.subscription_status = &ps
+// SetWechatOpenID sets the "wechat_open_id" field.
+func (m *PaymentMutation) SetWechatOpenID(s string) {
+	m.wechat_open_id = &s
 }
 
-// SubscriptionStatus returns the value of the "subscription_status" field in the mutation.
-func (m *PaymentMutation) SubscriptionStatus() (r payment.SubscriptionStatus, exists bool) {
-	v := m.subscription_status
+// WechatOpenID returns the value of the "wechat_open_id" field in the mutation.
+func (m *PaymentMutation) WechatOpenID() (r string, exists bool) {
+	v := m.wechat_open_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldSubscriptionStatus returns the old "subscription_status" field's value of the Payment entity.
+// OldWechatOpenID returns the old "wechat_open_id" field's value of the Payment entity.
 // If the Payment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PaymentMutation) OldSubscriptionStatus(ctx context.Context) (v payment.SubscriptionStatus, err error) {
+func (m *PaymentMutation) OldWechatOpenID(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldSubscriptionStatus is only allowed on UpdateOne operations")
+		return v, errors.New("OldWechatOpenID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldSubscriptionStatus requires an ID field in the mutation")
+		return v, errors.New("OldWechatOpenID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldSubscriptionStatus: %w", err)
+		return v, fmt.Errorf("querying old value for OldWechatOpenID: %w", err)
 	}
-	return oldValue.SubscriptionStatus, nil
+	return oldValue.WechatOpenID, nil
 }
 
-// ClearSubscriptionStatus clears the value of the "subscription_status" field.
-func (m *PaymentMutation) ClearSubscriptionStatus() {
-	m.subscription_status = nil
-	m.clearedFields[payment.FieldSubscriptionStatus] = struct{}{}
+// ClearWechatOpenID clears the value of the "wechat_open_id" field.
+func (m *PaymentMutation) ClearWechatOpenID() {
+	m.wechat_open_id = nil
+	m.clearedFields[payment.FieldWechatOpenID] = struct{}{}
 }
 
-// SubscriptionStatusCleared returns if the "subscription_status" field was cleared in this mutation.
-func (m *PaymentMutation) SubscriptionStatusCleared() bool {
-	_, ok := m.clearedFields[payment.FieldSubscriptionStatus]
+// WechatOpenIDCleared returns if the "wechat_open_id" field was cleared in this mutation.
+func (m *PaymentMutation) WechatOpenIDCleared() bool {
+	_, ok := m.clearedFields[payment.FieldWechatOpenID]
 	return ok
 }
 
-// ResetSubscriptionStatus resets all changes to the "subscription_status" field.
-func (m *PaymentMutation) ResetSubscriptionStatus() {
-	m.subscription_status = nil
-	delete(m.clearedFields, payment.FieldSubscriptionStatus)
+// ResetWechatOpenID resets all changes to the "wechat_open_id" field.
+func (m *PaymentMutation) ResetWechatOpenID() {
+	m.wechat_open_id = nil
+	delete(m.clearedFields, payment.FieldWechatOpenID)
 }
 
-// SetInterval sets the "interval" field.
-func (m *PaymentMutation) SetInterval(pa payment.Interval) {
-	m.interval = &pa
+// SetWechatTransactionID sets the "wechat_transaction_id" field.
+func (m *PaymentMutation) SetWechatTransactionID(s string) {
+	m.wechat_transaction_id = &s
 }
 
-// Interval returns the value of the "interval" field in the mutation.
-func (m *PaymentMutation) Interval() (r payment.Interval, exists bool) {
-	v := m.interval
+// WechatTransactionID returns the value of the "wechat_transaction_id" field in the mutation.
+func (m *PaymentMutation) WechatTransactionID() (r string, exists bool) {
+	v := m.wechat_transaction_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldInterval returns the old "interval" field's value of the Payment entity.
+// OldWechatTransactionID returns the old "wechat_transaction_id" field's value of the Payment entity.
 // If the Payment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PaymentMutation) OldInterval(ctx context.Context) (v payment.Interval, err error) {
+func (m *PaymentMutation) OldWechatTransactionID(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldInterval is only allowed on UpdateOne operations")
+		return v, errors.New("OldWechatTransactionID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldInterval requires an ID field in the mutation")
+		return v, errors.New("OldWechatTransactionID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldInterval: %w", err)
+		return v, fmt.Errorf("querying old value for OldWechatTransactionID: %w", err)
 	}
-	return oldValue.Interval, nil
+	return oldValue.WechatTransactionID, nil
 }
 
-// ClearInterval clears the value of the "interval" field.
-func (m *PaymentMutation) ClearInterval() {
-	m.interval = nil
-	m.clearedFields[payment.FieldInterval] = struct{}{}
+// ClearWechatTransactionID clears the value of the "wechat_transaction_id" field.
+func (m *PaymentMutation) ClearWechatTransactionID() {
+	m.wechat_transaction_id = nil
+	m.clearedFields[payment.FieldWechatTransactionID] = struct{}{}
 }
 
-// IntervalCleared returns if the "interval" field was cleared in this mutation.
-func (m *PaymentMutation) IntervalCleared() bool {
-	_, ok := m.clearedFields[payment.FieldInterval]
+// WechatTransactionIDCleared returns if the "wechat_transaction_id" field was cleared in this mutation.
+func (m *PaymentMutation) WechatTransactionIDCleared() bool {
+	_, ok := m.clearedFields[payment.FieldWechatTransactionID]
 	return ok
 }
 
-// ResetInterval resets all changes to the "interval" field.
-func (m *PaymentMutation) ResetInterval() {
-	m.interval = nil
-	delete(m.clearedFields, payment.FieldInterval)
+// ResetWechatTransactionID resets all changes to the "wechat_transaction_id" field.
+func (m *PaymentMutation) ResetWechatTransactionID() {
+	m.wechat_transaction_id = nil
+	delete(m.clearedFields, payment.FieldWechatTransactionID)
 }
 
-// SetCurrentPeriodStart sets the "current_period_start" field.
-func (m *PaymentMutation) SetCurrentPeriodStart(t time.Time) {
-	m.current_period_start = &t
+// SetStripeSubscriptionID sets the "stripe_subscription_id" field.
+func (m *PaymentMutation) SetStripeSubscriptionID(s string) {
+	m.stripe_subscription_id = &s
 }
 
-// CurrentPeriodStart returns the value of the "current_period_start" field in the mutation.
-func (m *PaymentMutation) CurrentPeriodStart() (r time.Time, exists bool) {
-	v := m.current_period_start
+// StripeSubscriptionID returns the value of the "stripe_subscription_id" field in the mutation.
+func (m *PaymentMutation) StripeSubscriptionID() (r string, exists bool) {
+	v := m.stripe_subscription_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldCurrentPeriodStart returns the old "current_period_start" field's value of the Payment entity.
+// OldStripeSubscriptionID returns the old "stripe_subscription_id" field's value of the Payment entity.
 // If the Payment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PaymentMutation) OldCurrentPeriodStart(ctx context.Context) (v time.Time, err error) {
+func (m *PaymentMutation) OldStripeSubscriptionID(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCurrentPeriodStart is only allowed on UpdateOne operations")
+		return v, errors.New("OldStripeSubscriptionID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCurrentPeriodStart requires an ID field in the mutation")
+		return v, errors.New("OldStripeSubscriptionID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCurrentPeriodStart: %w", err)
+		return v, fmt.Errorf("querying old value for OldStripeSubscriptionID: %w", err)
 	}
-	return oldValue.CurrentPeriodStart, nil
+	return oldValue.StripeSubscriptionID, nil
 }
 
-// ClearCurrentPeriodStart clears the value of the "current_period_start" field.
-func (m *PaymentMutation) ClearCurrentPeriodStart() {
-	m.current_period_start = nil
-	m.clearedFields[payment.FieldCurrentPeriodStart] = struct{}{}
+// ClearStripeSubscriptionID clears the value of the "stripe_subscription_id" field.
+func (m *PaymentMutation) ClearStripeSubscriptionID() {
+	m.stripe_subscription_id = nil
+	m.clearedFields[payment.FieldStripeSubscriptionID] = struct{}{}
 }
 
-// CurrentPeriodStartCleared returns if the "current_period_start" field was cleared in this mutation.
-func (m *PaymentMutation) CurrentPeriodStartCleared() bool {
-	_, ok := m.clearedFields[payment.FieldCurrentPeriodStart]
+// StripeSubscriptionIDCleared returns if the "stripe_subscription_id" field was cleared in this mutation.
+func (m *PaymentMutation) StripeSubscriptionIDCleared() bool {
+	_, ok := m.clearedFields[payment.FieldStripeSubscriptionID]
 	return ok
 }
 
-// ResetCurrentPeriodStart resets all changes to the "current_period_start" field.
-func (m *PaymentMutation) ResetCurrentPeriodStart() {
-	m.current_period_start = nil
-	delete(m.clearedFields, payment.FieldCurrentPeriodStart)
+// ResetStripeSubscriptionID resets all changes to the "stripe_subscription_id" field.
+func (m *PaymentMutation) ResetStripeSubscriptionID() {
+	m.stripe_subscription_id = nil
+	delete(m.clearedFields, payment.FieldStripeSubscriptionID)
 }
 
-// SetCurrentPeriodEnd sets the "current_period_end" field.
-func (m *PaymentMutation) SetCurrentPeriodEnd(t time.Time) {
-	m.current_period_end = &t
+// SetStripeSubscriptionStatus sets the "stripe_subscription_status" field.
+func (m *PaymentMutation) SetStripeSubscriptionStatus(s string) {
+	m.stripe_subscription_status = &s
 }
 
-// CurrentPeriodEnd returns the value of the "current_period_end" field in the mutation.
-func (m *PaymentMutation) CurrentPeriodEnd() (r time.Time, exists bool) {
-	v := m.current_period_end
+// StripeSubscriptionStatus returns the value of the "stripe_subscription_status" field in the mutation.
+func (m *PaymentMutation) StripeSubscriptionStatus() (r string, exists bool) {
+	v := m.stripe_subscription_status
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldCurrentPeriodEnd returns the old "current_period_end" field's value of the Payment entity.
+// OldStripeSubscriptionStatus returns the old "stripe_subscription_status" field's value of the Payment entity.
 // If the Payment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PaymentMutation) OldCurrentPeriodEnd(ctx context.Context) (v time.Time, err error) {
+func (m *PaymentMutation) OldStripeSubscriptionStatus(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCurrentPeriodEnd is only allowed on UpdateOne operations")
+		return v, errors.New("OldStripeSubscriptionStatus is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCurrentPeriodEnd requires an ID field in the mutation")
+		return v, errors.New("OldStripeSubscriptionStatus requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCurrentPeriodEnd: %w", err)
+		return v, fmt.Errorf("querying old value for OldStripeSubscriptionStatus: %w", err)
 	}
-	return oldValue.CurrentPeriodEnd, nil
+	return oldValue.StripeSubscriptionStatus, nil
 }
 
-// ClearCurrentPeriodEnd clears the value of the "current_period_end" field.
-func (m *PaymentMutation) ClearCurrentPeriodEnd() {
-	m.current_period_end = nil
-	m.clearedFields[payment.FieldCurrentPeriodEnd] = struct{}{}
+// ClearStripeSubscriptionStatus clears the value of the "stripe_subscription_status" field.
+func (m *PaymentMutation) ClearStripeSubscriptionStatus() {
+	m.stripe_subscription_status = nil
+	m.clearedFields[payment.FieldStripeSubscriptionStatus] = struct{}{}
 }
 
-// CurrentPeriodEndCleared returns if the "current_period_end" field was cleared in this mutation.
-func (m *PaymentMutation) CurrentPeriodEndCleared() bool {
-	_, ok := m.clearedFields[payment.FieldCurrentPeriodEnd]
+// StripeSubscriptionStatusCleared returns if the "stripe_subscription_status" field was cleared in this mutation.
+func (m *PaymentMutation) StripeSubscriptionStatusCleared() bool {
+	_, ok := m.clearedFields[payment.FieldStripeSubscriptionStatus]
 	return ok
 }
 
-// ResetCurrentPeriodEnd resets all changes to the "current_period_end" field.
-func (m *PaymentMutation) ResetCurrentPeriodEnd() {
-	m.current_period_end = nil
-	delete(m.clearedFields, payment.FieldCurrentPeriodEnd)
+// ResetStripeSubscriptionStatus resets all changes to the "stripe_subscription_status" field.
+func (m *PaymentMutation) ResetStripeSubscriptionStatus() {
+	m.stripe_subscription_status = nil
+	delete(m.clearedFields, payment.FieldStripeSubscriptionStatus)
 }
 
-// SetCustomerID sets the "customer_id" field.
-func (m *PaymentMutation) SetCustomerID(s string) {
-	m.customer_id = &s
+// SetStripeInterval sets the "stripe_interval" field.
+func (m *PaymentMutation) SetStripeInterval(s string) {
+	m.stripe_interval = &s
 }
 
-// CustomerID returns the value of the "customer_id" field in the mutation.
-func (m *PaymentMutation) CustomerID() (r string, exists bool) {
-	v := m.customer_id
+// StripeInterval returns the value of the "stripe_interval" field in the mutation.
+func (m *PaymentMutation) StripeInterval() (r string, exists bool) {
+	v := m.stripe_interval
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldCustomerID returns the old "customer_id" field's value of the Payment entity.
+// OldStripeInterval returns the old "stripe_interval" field's value of the Payment entity.
 // If the Payment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PaymentMutation) OldCustomerID(ctx context.Context) (v string, err error) {
+func (m *PaymentMutation) OldStripeInterval(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCustomerID is only allowed on UpdateOne operations")
+		return v, errors.New("OldStripeInterval is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCustomerID requires an ID field in the mutation")
+		return v, errors.New("OldStripeInterval requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCustomerID: %w", err)
+		return v, fmt.Errorf("querying old value for OldStripeInterval: %w", err)
 	}
-	return oldValue.CustomerID, nil
+	return oldValue.StripeInterval, nil
 }
 
-// ClearCustomerID clears the value of the "customer_id" field.
-func (m *PaymentMutation) ClearCustomerID() {
-	m.customer_id = nil
-	m.clearedFields[payment.FieldCustomerID] = struct{}{}
+// ClearStripeInterval clears the value of the "stripe_interval" field.
+func (m *PaymentMutation) ClearStripeInterval() {
+	m.stripe_interval = nil
+	m.clearedFields[payment.FieldStripeInterval] = struct{}{}
 }
 
-// CustomerIDCleared returns if the "customer_id" field was cleared in this mutation.
-func (m *PaymentMutation) CustomerIDCleared() bool {
-	_, ok := m.clearedFields[payment.FieldCustomerID]
+// StripeIntervalCleared returns if the "stripe_interval" field was cleared in this mutation.
+func (m *PaymentMutation) StripeIntervalCleared() bool {
+	_, ok := m.clearedFields[payment.FieldStripeInterval]
 	return ok
 }
 
-// ResetCustomerID resets all changes to the "customer_id" field.
-func (m *PaymentMutation) ResetCustomerID() {
-	m.customer_id = nil
-	delete(m.clearedFields, payment.FieldCustomerID)
+// ResetStripeInterval resets all changes to the "stripe_interval" field.
+func (m *PaymentMutation) ResetStripeInterval() {
+	m.stripe_interval = nil
+	delete(m.clearedFields, payment.FieldStripeInterval)
 }
 
-// SetCustomerEmail sets the "customer_email" field.
-func (m *PaymentMutation) SetCustomerEmail(s string) {
-	m.customer_email = &s
+// SetStripeCurrentPeriodStart sets the "stripe_current_period_start" field.
+func (m *PaymentMutation) SetStripeCurrentPeriodStart(t time.Time) {
+	m.stripe_current_period_start = &t
 }
 
-// CustomerEmail returns the value of the "customer_email" field in the mutation.
-func (m *PaymentMutation) CustomerEmail() (r string, exists bool) {
-	v := m.customer_email
+// StripeCurrentPeriodStart returns the value of the "stripe_current_period_start" field in the mutation.
+func (m *PaymentMutation) StripeCurrentPeriodStart() (r time.Time, exists bool) {
+	v := m.stripe_current_period_start
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldCustomerEmail returns the old "customer_email" field's value of the Payment entity.
+// OldStripeCurrentPeriodStart returns the old "stripe_current_period_start" field's value of the Payment entity.
 // If the Payment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PaymentMutation) OldCustomerEmail(ctx context.Context) (v string, err error) {
+func (m *PaymentMutation) OldStripeCurrentPeriodStart(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCustomerEmail is only allowed on UpdateOne operations")
+		return v, errors.New("OldStripeCurrentPeriodStart is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCustomerEmail requires an ID field in the mutation")
+		return v, errors.New("OldStripeCurrentPeriodStart requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCustomerEmail: %w", err)
+		return v, fmt.Errorf("querying old value for OldStripeCurrentPeriodStart: %w", err)
 	}
-	return oldValue.CustomerEmail, nil
+	return oldValue.StripeCurrentPeriodStart, nil
 }
 
-// ClearCustomerEmail clears the value of the "customer_email" field.
-func (m *PaymentMutation) ClearCustomerEmail() {
-	m.customer_email = nil
-	m.clearedFields[payment.FieldCustomerEmail] = struct{}{}
+// ClearStripeCurrentPeriodStart clears the value of the "stripe_current_period_start" field.
+func (m *PaymentMutation) ClearStripeCurrentPeriodStart() {
+	m.stripe_current_period_start = nil
+	m.clearedFields[payment.FieldStripeCurrentPeriodStart] = struct{}{}
 }
 
-// CustomerEmailCleared returns if the "customer_email" field was cleared in this mutation.
-func (m *PaymentMutation) CustomerEmailCleared() bool {
-	_, ok := m.clearedFields[payment.FieldCustomerEmail]
+// StripeCurrentPeriodStartCleared returns if the "stripe_current_period_start" field was cleared in this mutation.
+func (m *PaymentMutation) StripeCurrentPeriodStartCleared() bool {
+	_, ok := m.clearedFields[payment.FieldStripeCurrentPeriodStart]
 	return ok
 }
 
-// ResetCustomerEmail resets all changes to the "customer_email" field.
-func (m *PaymentMutation) ResetCustomerEmail() {
-	m.customer_email = nil
-	delete(m.clearedFields, payment.FieldCustomerEmail)
+// ResetStripeCurrentPeriodStart resets all changes to the "stripe_current_period_start" field.
+func (m *PaymentMutation) ResetStripeCurrentPeriodStart() {
+	m.stripe_current_period_start = nil
+	delete(m.clearedFields, payment.FieldStripeCurrentPeriodStart)
 }
 
-// SetCheckoutSessionID sets the "checkout_session_id" field.
-func (m *PaymentMutation) SetCheckoutSessionID(s string) {
-	m.checkout_session_id = &s
+// SetStripeCurrentPeriodEnd sets the "stripe_current_period_end" field.
+func (m *PaymentMutation) SetStripeCurrentPeriodEnd(t time.Time) {
+	m.stripe_current_period_end = &t
 }
 
-// CheckoutSessionID returns the value of the "checkout_session_id" field in the mutation.
-func (m *PaymentMutation) CheckoutSessionID() (r string, exists bool) {
-	v := m.checkout_session_id
+// StripeCurrentPeriodEnd returns the value of the "stripe_current_period_end" field in the mutation.
+func (m *PaymentMutation) StripeCurrentPeriodEnd() (r time.Time, exists bool) {
+	v := m.stripe_current_period_end
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldCheckoutSessionID returns the old "checkout_session_id" field's value of the Payment entity.
+// OldStripeCurrentPeriodEnd returns the old "stripe_current_period_end" field's value of the Payment entity.
 // If the Payment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PaymentMutation) OldCheckoutSessionID(ctx context.Context) (v string, err error) {
+func (m *PaymentMutation) OldStripeCurrentPeriodEnd(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCheckoutSessionID is only allowed on UpdateOne operations")
+		return v, errors.New("OldStripeCurrentPeriodEnd is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCheckoutSessionID requires an ID field in the mutation")
+		return v, errors.New("OldStripeCurrentPeriodEnd requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCheckoutSessionID: %w", err)
+		return v, fmt.Errorf("querying old value for OldStripeCurrentPeriodEnd: %w", err)
 	}
-	return oldValue.CheckoutSessionID, nil
+	return oldValue.StripeCurrentPeriodEnd, nil
 }
 
-// ClearCheckoutSessionID clears the value of the "checkout_session_id" field.
-func (m *PaymentMutation) ClearCheckoutSessionID() {
-	m.checkout_session_id = nil
-	m.clearedFields[payment.FieldCheckoutSessionID] = struct{}{}
+// ClearStripeCurrentPeriodEnd clears the value of the "stripe_current_period_end" field.
+func (m *PaymentMutation) ClearStripeCurrentPeriodEnd() {
+	m.stripe_current_period_end = nil
+	m.clearedFields[payment.FieldStripeCurrentPeriodEnd] = struct{}{}
 }
 
-// CheckoutSessionIDCleared returns if the "checkout_session_id" field was cleared in this mutation.
-func (m *PaymentMutation) CheckoutSessionIDCleared() bool {
-	_, ok := m.clearedFields[payment.FieldCheckoutSessionID]
+// StripeCurrentPeriodEndCleared returns if the "stripe_current_period_end" field was cleared in this mutation.
+func (m *PaymentMutation) StripeCurrentPeriodEndCleared() bool {
+	_, ok := m.clearedFields[payment.FieldStripeCurrentPeriodEnd]
 	return ok
 }
 
-// ResetCheckoutSessionID resets all changes to the "checkout_session_id" field.
-func (m *PaymentMutation) ResetCheckoutSessionID() {
-	m.checkout_session_id = nil
-	delete(m.clearedFields, payment.FieldCheckoutSessionID)
+// ResetStripeCurrentPeriodEnd resets all changes to the "stripe_current_period_end" field.
+func (m *PaymentMutation) ResetStripeCurrentPeriodEnd() {
+	m.stripe_current_period_end = nil
+	delete(m.clearedFields, payment.FieldStripeCurrentPeriodEnd)
+}
+
+// SetStripeCustomerID sets the "stripe_customer_id" field.
+func (m *PaymentMutation) SetStripeCustomerID(s string) {
+	m.stripe_customer_id = &s
+}
+
+// StripeCustomerID returns the value of the "stripe_customer_id" field in the mutation.
+func (m *PaymentMutation) StripeCustomerID() (r string, exists bool) {
+	v := m.stripe_customer_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStripeCustomerID returns the old "stripe_customer_id" field's value of the Payment entity.
+// If the Payment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentMutation) OldStripeCustomerID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStripeCustomerID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStripeCustomerID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStripeCustomerID: %w", err)
+	}
+	return oldValue.StripeCustomerID, nil
+}
+
+// ClearStripeCustomerID clears the value of the "stripe_customer_id" field.
+func (m *PaymentMutation) ClearStripeCustomerID() {
+	m.stripe_customer_id = nil
+	m.clearedFields[payment.FieldStripeCustomerID] = struct{}{}
+}
+
+// StripeCustomerIDCleared returns if the "stripe_customer_id" field was cleared in this mutation.
+func (m *PaymentMutation) StripeCustomerIDCleared() bool {
+	_, ok := m.clearedFields[payment.FieldStripeCustomerID]
+	return ok
+}
+
+// ResetStripeCustomerID resets all changes to the "stripe_customer_id" field.
+func (m *PaymentMutation) ResetStripeCustomerID() {
+	m.stripe_customer_id = nil
+	delete(m.clearedFields, payment.FieldStripeCustomerID)
+}
+
+// SetStripeCustomerEmail sets the "stripe_customer_email" field.
+func (m *PaymentMutation) SetStripeCustomerEmail(s string) {
+	m.stripe_customer_email = &s
+}
+
+// StripeCustomerEmail returns the value of the "stripe_customer_email" field in the mutation.
+func (m *PaymentMutation) StripeCustomerEmail() (r string, exists bool) {
+	v := m.stripe_customer_email
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStripeCustomerEmail returns the old "stripe_customer_email" field's value of the Payment entity.
+// If the Payment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentMutation) OldStripeCustomerEmail(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStripeCustomerEmail is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStripeCustomerEmail requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStripeCustomerEmail: %w", err)
+	}
+	return oldValue.StripeCustomerEmail, nil
+}
+
+// ClearStripeCustomerEmail clears the value of the "stripe_customer_email" field.
+func (m *PaymentMutation) ClearStripeCustomerEmail() {
+	m.stripe_customer_email = nil
+	m.clearedFields[payment.FieldStripeCustomerEmail] = struct{}{}
+}
+
+// StripeCustomerEmailCleared returns if the "stripe_customer_email" field was cleared in this mutation.
+func (m *PaymentMutation) StripeCustomerEmailCleared() bool {
+	_, ok := m.clearedFields[payment.FieldStripeCustomerEmail]
+	return ok
+}
+
+// ResetStripeCustomerEmail resets all changes to the "stripe_customer_email" field.
+func (m *PaymentMutation) ResetStripeCustomerEmail() {
+	m.stripe_customer_email = nil
+	delete(m.clearedFields, payment.FieldStripeCustomerEmail)
+}
+
+// SetStripeCheckoutSessionID sets the "stripe_checkout_session_id" field.
+func (m *PaymentMutation) SetStripeCheckoutSessionID(s string) {
+	m.stripe_checkout_session_id = &s
+}
+
+// StripeCheckoutSessionID returns the value of the "stripe_checkout_session_id" field in the mutation.
+func (m *PaymentMutation) StripeCheckoutSessionID() (r string, exists bool) {
+	v := m.stripe_checkout_session_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStripeCheckoutSessionID returns the old "stripe_checkout_session_id" field's value of the Payment entity.
+// If the Payment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentMutation) OldStripeCheckoutSessionID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStripeCheckoutSessionID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStripeCheckoutSessionID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStripeCheckoutSessionID: %w", err)
+	}
+	return oldValue.StripeCheckoutSessionID, nil
+}
+
+// ClearStripeCheckoutSessionID clears the value of the "stripe_checkout_session_id" field.
+func (m *PaymentMutation) ClearStripeCheckoutSessionID() {
+	m.stripe_checkout_session_id = nil
+	m.clearedFields[payment.FieldStripeCheckoutSessionID] = struct{}{}
+}
+
+// StripeCheckoutSessionIDCleared returns if the "stripe_checkout_session_id" field was cleared in this mutation.
+func (m *PaymentMutation) StripeCheckoutSessionIDCleared() bool {
+	_, ok := m.clearedFields[payment.FieldStripeCheckoutSessionID]
+	return ok
+}
+
+// ResetStripeCheckoutSessionID resets all changes to the "stripe_checkout_session_id" field.
+func (m *PaymentMutation) ResetStripeCheckoutSessionID() {
+	m.stripe_checkout_session_id = nil
+	delete(m.clearedFields, payment.FieldStripeCheckoutSessionID)
+}
+
+// SetStripeInvoiceID sets the "stripe_invoice_id" field.
+func (m *PaymentMutation) SetStripeInvoiceID(s string) {
+	m.stripe_invoice_id = &s
+}
+
+// StripeInvoiceID returns the value of the "stripe_invoice_id" field in the mutation.
+func (m *PaymentMutation) StripeInvoiceID() (r string, exists bool) {
+	v := m.stripe_invoice_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStripeInvoiceID returns the old "stripe_invoice_id" field's value of the Payment entity.
+// If the Payment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentMutation) OldStripeInvoiceID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStripeInvoiceID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStripeInvoiceID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStripeInvoiceID: %w", err)
+	}
+	return oldValue.StripeInvoiceID, nil
+}
+
+// ClearStripeInvoiceID clears the value of the "stripe_invoice_id" field.
+func (m *PaymentMutation) ClearStripeInvoiceID() {
+	m.stripe_invoice_id = nil
+	m.clearedFields[payment.FieldStripeInvoiceID] = struct{}{}
+}
+
+// StripeInvoiceIDCleared returns if the "stripe_invoice_id" field was cleared in this mutation.
+func (m *PaymentMutation) StripeInvoiceIDCleared() bool {
+	_, ok := m.clearedFields[payment.FieldStripeInvoiceID]
+	return ok
+}
+
+// ResetStripeInvoiceID resets all changes to the "stripe_invoice_id" field.
+func (m *PaymentMutation) ResetStripeInvoiceID() {
+	m.stripe_invoice_id = nil
+	delete(m.clearedFields, payment.FieldStripeInvoiceID)
 }
 
 // ClearUser clears the "user" edge to the User entity.
@@ -9260,7 +9323,7 @@ func (m *PaymentMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PaymentMutation) Fields() []string {
-	fields := make([]string, 0, 23)
+	fields := make([]string, 0, 24)
 	if m.created_at != nil {
 		fields = append(fields, payment.FieldCreatedAt)
 	}
@@ -9273,17 +9336,8 @@ func (m *PaymentMutation) Fields() []string {
 	if m.user != nil {
 		fields = append(fields, payment.FieldUserID)
 	}
-	if m.transaction_id != nil {
-		fields = append(fields, payment.FieldTransactionID)
-	}
-	if m.open_id != nil {
-		fields = append(fields, payment.FieldOpenID)
-	}
 	if m.channel != nil {
 		fields = append(fields, payment.FieldChannel)
-	}
-	if m.platform != nil {
-		fields = append(fields, payment.FieldPlatform)
 	}
 	if m.service != nil {
 		fields = append(fields, payment.FieldService)
@@ -9306,29 +9360,41 @@ func (m *PaymentMutation) Fields() []string {
 	if m.payment_type != nil {
 		fields = append(fields, payment.FieldPaymentType)
 	}
-	if m.subscription_id != nil {
-		fields = append(fields, payment.FieldSubscriptionID)
+	if m.wechat_platform != nil {
+		fields = append(fields, payment.FieldWechatPlatform)
 	}
-	if m.subscription_status != nil {
-		fields = append(fields, payment.FieldSubscriptionStatus)
+	if m.wechat_open_id != nil {
+		fields = append(fields, payment.FieldWechatOpenID)
 	}
-	if m.interval != nil {
-		fields = append(fields, payment.FieldInterval)
+	if m.wechat_transaction_id != nil {
+		fields = append(fields, payment.FieldWechatTransactionID)
 	}
-	if m.current_period_start != nil {
-		fields = append(fields, payment.FieldCurrentPeriodStart)
+	if m.stripe_subscription_id != nil {
+		fields = append(fields, payment.FieldStripeSubscriptionID)
 	}
-	if m.current_period_end != nil {
-		fields = append(fields, payment.FieldCurrentPeriodEnd)
+	if m.stripe_subscription_status != nil {
+		fields = append(fields, payment.FieldStripeSubscriptionStatus)
 	}
-	if m.customer_id != nil {
-		fields = append(fields, payment.FieldCustomerID)
+	if m.stripe_interval != nil {
+		fields = append(fields, payment.FieldStripeInterval)
 	}
-	if m.customer_email != nil {
-		fields = append(fields, payment.FieldCustomerEmail)
+	if m.stripe_current_period_start != nil {
+		fields = append(fields, payment.FieldStripeCurrentPeriodStart)
 	}
-	if m.checkout_session_id != nil {
-		fields = append(fields, payment.FieldCheckoutSessionID)
+	if m.stripe_current_period_end != nil {
+		fields = append(fields, payment.FieldStripeCurrentPeriodEnd)
+	}
+	if m.stripe_customer_id != nil {
+		fields = append(fields, payment.FieldStripeCustomerID)
+	}
+	if m.stripe_customer_email != nil {
+		fields = append(fields, payment.FieldStripeCustomerEmail)
+	}
+	if m.stripe_checkout_session_id != nil {
+		fields = append(fields, payment.FieldStripeCheckoutSessionID)
+	}
+	if m.stripe_invoice_id != nil {
+		fields = append(fields, payment.FieldStripeInvoiceID)
 	}
 	return fields
 }
@@ -9346,14 +9412,8 @@ func (m *PaymentMutation) Field(name string) (ent.Value, bool) {
 		return m.OutTradeNo()
 	case payment.FieldUserID:
 		return m.UserID()
-	case payment.FieldTransactionID:
-		return m.TransactionID()
-	case payment.FieldOpenID:
-		return m.OpenID()
 	case payment.FieldChannel:
 		return m.Channel()
-	case payment.FieldPlatform:
-		return m.Platform()
 	case payment.FieldService:
 		return m.Service()
 	case payment.FieldAmount:
@@ -9368,22 +9428,30 @@ func (m *PaymentMutation) Field(name string) (ent.Value, bool) {
 		return m.PaidAt()
 	case payment.FieldPaymentType:
 		return m.PaymentType()
-	case payment.FieldSubscriptionID:
-		return m.SubscriptionID()
-	case payment.FieldSubscriptionStatus:
-		return m.SubscriptionStatus()
-	case payment.FieldInterval:
-		return m.Interval()
-	case payment.FieldCurrentPeriodStart:
-		return m.CurrentPeriodStart()
-	case payment.FieldCurrentPeriodEnd:
-		return m.CurrentPeriodEnd()
-	case payment.FieldCustomerID:
-		return m.CustomerID()
-	case payment.FieldCustomerEmail:
-		return m.CustomerEmail()
-	case payment.FieldCheckoutSessionID:
-		return m.CheckoutSessionID()
+	case payment.FieldWechatPlatform:
+		return m.WechatPlatform()
+	case payment.FieldWechatOpenID:
+		return m.WechatOpenID()
+	case payment.FieldWechatTransactionID:
+		return m.WechatTransactionID()
+	case payment.FieldStripeSubscriptionID:
+		return m.StripeSubscriptionID()
+	case payment.FieldStripeSubscriptionStatus:
+		return m.StripeSubscriptionStatus()
+	case payment.FieldStripeInterval:
+		return m.StripeInterval()
+	case payment.FieldStripeCurrentPeriodStart:
+		return m.StripeCurrentPeriodStart()
+	case payment.FieldStripeCurrentPeriodEnd:
+		return m.StripeCurrentPeriodEnd()
+	case payment.FieldStripeCustomerID:
+		return m.StripeCustomerID()
+	case payment.FieldStripeCustomerEmail:
+		return m.StripeCustomerEmail()
+	case payment.FieldStripeCheckoutSessionID:
+		return m.StripeCheckoutSessionID()
+	case payment.FieldStripeInvoiceID:
+		return m.StripeInvoiceID()
 	}
 	return nil, false
 }
@@ -9401,14 +9469,8 @@ func (m *PaymentMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldOutTradeNo(ctx)
 	case payment.FieldUserID:
 		return m.OldUserID(ctx)
-	case payment.FieldTransactionID:
-		return m.OldTransactionID(ctx)
-	case payment.FieldOpenID:
-		return m.OldOpenID(ctx)
 	case payment.FieldChannel:
 		return m.OldChannel(ctx)
-	case payment.FieldPlatform:
-		return m.OldPlatform(ctx)
 	case payment.FieldService:
 		return m.OldService(ctx)
 	case payment.FieldAmount:
@@ -9423,22 +9485,30 @@ func (m *PaymentMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldPaidAt(ctx)
 	case payment.FieldPaymentType:
 		return m.OldPaymentType(ctx)
-	case payment.FieldSubscriptionID:
-		return m.OldSubscriptionID(ctx)
-	case payment.FieldSubscriptionStatus:
-		return m.OldSubscriptionStatus(ctx)
-	case payment.FieldInterval:
-		return m.OldInterval(ctx)
-	case payment.FieldCurrentPeriodStart:
-		return m.OldCurrentPeriodStart(ctx)
-	case payment.FieldCurrentPeriodEnd:
-		return m.OldCurrentPeriodEnd(ctx)
-	case payment.FieldCustomerID:
-		return m.OldCustomerID(ctx)
-	case payment.FieldCustomerEmail:
-		return m.OldCustomerEmail(ctx)
-	case payment.FieldCheckoutSessionID:
-		return m.OldCheckoutSessionID(ctx)
+	case payment.FieldWechatPlatform:
+		return m.OldWechatPlatform(ctx)
+	case payment.FieldWechatOpenID:
+		return m.OldWechatOpenID(ctx)
+	case payment.FieldWechatTransactionID:
+		return m.OldWechatTransactionID(ctx)
+	case payment.FieldStripeSubscriptionID:
+		return m.OldStripeSubscriptionID(ctx)
+	case payment.FieldStripeSubscriptionStatus:
+		return m.OldStripeSubscriptionStatus(ctx)
+	case payment.FieldStripeInterval:
+		return m.OldStripeInterval(ctx)
+	case payment.FieldStripeCurrentPeriodStart:
+		return m.OldStripeCurrentPeriodStart(ctx)
+	case payment.FieldStripeCurrentPeriodEnd:
+		return m.OldStripeCurrentPeriodEnd(ctx)
+	case payment.FieldStripeCustomerID:
+		return m.OldStripeCustomerID(ctx)
+	case payment.FieldStripeCustomerEmail:
+		return m.OldStripeCustomerEmail(ctx)
+	case payment.FieldStripeCheckoutSessionID:
+		return m.OldStripeCheckoutSessionID(ctx)
+	case payment.FieldStripeInvoiceID:
+		return m.OldStripeInvoiceID(ctx)
 	}
 	return nil, fmt.Errorf("unknown Payment field %s", name)
 }
@@ -9476,33 +9546,12 @@ func (m *PaymentMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUserID(v)
 		return nil
-	case payment.FieldTransactionID:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetTransactionID(v)
-		return nil
-	case payment.FieldOpenID:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetOpenID(v)
-		return nil
 	case payment.FieldChannel:
 		v, ok := value.(payment.Channel)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetChannel(v)
-		return nil
-	case payment.FieldPlatform:
-		v, ok := value.(payment.Platform)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetPlatform(v)
 		return nil
 	case payment.FieldService:
 		v, ok := value.(string)
@@ -9553,61 +9602,89 @@ func (m *PaymentMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetPaymentType(v)
 		return nil
-	case payment.FieldSubscriptionID:
+	case payment.FieldWechatPlatform:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetSubscriptionID(v)
+		m.SetWechatPlatform(v)
 		return nil
-	case payment.FieldSubscriptionStatus:
-		v, ok := value.(payment.SubscriptionStatus)
+	case payment.FieldWechatOpenID:
+		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetSubscriptionStatus(v)
+		m.SetWechatOpenID(v)
 		return nil
-	case payment.FieldInterval:
-		v, ok := value.(payment.Interval)
+	case payment.FieldWechatTransactionID:
+		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetInterval(v)
+		m.SetWechatTransactionID(v)
 		return nil
-	case payment.FieldCurrentPeriodStart:
+	case payment.FieldStripeSubscriptionID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStripeSubscriptionID(v)
+		return nil
+	case payment.FieldStripeSubscriptionStatus:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStripeSubscriptionStatus(v)
+		return nil
+	case payment.FieldStripeInterval:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStripeInterval(v)
+		return nil
+	case payment.FieldStripeCurrentPeriodStart:
 		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetCurrentPeriodStart(v)
+		m.SetStripeCurrentPeriodStart(v)
 		return nil
-	case payment.FieldCurrentPeriodEnd:
+	case payment.FieldStripeCurrentPeriodEnd:
 		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetCurrentPeriodEnd(v)
+		m.SetStripeCurrentPeriodEnd(v)
 		return nil
-	case payment.FieldCustomerID:
+	case payment.FieldStripeCustomerID:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetCustomerID(v)
+		m.SetStripeCustomerID(v)
 		return nil
-	case payment.FieldCustomerEmail:
+	case payment.FieldStripeCustomerEmail:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetCustomerEmail(v)
+		m.SetStripeCustomerEmail(v)
 		return nil
-	case payment.FieldCheckoutSessionID:
+	case payment.FieldStripeCheckoutSessionID:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetCheckoutSessionID(v)
+		m.SetStripeCheckoutSessionID(v)
+		return nil
+	case payment.FieldStripeInvoiceID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStripeInvoiceID(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Payment field %s", name)
@@ -9654,38 +9731,44 @@ func (m *PaymentMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *PaymentMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(payment.FieldTransactionID) {
-		fields = append(fields, payment.FieldTransactionID)
-	}
-	if m.FieldCleared(payment.FieldOpenID) {
-		fields = append(fields, payment.FieldOpenID)
-	}
 	if m.FieldCleared(payment.FieldPaidAt) {
 		fields = append(fields, payment.FieldPaidAt)
 	}
-	if m.FieldCleared(payment.FieldSubscriptionID) {
-		fields = append(fields, payment.FieldSubscriptionID)
+	if m.FieldCleared(payment.FieldWechatPlatform) {
+		fields = append(fields, payment.FieldWechatPlatform)
 	}
-	if m.FieldCleared(payment.FieldSubscriptionStatus) {
-		fields = append(fields, payment.FieldSubscriptionStatus)
+	if m.FieldCleared(payment.FieldWechatOpenID) {
+		fields = append(fields, payment.FieldWechatOpenID)
 	}
-	if m.FieldCleared(payment.FieldInterval) {
-		fields = append(fields, payment.FieldInterval)
+	if m.FieldCleared(payment.FieldWechatTransactionID) {
+		fields = append(fields, payment.FieldWechatTransactionID)
 	}
-	if m.FieldCleared(payment.FieldCurrentPeriodStart) {
-		fields = append(fields, payment.FieldCurrentPeriodStart)
+	if m.FieldCleared(payment.FieldStripeSubscriptionID) {
+		fields = append(fields, payment.FieldStripeSubscriptionID)
 	}
-	if m.FieldCleared(payment.FieldCurrentPeriodEnd) {
-		fields = append(fields, payment.FieldCurrentPeriodEnd)
+	if m.FieldCleared(payment.FieldStripeSubscriptionStatus) {
+		fields = append(fields, payment.FieldStripeSubscriptionStatus)
 	}
-	if m.FieldCleared(payment.FieldCustomerID) {
-		fields = append(fields, payment.FieldCustomerID)
+	if m.FieldCleared(payment.FieldStripeInterval) {
+		fields = append(fields, payment.FieldStripeInterval)
 	}
-	if m.FieldCleared(payment.FieldCustomerEmail) {
-		fields = append(fields, payment.FieldCustomerEmail)
+	if m.FieldCleared(payment.FieldStripeCurrentPeriodStart) {
+		fields = append(fields, payment.FieldStripeCurrentPeriodStart)
 	}
-	if m.FieldCleared(payment.FieldCheckoutSessionID) {
-		fields = append(fields, payment.FieldCheckoutSessionID)
+	if m.FieldCleared(payment.FieldStripeCurrentPeriodEnd) {
+		fields = append(fields, payment.FieldStripeCurrentPeriodEnd)
+	}
+	if m.FieldCleared(payment.FieldStripeCustomerID) {
+		fields = append(fields, payment.FieldStripeCustomerID)
+	}
+	if m.FieldCleared(payment.FieldStripeCustomerEmail) {
+		fields = append(fields, payment.FieldStripeCustomerEmail)
+	}
+	if m.FieldCleared(payment.FieldStripeCheckoutSessionID) {
+		fields = append(fields, payment.FieldStripeCheckoutSessionID)
+	}
+	if m.FieldCleared(payment.FieldStripeInvoiceID) {
+		fields = append(fields, payment.FieldStripeInvoiceID)
 	}
 	return fields
 }
@@ -9701,38 +9784,44 @@ func (m *PaymentMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *PaymentMutation) ClearField(name string) error {
 	switch name {
-	case payment.FieldTransactionID:
-		m.ClearTransactionID()
-		return nil
-	case payment.FieldOpenID:
-		m.ClearOpenID()
-		return nil
 	case payment.FieldPaidAt:
 		m.ClearPaidAt()
 		return nil
-	case payment.FieldSubscriptionID:
-		m.ClearSubscriptionID()
+	case payment.FieldWechatPlatform:
+		m.ClearWechatPlatform()
 		return nil
-	case payment.FieldSubscriptionStatus:
-		m.ClearSubscriptionStatus()
+	case payment.FieldWechatOpenID:
+		m.ClearWechatOpenID()
 		return nil
-	case payment.FieldInterval:
-		m.ClearInterval()
+	case payment.FieldWechatTransactionID:
+		m.ClearWechatTransactionID()
 		return nil
-	case payment.FieldCurrentPeriodStart:
-		m.ClearCurrentPeriodStart()
+	case payment.FieldStripeSubscriptionID:
+		m.ClearStripeSubscriptionID()
 		return nil
-	case payment.FieldCurrentPeriodEnd:
-		m.ClearCurrentPeriodEnd()
+	case payment.FieldStripeSubscriptionStatus:
+		m.ClearStripeSubscriptionStatus()
 		return nil
-	case payment.FieldCustomerID:
-		m.ClearCustomerID()
+	case payment.FieldStripeInterval:
+		m.ClearStripeInterval()
 		return nil
-	case payment.FieldCustomerEmail:
-		m.ClearCustomerEmail()
+	case payment.FieldStripeCurrentPeriodStart:
+		m.ClearStripeCurrentPeriodStart()
 		return nil
-	case payment.FieldCheckoutSessionID:
-		m.ClearCheckoutSessionID()
+	case payment.FieldStripeCurrentPeriodEnd:
+		m.ClearStripeCurrentPeriodEnd()
+		return nil
+	case payment.FieldStripeCustomerID:
+		m.ClearStripeCustomerID()
+		return nil
+	case payment.FieldStripeCustomerEmail:
+		m.ClearStripeCustomerEmail()
+		return nil
+	case payment.FieldStripeCheckoutSessionID:
+		m.ClearStripeCheckoutSessionID()
+		return nil
+	case payment.FieldStripeInvoiceID:
+		m.ClearStripeInvoiceID()
 		return nil
 	}
 	return fmt.Errorf("unknown Payment nullable field %s", name)
@@ -9754,17 +9843,8 @@ func (m *PaymentMutation) ResetField(name string) error {
 	case payment.FieldUserID:
 		m.ResetUserID()
 		return nil
-	case payment.FieldTransactionID:
-		m.ResetTransactionID()
-		return nil
-	case payment.FieldOpenID:
-		m.ResetOpenID()
-		return nil
 	case payment.FieldChannel:
 		m.ResetChannel()
-		return nil
-	case payment.FieldPlatform:
-		m.ResetPlatform()
 		return nil
 	case payment.FieldService:
 		m.ResetService()
@@ -9787,29 +9867,41 @@ func (m *PaymentMutation) ResetField(name string) error {
 	case payment.FieldPaymentType:
 		m.ResetPaymentType()
 		return nil
-	case payment.FieldSubscriptionID:
-		m.ResetSubscriptionID()
+	case payment.FieldWechatPlatform:
+		m.ResetWechatPlatform()
 		return nil
-	case payment.FieldSubscriptionStatus:
-		m.ResetSubscriptionStatus()
+	case payment.FieldWechatOpenID:
+		m.ResetWechatOpenID()
 		return nil
-	case payment.FieldInterval:
-		m.ResetInterval()
+	case payment.FieldWechatTransactionID:
+		m.ResetWechatTransactionID()
 		return nil
-	case payment.FieldCurrentPeriodStart:
-		m.ResetCurrentPeriodStart()
+	case payment.FieldStripeSubscriptionID:
+		m.ResetStripeSubscriptionID()
 		return nil
-	case payment.FieldCurrentPeriodEnd:
-		m.ResetCurrentPeriodEnd()
+	case payment.FieldStripeSubscriptionStatus:
+		m.ResetStripeSubscriptionStatus()
 		return nil
-	case payment.FieldCustomerID:
-		m.ResetCustomerID()
+	case payment.FieldStripeInterval:
+		m.ResetStripeInterval()
 		return nil
-	case payment.FieldCustomerEmail:
-		m.ResetCustomerEmail()
+	case payment.FieldStripeCurrentPeriodStart:
+		m.ResetStripeCurrentPeriodStart()
 		return nil
-	case payment.FieldCheckoutSessionID:
-		m.ResetCheckoutSessionID()
+	case payment.FieldStripeCurrentPeriodEnd:
+		m.ResetStripeCurrentPeriodEnd()
+		return nil
+	case payment.FieldStripeCustomerID:
+		m.ResetStripeCustomerID()
+		return nil
+	case payment.FieldStripeCustomerEmail:
+		m.ResetStripeCustomerEmail()
+		return nil
+	case payment.FieldStripeCheckoutSessionID:
+		m.ResetStripeCheckoutSessionID()
+		return nil
+	case payment.FieldStripeInvoiceID:
+		m.ResetStripeInvoiceID()
 		return nil
 	}
 	return fmt.Errorf("unknown Payment field %s", name)
@@ -12049,18 +12141,20 @@ func (m *ScopeMutation) ResetEdge(name string) error {
 // StripeEventMutation represents an operation that mutates the StripeEvent nodes in the graph.
 type StripeEventMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *int
-	created_at    *time.Time
-	event_id      *string
-	event_type    *string
-	processed     *bool
-	processed_at  *time.Time
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*StripeEvent, error)
-	predicates    []predicate.StripeEvent
+	op              Op
+	typ             string
+	id              *int
+	created_at      *time.Time
+	event_id        *string
+	event_type      *string
+	subscription_id *string
+	user_id         *string
+	processed       *bool
+	processed_at    *time.Time
+	clearedFields   map[string]struct{}
+	done            bool
+	oldValue        func(context.Context) (*StripeEvent, error)
+	predicates      []predicate.StripeEvent
 }
 
 var _ ent.Mutation = (*StripeEventMutation)(nil)
@@ -12269,6 +12363,104 @@ func (m *StripeEventMutation) ResetEventType() {
 	m.event_type = nil
 }
 
+// SetSubscriptionID sets the "subscription_id" field.
+func (m *StripeEventMutation) SetSubscriptionID(s string) {
+	m.subscription_id = &s
+}
+
+// SubscriptionID returns the value of the "subscription_id" field in the mutation.
+func (m *StripeEventMutation) SubscriptionID() (r string, exists bool) {
+	v := m.subscription_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSubscriptionID returns the old "subscription_id" field's value of the StripeEvent entity.
+// If the StripeEvent object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *StripeEventMutation) OldSubscriptionID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSubscriptionID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSubscriptionID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSubscriptionID: %w", err)
+	}
+	return oldValue.SubscriptionID, nil
+}
+
+// ClearSubscriptionID clears the value of the "subscription_id" field.
+func (m *StripeEventMutation) ClearSubscriptionID() {
+	m.subscription_id = nil
+	m.clearedFields[stripeevent.FieldSubscriptionID] = struct{}{}
+}
+
+// SubscriptionIDCleared returns if the "subscription_id" field was cleared in this mutation.
+func (m *StripeEventMutation) SubscriptionIDCleared() bool {
+	_, ok := m.clearedFields[stripeevent.FieldSubscriptionID]
+	return ok
+}
+
+// ResetSubscriptionID resets all changes to the "subscription_id" field.
+func (m *StripeEventMutation) ResetSubscriptionID() {
+	m.subscription_id = nil
+	delete(m.clearedFields, stripeevent.FieldSubscriptionID)
+}
+
+// SetUserID sets the "user_id" field.
+func (m *StripeEventMutation) SetUserID(s string) {
+	m.user_id = &s
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *StripeEventMutation) UserID() (r string, exists bool) {
+	v := m.user_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the StripeEvent entity.
+// If the StripeEvent object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *StripeEventMutation) OldUserID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (m *StripeEventMutation) ClearUserID() {
+	m.user_id = nil
+	m.clearedFields[stripeevent.FieldUserID] = struct{}{}
+}
+
+// UserIDCleared returns if the "user_id" field was cleared in this mutation.
+func (m *StripeEventMutation) UserIDCleared() bool {
+	_, ok := m.clearedFields[stripeevent.FieldUserID]
+	return ok
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *StripeEventMutation) ResetUserID() {
+	m.user_id = nil
+	delete(m.clearedFields, stripeevent.FieldUserID)
+}
+
 // SetProcessed sets the "processed" field.
 func (m *StripeEventMutation) SetProcessed(b bool) {
 	m.processed = &b
@@ -12388,7 +12580,7 @@ func (m *StripeEventMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *StripeEventMutation) Fields() []string {
-	fields := make([]string, 0, 5)
+	fields := make([]string, 0, 7)
 	if m.created_at != nil {
 		fields = append(fields, stripeevent.FieldCreatedAt)
 	}
@@ -12397,6 +12589,12 @@ func (m *StripeEventMutation) Fields() []string {
 	}
 	if m.event_type != nil {
 		fields = append(fields, stripeevent.FieldEventType)
+	}
+	if m.subscription_id != nil {
+		fields = append(fields, stripeevent.FieldSubscriptionID)
+	}
+	if m.user_id != nil {
+		fields = append(fields, stripeevent.FieldUserID)
 	}
 	if m.processed != nil {
 		fields = append(fields, stripeevent.FieldProcessed)
@@ -12418,6 +12616,10 @@ func (m *StripeEventMutation) Field(name string) (ent.Value, bool) {
 		return m.EventID()
 	case stripeevent.FieldEventType:
 		return m.EventType()
+	case stripeevent.FieldSubscriptionID:
+		return m.SubscriptionID()
+	case stripeevent.FieldUserID:
+		return m.UserID()
 	case stripeevent.FieldProcessed:
 		return m.Processed()
 	case stripeevent.FieldProcessedAt:
@@ -12437,6 +12639,10 @@ func (m *StripeEventMutation) OldField(ctx context.Context, name string) (ent.Va
 		return m.OldEventID(ctx)
 	case stripeevent.FieldEventType:
 		return m.OldEventType(ctx)
+	case stripeevent.FieldSubscriptionID:
+		return m.OldSubscriptionID(ctx)
+	case stripeevent.FieldUserID:
+		return m.OldUserID(ctx)
 	case stripeevent.FieldProcessed:
 		return m.OldProcessed(ctx)
 	case stripeevent.FieldProcessedAt:
@@ -12470,6 +12676,20 @@ func (m *StripeEventMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetEventType(v)
+		return nil
+	case stripeevent.FieldSubscriptionID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSubscriptionID(v)
+		return nil
+	case stripeevent.FieldUserID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
 		return nil
 	case stripeevent.FieldProcessed:
 		v, ok := value.(bool)
@@ -12515,6 +12735,12 @@ func (m *StripeEventMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *StripeEventMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(stripeevent.FieldSubscriptionID) {
+		fields = append(fields, stripeevent.FieldSubscriptionID)
+	}
+	if m.FieldCleared(stripeevent.FieldUserID) {
+		fields = append(fields, stripeevent.FieldUserID)
+	}
 	if m.FieldCleared(stripeevent.FieldProcessedAt) {
 		fields = append(fields, stripeevent.FieldProcessedAt)
 	}
@@ -12532,6 +12758,12 @@ func (m *StripeEventMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *StripeEventMutation) ClearField(name string) error {
 	switch name {
+	case stripeevent.FieldSubscriptionID:
+		m.ClearSubscriptionID()
+		return nil
+	case stripeevent.FieldUserID:
+		m.ClearUserID()
+		return nil
 	case stripeevent.FieldProcessedAt:
 		m.ClearProcessedAt()
 		return nil
@@ -12551,6 +12783,12 @@ func (m *StripeEventMutation) ResetField(name string) error {
 		return nil
 	case stripeevent.FieldEventType:
 		m.ResetEventType()
+		return nil
+	case stripeevent.FieldSubscriptionID:
+		m.ResetSubscriptionID()
+		return nil
+	case stripeevent.FieldUserID:
+		m.ResetUserID()
 		return nil
 	case stripeevent.FieldProcessed:
 		m.ResetProcessed()

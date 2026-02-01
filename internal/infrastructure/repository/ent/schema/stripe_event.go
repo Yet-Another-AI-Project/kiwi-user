@@ -19,6 +19,8 @@ func (StripeEvent) Fields() []ent.Field {
 			Default(time.Now),
 		field.String("event_id").NotEmpty().Unique(),
 		field.String("event_type").NotEmpty(),
+		field.String("subscription_id").Optional(),
+		field.String("user_id").Optional(),
 		field.Bool("processed").Default(false),
 		field.Time("processed_at").Optional(),
 	}

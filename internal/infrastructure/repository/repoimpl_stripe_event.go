@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"time"
 
 	"kiwi-user/internal/domain/contract"
 	"kiwi-user/internal/domain/model/entity"
@@ -45,6 +44,8 @@ func (s *stripeEventImpl) Create(ctx context.Context, event *entity.StripeEventE
 	eventDO, err := db.StripeEvent.Create().
 		SetEventID(event.EventID).
 		SetEventType(event.EventType).
+		SetSubscriptionID(event.SubscriptionID).
+		SetUserID(event.UserID).
 		SetProcessed(event.Processed).
 		SetCreatedAt(event.CreatedAt).
 		Save(ctx)
@@ -54,18 +55,6 @@ func (s *stripeEventImpl) Create(ctx context.Context, event *entity.StripeEventE
 	}
 
 	return convertStripeEventDOToEntity(eventDO), nil
-}
-
-func (s *stripeEventImpl) MarkProcessed(ctx context.Context, eventID string) error {
-	db := s.getEntClient(ctx)
-
-	_, err := db.StripeEvent.Update().
-		Where(stripeevent.EventID(eventID)).
-		SetProcessed(true).
-		SetProcessedAt(time.Now()).
-		Save(ctx)
-
-	return err
 }
 
 func NewStripeEventImpl(db *Client) contract.IStripeEventRepository {

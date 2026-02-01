@@ -62,6 +62,7 @@ func (route *Route) RegisterApiV1(gin *gin.Engine) {
 		// Stripe subscription payments
 		payment.POST("/stripe/checkout", NormalHandler(route.apiController.CreateStripeCheckoutSession))
 		payment.POST("/stripe/webhook", NormalHandler(route.apiController.StripeWebhook))
+		payment.POST("/stripe/cancel", NormalHandler(route.apiController.CancelStripeSubscription))
 	}
 
 	// internal apis

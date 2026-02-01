@@ -15,22 +15,26 @@ type PaymentEntity struct {
 	Description string
 	Status      enum.PaymentStatus
 	CreatedAt   time.Time
+	UpdatedAt   time.Time
 	PaidAt      time.Time
-
-	PaymentType        enum.PaymentType
-	SubscriptionID     string
-	SubscriptionStatus enum.SubscriptionStatus
-	Interval           enum.SubscriptionInterval
-	CurrentPeriodStart time.Time
-	CurrentPeriodEnd   time.Time
-	CustomerID         string
-	CustomerEmail      string
-	CheckoutSessionID  string
+	PaymentType enum.PaymentType
 }
 
 type PaymentChannelInfo struct {
-	Channel       enum.PaymentChannel
-	Platform      enum.WechatOpenIDPlatform
-	TransactionID string
-	OpenID        string
+	Channel enum.PaymentChannel
+	// wechat
+	WechatPlatform      enum.WechatOpenIDPlatform
+	WeChatTransactionID string
+	WeChatOpenID        string
+
+	// stripe
+	StripeSubscriptionID     string
+	StripeSubscriptionStatus enum.SubscriptionStatus
+	StripeInterval           enum.SubscriptionInterval
+	StripeCurrentPeriodStart time.Time
+	StripeCurrentPeriodEnd   time.Time
+	StripeCustomerID         string
+	StripeCustomerEmail      string
+	StripeCheckoutSessionID  string
+	StripeInvoiceID          string
 }

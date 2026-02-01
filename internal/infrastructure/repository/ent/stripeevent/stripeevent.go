@@ -19,6 +19,10 @@ const (
 	FieldEventID = "event_id"
 	// FieldEventType holds the string denoting the event_type field in the database.
 	FieldEventType = "event_type"
+	// FieldSubscriptionID holds the string denoting the subscription_id field in the database.
+	FieldSubscriptionID = "subscription_id"
+	// FieldUserID holds the string denoting the user_id field in the database.
+	FieldUserID = "user_id"
 	// FieldProcessed holds the string denoting the processed field in the database.
 	FieldProcessed = "processed"
 	// FieldProcessedAt holds the string denoting the processed_at field in the database.
@@ -33,6 +37,8 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldEventID,
 	FieldEventType,
+	FieldSubscriptionID,
+	FieldUserID,
 	FieldProcessed,
 	FieldProcessedAt,
 }
@@ -79,6 +85,16 @@ func ByEventID(opts ...sql.OrderTermOption) OrderOption {
 // ByEventType orders the results by the event_type field.
 func ByEventType(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldEventType, opts...).ToFunc()
+}
+
+// BySubscriptionID orders the results by the subscription_id field.
+func BySubscriptionID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldSubscriptionID, opts...).ToFunc()
+}
+
+// ByUserID orders the results by the user_id field.
+func ByUserID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUserID, opts...).ToFunc()
 }
 
 // ByProcessed orders the results by the processed field.

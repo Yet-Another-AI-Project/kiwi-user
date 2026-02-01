@@ -69,6 +69,16 @@ func EventType(v string) predicate.StripeEvent {
 	return predicate.StripeEvent(sql.FieldEQ(FieldEventType, v))
 }
 
+// SubscriptionID applies equality check predicate on the "subscription_id" field. It's identical to SubscriptionIDEQ.
+func SubscriptionID(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldEQ(FieldSubscriptionID, v))
+}
+
+// UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
+func UserID(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldEQ(FieldUserID, v))
+}
+
 // Processed applies equality check predicate on the "processed" field. It's identical to ProcessedEQ.
 func Processed(v bool) predicate.StripeEvent {
 	return predicate.StripeEvent(sql.FieldEQ(FieldProcessed, v))
@@ -247,6 +257,156 @@ func EventTypeEqualFold(v string) predicate.StripeEvent {
 // EventTypeContainsFold applies the ContainsFold predicate on the "event_type" field.
 func EventTypeContainsFold(v string) predicate.StripeEvent {
 	return predicate.StripeEvent(sql.FieldContainsFold(FieldEventType, v))
+}
+
+// SubscriptionIDEQ applies the EQ predicate on the "subscription_id" field.
+func SubscriptionIDEQ(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldEQ(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDNEQ applies the NEQ predicate on the "subscription_id" field.
+func SubscriptionIDNEQ(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldNEQ(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDIn applies the In predicate on the "subscription_id" field.
+func SubscriptionIDIn(vs ...string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldIn(FieldSubscriptionID, vs...))
+}
+
+// SubscriptionIDNotIn applies the NotIn predicate on the "subscription_id" field.
+func SubscriptionIDNotIn(vs ...string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldNotIn(FieldSubscriptionID, vs...))
+}
+
+// SubscriptionIDGT applies the GT predicate on the "subscription_id" field.
+func SubscriptionIDGT(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldGT(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDGTE applies the GTE predicate on the "subscription_id" field.
+func SubscriptionIDGTE(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldGTE(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDLT applies the LT predicate on the "subscription_id" field.
+func SubscriptionIDLT(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldLT(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDLTE applies the LTE predicate on the "subscription_id" field.
+func SubscriptionIDLTE(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldLTE(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDContains applies the Contains predicate on the "subscription_id" field.
+func SubscriptionIDContains(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldContains(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDHasPrefix applies the HasPrefix predicate on the "subscription_id" field.
+func SubscriptionIDHasPrefix(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldHasPrefix(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDHasSuffix applies the HasSuffix predicate on the "subscription_id" field.
+func SubscriptionIDHasSuffix(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldHasSuffix(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDIsNil applies the IsNil predicate on the "subscription_id" field.
+func SubscriptionIDIsNil() predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldIsNull(FieldSubscriptionID))
+}
+
+// SubscriptionIDNotNil applies the NotNil predicate on the "subscription_id" field.
+func SubscriptionIDNotNil() predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldNotNull(FieldSubscriptionID))
+}
+
+// SubscriptionIDEqualFold applies the EqualFold predicate on the "subscription_id" field.
+func SubscriptionIDEqualFold(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldEqualFold(FieldSubscriptionID, v))
+}
+
+// SubscriptionIDContainsFold applies the ContainsFold predicate on the "subscription_id" field.
+func SubscriptionIDContainsFold(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldContainsFold(FieldSubscriptionID, v))
+}
+
+// UserIDEQ applies the EQ predicate on the "user_id" field.
+func UserIDEQ(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldEQ(FieldUserID, v))
+}
+
+// UserIDNEQ applies the NEQ predicate on the "user_id" field.
+func UserIDNEQ(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldNEQ(FieldUserID, v))
+}
+
+// UserIDIn applies the In predicate on the "user_id" field.
+func UserIDIn(vs ...string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldIn(FieldUserID, vs...))
+}
+
+// UserIDNotIn applies the NotIn predicate on the "user_id" field.
+func UserIDNotIn(vs ...string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldNotIn(FieldUserID, vs...))
+}
+
+// UserIDGT applies the GT predicate on the "user_id" field.
+func UserIDGT(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldGT(FieldUserID, v))
+}
+
+// UserIDGTE applies the GTE predicate on the "user_id" field.
+func UserIDGTE(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldGTE(FieldUserID, v))
+}
+
+// UserIDLT applies the LT predicate on the "user_id" field.
+func UserIDLT(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldLT(FieldUserID, v))
+}
+
+// UserIDLTE applies the LTE predicate on the "user_id" field.
+func UserIDLTE(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldLTE(FieldUserID, v))
+}
+
+// UserIDContains applies the Contains predicate on the "user_id" field.
+func UserIDContains(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldContains(FieldUserID, v))
+}
+
+// UserIDHasPrefix applies the HasPrefix predicate on the "user_id" field.
+func UserIDHasPrefix(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldHasPrefix(FieldUserID, v))
+}
+
+// UserIDHasSuffix applies the HasSuffix predicate on the "user_id" field.
+func UserIDHasSuffix(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldHasSuffix(FieldUserID, v))
+}
+
+// UserIDIsNil applies the IsNil predicate on the "user_id" field.
+func UserIDIsNil() predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldIsNull(FieldUserID))
+}
+
+// UserIDNotNil applies the NotNil predicate on the "user_id" field.
+func UserIDNotNil() predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldNotNull(FieldUserID))
+}
+
+// UserIDEqualFold applies the EqualFold predicate on the "user_id" field.
+func UserIDEqualFold(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldEqualFold(FieldUserID, v))
+}
+
+// UserIDContainsFold applies the ContainsFold predicate on the "user_id" field.
+func UserIDContainsFold(v string) predicate.StripeEvent {
+	return predicate.StripeEvent(sql.FieldContainsFold(FieldUserID, v))
 }
 
 // ProcessedEQ applies the EQ predicate on the "processed" field.

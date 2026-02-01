@@ -4,28 +4,33 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/stripe/stripe-go/v82"
+	"github.com/futurxlab/golanggraph/xerror"
+	"github.com/stripe/stripe-go/v84"
 )
 
 type CheckoutSessionCompleted struct {
 	SessionID      string
+	InvoiceID      string
 	CustomerID     string
 	CustomerEmail  string
 	SubscriptionID string
 	PaymentStatus  string
+	ExpiresAt      int64
 	AmountTotal    int64
 	Currency       string
 	Metadata       map[string]string
 }
 
 type InvoicePaid struct {
-	InvoiceID      string
-	CustomerID     string
-	SubscriptionID string
-	AmountPaid     int64
-	Currency       string
-	PaidAt         time.Time
-	BillingReason  string
+	InvoiceID          string
+	CustomerID         string
+	SubscriptionID     string
+	AmountPaid         int64
+	Currency           string
+	PaidAt             time.Time
+	BillingReason      string
+	CurrentPeriodStart int64
+	CurrentPeriodEnd   int64
 }
 
 type InvoicePaymentFailed struct {
@@ -56,29 +61,83 @@ type SubscriptionDeleted struct {
 }
 
 func ParseCheckoutSessionCompleted(event *WebhookEvent) (*CheckoutSessionCompleted, error) {
-	var session stripe.CheckoutSession
-	if err := json.Unmarshal(event.RawData, &session); err != nil {
+	// Use map to handle dynamic types (string vs object)
+	var rawData map[string]interface{}
+	if err := json.Unmarshal(event.RawData, &rawData); err != nil {
 		return nil, err
 	}
 
-	result := &CheckoutSessionCompleted{
-		SessionID:     session.ID,
-		PaymentStatus: string(session.PaymentStatus),
-		AmountTotal:   session.AmountTotal,
-		Currency:      string(session.Currency),
-		Metadata:      session.Metadata,
+	result := &CheckoutSessionCompleted{}
+
+	// Session ID
+	if id, ok := rawData["id"].(string); ok {
+		result.SessionID = id
 	}
 
-	if session.Customer != nil {
-		result.CustomerID = session.Customer.ID
+	// Payment Status
+	if status, ok := rawData["payment_status"].(string); ok {
+		result.PaymentStatus = status
 	}
 
-	if session.Subscription != nil {
-		result.SubscriptionID = session.Subscription.ID
+	// Amount Total
+	if amount, ok := rawData["amount_total"].(float64); ok {
+		result.AmountTotal = int64(amount)
 	}
 
-	if session.CustomerDetails != nil {
-		result.CustomerEmail = session.CustomerDetails.Email
+	// Currency
+	if currency, ok := rawData["currency"].(string); ok {
+		result.Currency = currency
+	}
+
+	// Invoice ID
+	if invoiceID, ok := rawData["invoice"].(string); ok {
+		result.InvoiceID = invoiceID
+	}
+
+	// Expires At
+	if expiresAt, ok := rawData["expires_at"].(int64); ok {
+		result.ExpiresAt = expiresAt
+	}
+
+	// Metadata
+	if metadata, ok := rawData["metadata"].(map[string]interface{}); ok {
+		result.Metadata = make(map[string]string)
+		for k, v := range metadata {
+			if strVal, ok := v.(string); ok {
+				result.Metadata[k] = strVal
+			}
+		}
+	}
+
+	// Customer - can be string ID or object with ID field
+	if customer := rawData["customer"]; customer != nil {
+		switch c := customer.(type) {
+		case string:
+			result.CustomerID = c
+		case map[string]interface{}:
+			if id, ok := c["id"].(string); ok {
+				result.CustomerID = id
+			}
+		}
+	}
+
+	// Subscription - can be string ID or object with ID field
+	if subscription := rawData["subscription"]; subscription != nil {
+		switch s := subscription.(type) {
+		case string:
+			result.SubscriptionID = s
+		case map[string]interface{}:
+			if id, ok := s["id"].(string); ok {
+				result.SubscriptionID = id
+			}
+		}
+	}
+
+	// Customer Email from customer_details
+	if customerDetails, ok := rawData["customer_details"].(map[string]interface{}); ok {
+		if email, ok := customerDetails["email"].(string); ok {
+			result.CustomerEmail = email
+		}
 	}
 
 	return result, nil
@@ -90,11 +149,17 @@ func ParseInvoicePaid(event *WebhookEvent) (*InvoicePaid, error) {
 		return nil, err
 	}
 
+	if len(invoice.Lines.Data) == 0 {
+		return nil, xerror.New("no line items found in invoice")
+	}
+
 	result := &InvoicePaid{
-		InvoiceID:     invoice.ID,
-		AmountPaid:    invoice.AmountPaid,
-		Currency:      string(invoice.Currency),
-		BillingReason: string(invoice.BillingReason),
+		InvoiceID:          invoice.ID,
+		AmountPaid:         invoice.AmountPaid,
+		Currency:           string(invoice.Currency),
+		BillingReason:      string(invoice.BillingReason),
+		CurrentPeriodStart: invoice.Lines.Data[0].Period.Start,
+		CurrentPeriodEnd:   invoice.Lines.Data[0].Period.End,
 	}
 
 	if invoice.Customer != nil {

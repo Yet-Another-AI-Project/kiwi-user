@@ -2,13 +2,12 @@ package stripe
 
 import (
 	"context"
-	"io"
-	"net/http"
 
 	"github.com/futurxlab/golanggraph/xerror"
-	"github.com/stripe/stripe-go/v82"
-	"github.com/stripe/stripe-go/v82/checkout/session"
-	"github.com/stripe/stripe-go/v82/webhook"
+	"github.com/stripe/stripe-go/v84"
+	"github.com/stripe/stripe-go/v84/checkout/session"
+	"github.com/stripe/stripe-go/v84/subscription"
+	"github.com/stripe/stripe-go/v84/webhook"
 )
 
 type StripeClient struct {
@@ -98,13 +97,7 @@ func (c *StripeClient) CreateCheckoutSession(ctx context.Context, params *Create
 	return sess, nil
 }
 
-func (c *StripeClient) VerifyWebhookSignature(req *http.Request) (*WebhookEvent, error) {
-	body, err := io.ReadAll(req.Body)
-	if err != nil {
-		return nil, xerror.Wrap(err)
-	}
-
-	sig := req.Header.Get("Stripe-Signature")
+func (c *StripeClient) VerifyWebhookSignature(body []byte, sig string) (*WebhookEvent, error) {
 	event, err := webhook.ConstructEvent(body, sig, c.WebhookSecret)
 	if err != nil {
 		return nil, xerror.Wrap(err)
@@ -122,4 +115,12 @@ func (c *StripeClient) GetPriceID(interval string) string {
 		return c.YearlyPriceID
 	}
 	return c.MonthlyPriceID
+}
+
+func (c *StripeClient) CancelSubscription(ctx context.Context, subscriptionID string, params *stripe.SubscriptionCancelParams) (*stripe.Subscription, error) {
+	sub, err := subscription.Cancel(subscriptionID, params)
+	if err != nil {
+		return nil, xerror.Wrap(err)
+	}
+	return sub, nil
 }

@@ -19,6 +19,7 @@ import (
 	"github.com/Yet-Another-AI-Project/kiwi-lib/tools/xhttp"
 	"github.com/futurxlab/golanggraph/logger"
 	"github.com/futurxlab/golanggraph/xerror"
+	"github.com/stripe/stripe-go/v84"
 )
 
 type StripePaymentService struct {
@@ -81,6 +82,41 @@ type StripeCheckoutResponse struct {
 	OutTradeNo  string `json:"out_trade_no"`
 }
 
+type StripeCancelSubscriptionRequest struct {
+	UserID  string `json:"user_id"`
+	Service string `json:"service"`
+}
+
+type StripeCancelSubscriptionResponse struct {
+	Success        bool   `json:"success"`
+	Message        string `json:"message,omitempty"`
+	SubscriptionID string `json:"subscription_id,omitempty"`
+}
+
+type SubscriptionNotifyPayload struct {
+	Event   string                   `json:"event"`
+	Service string                   `json:"service"`
+	UserID  string                   `json:"user_id"`
+	OrderNo string                   `json:"order_no"`
+	Plan    string                   `json:"plan"`
+	Stripe  SubscriptionNotifyStripe `json:"stripe"`
+	Period  SubscriptionNotifyPeriod `json:"period"`
+	Status  string                   `json:"status"`
+	EventID string                   `json:"event_id"`
+}
+
+type SubscriptionNotifyStripe struct {
+	SubscriptionID    string `json:"subscription_id"`
+	CustomerID        string `json:"customer_id"`
+	CheckoutSessionID string `json:"checkout_session_id"`
+	InvoiceID         string `json:"invoice_id"`
+}
+
+type SubscriptionNotifyPeriod struct {
+	CurrentPeriodStart int64 `json:"current_period_start"`
+	CurrentPeriodEnd   int64 `json:"current_period_end"`
+}
+
 func (s *StripePaymentService) CreateCheckoutSession(ctx context.Context, encrypt string) (*StripeCheckoutResponse, error) {
 	if s.stripeClient == nil {
 		return nil, xerror.New("stripe client not initialized")
@@ -94,6 +130,16 @@ func (s *StripePaymentService) CreateCheckoutSession(ctx context.Context, encryp
 	var request StripeCheckoutRequest
 	if err := json.Unmarshal([]byte(decryptData), &request); err != nil {
 		return nil, xerror.Wrap(err)
+	}
+
+	// check if user has active subscription
+	paymentAggregate, err := s.paymentRepository.FindActiveSubscriptionByUserIDAndService(ctx, request.UserID, request.Service)
+	if err != nil {
+		return nil, xerror.Wrap(err)
+	}
+
+	if paymentAggregate != nil {
+		return nil, xerror.New("user already has an active subscription")
 	}
 
 	userAggregate, err := s.userRepository.Find(ctx, request.UserID)
@@ -125,19 +171,20 @@ func (s *StripePaymentService) CreateCheckoutSession(ctx context.Context, encryp
 	}
 
 	payment := &entity.PaymentEntity{
-		OutTradeNo:        outTradeNo,
-		UserID:            request.UserID,
-		ChannelInfo:       entity.PaymentChannelInfo{Channel: enum.PaymentChannelStripe},
-		Service:           request.Service,
-		Amount:            int(session.AmountTotal),
-		Currency:          string(session.Currency),
-		Description:       request.Description,
-		Status:            enum.PaymentStatusNotPay,
-		CreatedAt:         time.Now(),
-		PaymentType:       enum.PaymentTypeSubscription,
-		Interval:          interval,
-		CustomerEmail:     request.CustomerEmail,
-		CheckoutSessionID: session.ID,
+		OutTradeNo: outTradeNo,
+		UserID:     request.UserID,
+		ChannelInfo: entity.PaymentChannelInfo{
+			Channel:                 enum.PaymentChannelStripe,
+			StripeInterval:          interval,
+			StripeCustomerEmail:     request.CustomerEmail,
+			StripeCheckoutSessionID: session.ID,
+		},
+		Service:     request.Service,
+		Amount:      int(session.AmountTotal),
+		Currency:    string(session.Currency),
+		Description: request.Description,
+		Status:      enum.PaymentStatusNotPay,
+		PaymentType: enum.PaymentTypeSubscription,
 	}
 
 	_, err = s.paymentRepository.Create(ctx, &aggregate.PaymentAggregate{Payment: payment})
@@ -152,208 +199,248 @@ func (s *StripePaymentService) CreateCheckoutSession(ctx context.Context, encryp
 	}, nil
 }
 
-func (s *StripePaymentService) HandleWebhook(ctx context.Context, req *http.Request) error {
+func (s *StripePaymentService) HandleWebhook(ctx context.Context, event *stripeclient.WebhookEvent) (*aggregate.PaymentAggregate, error) {
 	if s.stripeClient == nil {
-		return xerror.New("stripe client not initialized")
-	}
-
-	event, err := s.stripeClient.VerifyWebhookSignature(req)
-	if err != nil {
-		s.logger.Errorf(ctx, "Stripe webhook signature verification failed: %v", err)
-		return xerror.Wrap(err)
+		return nil, xerror.New("stripe client not initialized")
 	}
 
 	exists, err := s.stripeEventRepository.ExistsByEventID(ctx, event.ID)
 	if err != nil {
-		return xerror.Wrap(err)
+		return nil, xerror.Wrap(err)
 	}
 	if exists {
 		s.logger.Infof(ctx, "Stripe event %s already processed, skipping", event.ID)
-		return nil
+		return nil, nil
 	}
 
-	stripeEvent := &entity.StripeEventEntity{
-		EventID:   event.ID,
-		EventType: event.Type,
-		Processed: false,
-		CreatedAt: time.Now(),
-	}
-	if _, err := s.stripeEventRepository.Create(ctx, stripeEvent); err != nil {
-		return xerror.Wrap(err)
-	}
-
+	var paymentAggregate *aggregate.PaymentAggregate
 	var handleErr error
 	switch event.Type {
-	case "checkout.session.completed":
-		handleErr = s.handleCheckoutSessionCompleted(ctx, event)
-	case "invoice.paid":
-		handleErr = s.handleInvoicePaid(ctx, event)
-	case "invoice.payment_failed":
-		handleErr = s.handleInvoicePaymentFailed(ctx, event)
-	case "customer.subscription.updated":
-		handleErr = s.handleSubscriptionUpdated(ctx, event)
-	case "customer.subscription.deleted":
-		handleErr = s.handleSubscriptionDeleted(ctx, event)
+	case string(stripe.EventTypeCheckoutSessionCompleted):
+		paymentAggregate, handleErr = s.handleCheckoutSessionCompleted(ctx, event)
+	case string(stripe.EventTypeInvoicePaymentSucceeded):
+		paymentAggregate, handleErr = s.handleInvoicePaymentSucceeded(ctx, event)
+	case string(stripe.EventTypeInvoicePaymentFailed):
+		paymentAggregate, handleErr = s.handleInvoicePaymentFailed(ctx, event)
+	case string(stripe.EventTypeCustomerSubscriptionUpdated):
+		paymentAggregate, handleErr = s.handleSubscriptionUpdated(ctx, event)
+	case string(stripe.EventTypeCustomerSubscriptionDeleted):
+		paymentAggregate, handleErr = s.handleSubscriptionDeleted(ctx, event)
 	default:
 		s.logger.Infof(ctx, "Unhandled Stripe event type: %s", event.Type)
+		return nil, nil
 	}
 
 	if handleErr != nil {
 		s.logger.Errorf(ctx, "Error handling Stripe event %s: %v", event.Type, handleErr)
-		return handleErr
+		return nil, handleErr
 	}
 
-	if err := s.stripeEventRepository.MarkProcessed(ctx, event.ID); err != nil {
-		s.logger.Errorf(ctx, "Failed to mark event as processed: %v", err)
+	stripeEvent := &entity.StripeEventEntity{
+		EventID:        event.ID,
+		EventType:      event.Type,
+		SubscriptionID: paymentAggregate.Payment.ChannelInfo.StripeSubscriptionID,
+		UserID:         paymentAggregate.Payment.UserID,
+		Processed:      true,
+		ProcessedAt:    time.Now(),
+	}
+	if _, err := s.stripeEventRepository.Create(ctx, stripeEvent); err != nil {
+		return nil, xerror.Wrap(err)
 	}
 
-	return nil
+	return paymentAggregate, nil
 }
 
-func (s *StripePaymentService) handleCheckoutSessionCompleted(ctx context.Context, event *stripeclient.WebhookEvent) error {
+func (s *StripePaymentService) handleCheckoutSessionCompleted(ctx context.Context, event *stripeclient.WebhookEvent) (*aggregate.PaymentAggregate, error) {
 	sessionData, err := stripeclient.ParseCheckoutSessionCompleted(event)
 	if err != nil {
-		return xerror.Wrap(err)
+		return nil, xerror.Wrap(err)
 	}
 
 	outTradeNo := sessionData.Metadata["out_trade_no"]
 	if outTradeNo == "" {
 		s.logger.Errorf(ctx, "Missing out_trade_no in checkout session metadata")
-		return xerror.New("missing out_trade_no in metadata")
+		return nil, xerror.New("missing out_trade_no in metadata")
 	}
 
 	paymentAggregate, err := s.paymentRepository.FindByOutTradeNo(ctx, outTradeNo)
 	if err != nil {
-		return xerror.Wrap(err)
+		return nil, xerror.Wrap(err)
 	}
 	if paymentAggregate == nil {
-		return xerror.New("payment not found for out_trade_no: " + outTradeNo)
+		return nil, xerror.New("payment not found for out_trade_no: " + outTradeNo)
 	}
 
 	paymentAggregate.Payment.Status = enum.PaymentStatusSuccess
-	paymentAggregate.Payment.SubscriptionID = sessionData.SubscriptionID
-	paymentAggregate.Payment.CustomerID = sessionData.CustomerID
-	paymentAggregate.Payment.CustomerEmail = sessionData.CustomerEmail
-	paymentAggregate.Payment.SubscriptionStatus = enum.SubscriptionStatusActive
-	paymentAggregate.Payment.PaidAt = time.Now()
+	paymentAggregate.Payment.ChannelInfo.StripeSubscriptionID = sessionData.SubscriptionID
+	paymentAggregate.Payment.ChannelInfo.StripeCustomerID = sessionData.CustomerID
+	paymentAggregate.Payment.ChannelInfo.StripeCustomerEmail = sessionData.CustomerEmail
+	paymentAggregate.Payment.ChannelInfo.StripeSubscriptionStatus = enum.SubscriptionStatusActive
+	paymentAggregate.Payment.ChannelInfo.StripeInvoiceID = sessionData.InvoiceID
 
 	if _, err := s.paymentRepository.Update(ctx, paymentAggregate); err != nil {
-		return xerror.Wrap(err)
+		return nil, xerror.Wrap(err)
 	}
 
-	return s.sendNotification(ctx, paymentAggregate, "checkout.session.completed")
+	return paymentAggregate, nil
 }
 
-func (s *StripePaymentService) handleInvoicePaid(ctx context.Context, event *stripeclient.WebhookEvent) error {
+func (s *StripePaymentService) handleInvoicePaymentSucceeded(ctx context.Context, event *stripeclient.WebhookEvent) (*aggregate.PaymentAggregate, error) {
 	invoiceData, err := stripeclient.ParseInvoicePaid(event)
 	if err != nil {
-		return xerror.Wrap(err)
-	}
-
-	if invoiceData.BillingReason == "subscription_create" {
-		s.logger.Infof(ctx, "Skipping invoice.paid for subscription_create, handled by checkout.session.completed")
-		return nil
+		return nil, xerror.Wrap(err)
 	}
 
 	paymentAggregate, err := s.paymentRepository.FindBySubscriptionID(ctx, invoiceData.SubscriptionID)
 	if err != nil {
-		return xerror.Wrap(err)
+		return nil, xerror.Wrap(err)
 	}
 	if paymentAggregate == nil {
 		s.logger.Warnf(ctx, "No payment found for subscription %s", invoiceData.SubscriptionID)
-		return nil
+		return nil, nil
 	}
 
-	paymentAggregate.Payment.SubscriptionStatus = enum.SubscriptionStatusActive
 	paymentAggregate.Payment.PaidAt = invoiceData.PaidAt
+	paymentAggregate.Payment.ChannelInfo.StripeSubscriptionStatus = enum.SubscriptionStatusActive
+	paymentAggregate.Payment.ChannelInfo.StripeCurrentPeriodStart = time.Unix(invoiceData.CurrentPeriodStart, 0)
+	paymentAggregate.Payment.ChannelInfo.StripeCurrentPeriodEnd = time.Unix(invoiceData.CurrentPeriodEnd, 0)
+	paymentAggregate.Payment.ChannelInfo.StripeInvoiceID = invoiceData.InvoiceID
 
 	if _, err := s.paymentRepository.Update(ctx, paymentAggregate); err != nil {
-		return xerror.Wrap(err)
+		return nil, xerror.Wrap(err)
 	}
 
-	return s.sendNotification(ctx, paymentAggregate, "invoice.paid")
+	return paymentAggregate, nil
 }
 
-func (s *StripePaymentService) handleInvoicePaymentFailed(ctx context.Context, event *stripeclient.WebhookEvent) error {
+func (s *StripePaymentService) handleInvoicePaymentFailed(ctx context.Context, event *stripeclient.WebhookEvent) (*aggregate.PaymentAggregate, error) {
 	invoiceData, err := stripeclient.ParseInvoicePaymentFailed(event)
 	if err != nil {
-		return xerror.Wrap(err)
+		return nil, xerror.Wrap(err)
 	}
 
 	paymentAggregate, err := s.paymentRepository.FindBySubscriptionID(ctx, invoiceData.SubscriptionID)
 	if err != nil {
-		return xerror.Wrap(err)
+		return nil, xerror.Wrap(err)
 	}
 	if paymentAggregate == nil {
 		s.logger.Warnf(ctx, "No payment found for subscription %s", invoiceData.SubscriptionID)
-		return nil
+		return nil, nil
 	}
 
-	paymentAggregate.Payment.SubscriptionStatus = enum.SubscriptionStatusPastDue
+	paymentAggregate.Payment.ChannelInfo.StripeSubscriptionStatus = enum.SubscriptionStatusPastDue
 
 	if _, err := s.paymentRepository.Update(ctx, paymentAggregate); err != nil {
-		return xerror.Wrap(err)
+		return nil, xerror.Wrap(err)
 	}
 
-	return s.sendNotification(ctx, paymentAggregate, "invoice.payment_failed")
+	return paymentAggregate, nil
 }
 
-func (s *StripePaymentService) handleSubscriptionUpdated(ctx context.Context, event *stripeclient.WebhookEvent) error {
+func (s *StripePaymentService) handleSubscriptionUpdated(ctx context.Context, event *stripeclient.WebhookEvent) (*aggregate.PaymentAggregate, error) {
 	subData, err := stripeclient.ParseSubscriptionUpdated(event)
 	if err != nil {
-		return xerror.Wrap(err)
+		return nil, xerror.Wrap(err)
 	}
 
 	paymentAggregate, err := s.paymentRepository.FindBySubscriptionID(ctx, subData.SubscriptionID)
 	if err != nil {
-		return xerror.Wrap(err)
+		return nil, xerror.Wrap(err)
 	}
 	if paymentAggregate == nil {
 		s.logger.Warnf(ctx, "No payment found for subscription %s", subData.SubscriptionID)
-		return nil
+		return nil, nil
 	}
 
-	paymentAggregate.Payment.SubscriptionStatus = enum.ParseSubscriptionStatus(subData.Status)
-	paymentAggregate.Payment.CurrentPeriodStart = subData.CurrentPeriodStart
-	paymentAggregate.Payment.CurrentPeriodEnd = subData.CurrentPeriodEnd
-
-	if subData.Status == "canceled" {
-		paymentAggregate.Payment.SubscriptionStatus = enum.SubscriptionStatusCanceled
-	}
+	paymentAggregate.Payment.ChannelInfo.StripeSubscriptionStatus = enum.ParseSubscriptionStatus(subData.Status)
+	paymentAggregate.Payment.ChannelInfo.StripeCurrentPeriodStart = subData.CurrentPeriodStart
+	paymentAggregate.Payment.ChannelInfo.StripeCurrentPeriodEnd = subData.CurrentPeriodEnd
 
 	if _, err := s.paymentRepository.Update(ctx, paymentAggregate); err != nil {
-		return xerror.Wrap(err)
+		return nil, xerror.Wrap(err)
 	}
 
-	return s.sendNotification(ctx, paymentAggregate, "customer.subscription.updated")
+	return paymentAggregate, nil
 }
 
-func (s *StripePaymentService) handleSubscriptionDeleted(ctx context.Context, event *stripeclient.WebhookEvent) error {
+func (s *StripePaymentService) handleSubscriptionDeleted(ctx context.Context, event *stripeclient.WebhookEvent) (*aggregate.PaymentAggregate, error) {
 	subData, err := stripeclient.ParseSubscriptionDeleted(event)
 	if err != nil {
-		return xerror.Wrap(err)
+		return nil, xerror.Wrap(err)
 	}
 
 	paymentAggregate, err := s.paymentRepository.FindBySubscriptionID(ctx, subData.SubscriptionID)
 	if err != nil {
-		return xerror.Wrap(err)
+		return nil, xerror.Wrap(err)
 	}
 	if paymentAggregate == nil {
 		s.logger.Warnf(ctx, "No payment found for subscription %s", subData.SubscriptionID)
-		return nil
+		return nil, nil
 	}
 
-	paymentAggregate.Payment.SubscriptionStatus = enum.SubscriptionStatusCanceled
+	paymentAggregate.Payment.ChannelInfo.StripeSubscriptionStatus = enum.SubscriptionStatusCanceled
 	paymentAggregate.Payment.Status = enum.PaymentStatusClosed
 
 	if _, err := s.paymentRepository.Update(ctx, paymentAggregate); err != nil {
-		return xerror.Wrap(err)
+		return nil, xerror.Wrap(err)
 	}
 
-	return s.sendNotification(ctx, paymentAggregate, "customer.subscription.deleted")
+	return paymentAggregate, nil
 }
 
-func (s *StripePaymentService) sendNotification(ctx context.Context, paymentAggregate *aggregate.PaymentAggregate, eventType string) error {
+func (s *StripePaymentService) CancelSubscription(ctx context.Context, encrypt string) (*aggregate.PaymentAggregate, error) {
+	if s.stripeClient == nil {
+		return nil, xerror.New("stripe client not initialized")
+	}
+
+	decryptData, err := aes.AESDecrypt(encrypt, []byte(s.AESKey))
+	if err != nil {
+		return nil, xerror.Wrap(err)
+	}
+
+	var request StripeCancelSubscriptionRequest
+	if err := json.Unmarshal([]byte(decryptData), &request); err != nil {
+		return nil, xerror.Wrap(err)
+	}
+
+	if request.UserID == "" {
+		return nil, xerror.New("user_id is required")
+	}
+
+	if request.Service == "" {
+		return nil, xerror.New("service is required")
+	}
+
+	paymentAggregate, err := s.paymentRepository.FindActiveSubscriptionByUserIDAndService(ctx, request.UserID, request.Service)
+	if err != nil {
+		return nil, xerror.Wrap(err)
+	}
+	if paymentAggregate == nil {
+		return nil, xerror.New("no active subscription found for user")
+	}
+
+	if paymentAggregate.Payment.ChannelInfo.StripeSubscriptionID == "" {
+		return nil, xerror.New("subscription ID not found in payment record")
+	}
+
+	_, err = s.stripeClient.CancelSubscription(ctx, paymentAggregate.Payment.ChannelInfo.StripeSubscriptionID, &stripe.SubscriptionCancelParams{
+		Prorate: stripe.Bool(true),
+	})
+	if err != nil {
+		return nil, xerror.Wrap(err)
+	}
+
+	paymentAggregate.Payment.ChannelInfo.StripeSubscriptionStatus = enum.SubscriptionStatusCanceled
+	paymentAggregate.Payment.Status = enum.PaymentStatusClosed
+
+	if _, err := s.paymentRepository.Update(ctx, paymentAggregate); err != nil {
+		return nil, xerror.Wrap(err)
+	}
+
+	return paymentAggregate, nil
+}
+
+func (s *StripePaymentService) SendNotification(ctx context.Context, paymentAggregate *aggregate.PaymentAggregate, event *stripeclient.WebhookEvent) error {
 	var notifyURL string
 	if urlValue, ok := s.ServiceNotifyURL[paymentAggregate.Payment.Service]; ok {
 		notifyURL = urlValue.(string)
@@ -362,23 +449,24 @@ func (s *StripePaymentService) sendNotification(ctx context.Context, paymentAggr
 		return nil
 	}
 
-	payloadData := map[string]interface{}{
-		"order_no":             paymentAggregate.Payment.OutTradeNo,
-		"pay_order_no":         paymentAggregate.Payment.ChannelInfo.TransactionID,
-		"subscription_id":      paymentAggregate.Payment.SubscriptionID,
-		"customer_id":          paymentAggregate.Payment.CustomerID,
-		"amount":               int64(paymentAggregate.Payment.Amount),
-		"currency":             paymentAggregate.Payment.Currency,
-		"pay_time":             paymentAggregate.Payment.PaidAt.Format(time.RFC3339),
-		"pay_state":            string(paymentAggregate.Payment.Status),
-		"subscription_status":  string(paymentAggregate.Payment.SubscriptionStatus),
-		"interval":             string(paymentAggregate.Payment.Interval),
-		"event_type":           eventType,
-		"channel":              "stripe",
-		"payment_type":         string(paymentAggregate.Payment.PaymentType),
-		"current_period_start": paymentAggregate.Payment.CurrentPeriodStart.Format(time.RFC3339),
-		"current_period_end":   paymentAggregate.Payment.CurrentPeriodEnd.Format(time.RFC3339),
-		"user_id":              paymentAggregate.Payment.UserID,
+	payloadData := SubscriptionNotifyPayload{
+		Event:   event.Type,
+		EventID: event.ID,
+		Service: paymentAggregate.Payment.Service,
+		UserID:  paymentAggregate.Payment.UserID,
+		OrderNo: paymentAggregate.Payment.OutTradeNo,
+		Plan:    string(paymentAggregate.Payment.ChannelInfo.StripeInterval),
+		Stripe: SubscriptionNotifyStripe{
+			SubscriptionID:    paymentAggregate.Payment.ChannelInfo.StripeSubscriptionID,
+			CustomerID:        paymentAggregate.Payment.ChannelInfo.StripeCustomerID,
+			CheckoutSessionID: paymentAggregate.Payment.ChannelInfo.StripeCheckoutSessionID,
+			InvoiceID:         paymentAggregate.Payment.ChannelInfo.StripeInvoiceID,
+		},
+		Period: SubscriptionNotifyPeriod{
+			CurrentPeriodStart: paymentAggregate.Payment.ChannelInfo.StripeCurrentPeriodStart.Unix(),
+			CurrentPeriodEnd:   paymentAggregate.Payment.ChannelInfo.StripeCurrentPeriodEnd.Unix(),
+		},
+		Status: string(paymentAggregate.Payment.Status),
 	}
 
 	jsonData, err := json.Marshal(payloadData)
@@ -392,7 +480,7 @@ func (s *StripePaymentService) sendNotification(ctx context.Context, paymentAggr
 	}
 
 	requestBody := map[string]interface{}{
-		"encrypt": encryptedData,
+		"data": encryptedData,
 	}
 
 	jsonReqBody, err := json.Marshal(requestBody)
@@ -411,6 +499,6 @@ func (s *StripePaymentService) sendNotification(ctx context.Context, paymentAggr
 		return xerror.New("notification failed")
 	}
 
-	s.logger.Infof(ctx, "Successfully sent notification for event %s to %s", eventType, notifyURL)
+	s.logger.Infof(ctx, "Successfully sent notification for event %s %s to %s", event.Type, event.ID, notifyURL)
 	return nil
 }

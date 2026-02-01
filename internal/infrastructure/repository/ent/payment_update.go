@@ -63,46 +63,6 @@ func (pu *PaymentUpdate) SetNillableUserID(s *string) *PaymentUpdate {
 	return pu
 }
 
-// SetTransactionID sets the "transaction_id" field.
-func (pu *PaymentUpdate) SetTransactionID(s string) *PaymentUpdate {
-	pu.mutation.SetTransactionID(s)
-	return pu
-}
-
-// SetNillableTransactionID sets the "transaction_id" field if the given value is not nil.
-func (pu *PaymentUpdate) SetNillableTransactionID(s *string) *PaymentUpdate {
-	if s != nil {
-		pu.SetTransactionID(*s)
-	}
-	return pu
-}
-
-// ClearTransactionID clears the value of the "transaction_id" field.
-func (pu *PaymentUpdate) ClearTransactionID() *PaymentUpdate {
-	pu.mutation.ClearTransactionID()
-	return pu
-}
-
-// SetOpenID sets the "open_id" field.
-func (pu *PaymentUpdate) SetOpenID(s string) *PaymentUpdate {
-	pu.mutation.SetOpenID(s)
-	return pu
-}
-
-// SetNillableOpenID sets the "open_id" field if the given value is not nil.
-func (pu *PaymentUpdate) SetNillableOpenID(s *string) *PaymentUpdate {
-	if s != nil {
-		pu.SetOpenID(*s)
-	}
-	return pu
-}
-
-// ClearOpenID clears the value of the "open_id" field.
-func (pu *PaymentUpdate) ClearOpenID() *PaymentUpdate {
-	pu.mutation.ClearOpenID()
-	return pu
-}
-
 // SetChannel sets the "channel" field.
 func (pu *PaymentUpdate) SetChannel(pa payment.Channel) *PaymentUpdate {
 	pu.mutation.SetChannel(pa)
@@ -113,20 +73,6 @@ func (pu *PaymentUpdate) SetChannel(pa payment.Channel) *PaymentUpdate {
 func (pu *PaymentUpdate) SetNillableChannel(pa *payment.Channel) *PaymentUpdate {
 	if pa != nil {
 		pu.SetChannel(*pa)
-	}
-	return pu
-}
-
-// SetPlatform sets the "platform" field.
-func (pu *PaymentUpdate) SetPlatform(pa payment.Platform) *PaymentUpdate {
-	pu.mutation.SetPlatform(pa)
-	return pu
-}
-
-// SetNillablePlatform sets the "platform" field if the given value is not nil.
-func (pu *PaymentUpdate) SetNillablePlatform(pa *payment.Platform) *PaymentUpdate {
-	if pa != nil {
-		pu.SetPlatform(*pa)
 	}
 	return pu
 }
@@ -242,163 +188,243 @@ func (pu *PaymentUpdate) SetNillablePaymentType(pt *payment.PaymentType) *Paymen
 	return pu
 }
 
-// SetSubscriptionID sets the "subscription_id" field.
-func (pu *PaymentUpdate) SetSubscriptionID(s string) *PaymentUpdate {
-	pu.mutation.SetSubscriptionID(s)
+// SetWechatPlatform sets the "wechat_platform" field.
+func (pu *PaymentUpdate) SetWechatPlatform(s string) *PaymentUpdate {
+	pu.mutation.SetWechatPlatform(s)
 	return pu
 }
 
-// SetNillableSubscriptionID sets the "subscription_id" field if the given value is not nil.
-func (pu *PaymentUpdate) SetNillableSubscriptionID(s *string) *PaymentUpdate {
+// SetNillableWechatPlatform sets the "wechat_platform" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableWechatPlatform(s *string) *PaymentUpdate {
 	if s != nil {
-		pu.SetSubscriptionID(*s)
+		pu.SetWechatPlatform(*s)
 	}
 	return pu
 }
 
-// ClearSubscriptionID clears the value of the "subscription_id" field.
-func (pu *PaymentUpdate) ClearSubscriptionID() *PaymentUpdate {
-	pu.mutation.ClearSubscriptionID()
+// ClearWechatPlatform clears the value of the "wechat_platform" field.
+func (pu *PaymentUpdate) ClearWechatPlatform() *PaymentUpdate {
+	pu.mutation.ClearWechatPlatform()
 	return pu
 }
 
-// SetSubscriptionStatus sets the "subscription_status" field.
-func (pu *PaymentUpdate) SetSubscriptionStatus(ps payment.SubscriptionStatus) *PaymentUpdate {
-	pu.mutation.SetSubscriptionStatus(ps)
+// SetWechatOpenID sets the "wechat_open_id" field.
+func (pu *PaymentUpdate) SetWechatOpenID(s string) *PaymentUpdate {
+	pu.mutation.SetWechatOpenID(s)
 	return pu
 }
 
-// SetNillableSubscriptionStatus sets the "subscription_status" field if the given value is not nil.
-func (pu *PaymentUpdate) SetNillableSubscriptionStatus(ps *payment.SubscriptionStatus) *PaymentUpdate {
-	if ps != nil {
-		pu.SetSubscriptionStatus(*ps)
+// SetNillableWechatOpenID sets the "wechat_open_id" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableWechatOpenID(s *string) *PaymentUpdate {
+	if s != nil {
+		pu.SetWechatOpenID(*s)
 	}
 	return pu
 }
 
-// ClearSubscriptionStatus clears the value of the "subscription_status" field.
-func (pu *PaymentUpdate) ClearSubscriptionStatus() *PaymentUpdate {
-	pu.mutation.ClearSubscriptionStatus()
+// ClearWechatOpenID clears the value of the "wechat_open_id" field.
+func (pu *PaymentUpdate) ClearWechatOpenID() *PaymentUpdate {
+	pu.mutation.ClearWechatOpenID()
 	return pu
 }
 
-// SetInterval sets the "interval" field.
-func (pu *PaymentUpdate) SetInterval(pa payment.Interval) *PaymentUpdate {
-	pu.mutation.SetInterval(pa)
+// SetWechatTransactionID sets the "wechat_transaction_id" field.
+func (pu *PaymentUpdate) SetWechatTransactionID(s string) *PaymentUpdate {
+	pu.mutation.SetWechatTransactionID(s)
 	return pu
 }
 
-// SetNillableInterval sets the "interval" field if the given value is not nil.
-func (pu *PaymentUpdate) SetNillableInterval(pa *payment.Interval) *PaymentUpdate {
-	if pa != nil {
-		pu.SetInterval(*pa)
+// SetNillableWechatTransactionID sets the "wechat_transaction_id" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableWechatTransactionID(s *string) *PaymentUpdate {
+	if s != nil {
+		pu.SetWechatTransactionID(*s)
 	}
 	return pu
 }
 
-// ClearInterval clears the value of the "interval" field.
-func (pu *PaymentUpdate) ClearInterval() *PaymentUpdate {
-	pu.mutation.ClearInterval()
+// ClearWechatTransactionID clears the value of the "wechat_transaction_id" field.
+func (pu *PaymentUpdate) ClearWechatTransactionID() *PaymentUpdate {
+	pu.mutation.ClearWechatTransactionID()
 	return pu
 }
 
-// SetCurrentPeriodStart sets the "current_period_start" field.
-func (pu *PaymentUpdate) SetCurrentPeriodStart(t time.Time) *PaymentUpdate {
-	pu.mutation.SetCurrentPeriodStart(t)
+// SetStripeSubscriptionID sets the "stripe_subscription_id" field.
+func (pu *PaymentUpdate) SetStripeSubscriptionID(s string) *PaymentUpdate {
+	pu.mutation.SetStripeSubscriptionID(s)
 	return pu
 }
 
-// SetNillableCurrentPeriodStart sets the "current_period_start" field if the given value is not nil.
-func (pu *PaymentUpdate) SetNillableCurrentPeriodStart(t *time.Time) *PaymentUpdate {
+// SetNillableStripeSubscriptionID sets the "stripe_subscription_id" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableStripeSubscriptionID(s *string) *PaymentUpdate {
+	if s != nil {
+		pu.SetStripeSubscriptionID(*s)
+	}
+	return pu
+}
+
+// ClearStripeSubscriptionID clears the value of the "stripe_subscription_id" field.
+func (pu *PaymentUpdate) ClearStripeSubscriptionID() *PaymentUpdate {
+	pu.mutation.ClearStripeSubscriptionID()
+	return pu
+}
+
+// SetStripeSubscriptionStatus sets the "stripe_subscription_status" field.
+func (pu *PaymentUpdate) SetStripeSubscriptionStatus(s string) *PaymentUpdate {
+	pu.mutation.SetStripeSubscriptionStatus(s)
+	return pu
+}
+
+// SetNillableStripeSubscriptionStatus sets the "stripe_subscription_status" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableStripeSubscriptionStatus(s *string) *PaymentUpdate {
+	if s != nil {
+		pu.SetStripeSubscriptionStatus(*s)
+	}
+	return pu
+}
+
+// ClearStripeSubscriptionStatus clears the value of the "stripe_subscription_status" field.
+func (pu *PaymentUpdate) ClearStripeSubscriptionStatus() *PaymentUpdate {
+	pu.mutation.ClearStripeSubscriptionStatus()
+	return pu
+}
+
+// SetStripeInterval sets the "stripe_interval" field.
+func (pu *PaymentUpdate) SetStripeInterval(s string) *PaymentUpdate {
+	pu.mutation.SetStripeInterval(s)
+	return pu
+}
+
+// SetNillableStripeInterval sets the "stripe_interval" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableStripeInterval(s *string) *PaymentUpdate {
+	if s != nil {
+		pu.SetStripeInterval(*s)
+	}
+	return pu
+}
+
+// ClearStripeInterval clears the value of the "stripe_interval" field.
+func (pu *PaymentUpdate) ClearStripeInterval() *PaymentUpdate {
+	pu.mutation.ClearStripeInterval()
+	return pu
+}
+
+// SetStripeCurrentPeriodStart sets the "stripe_current_period_start" field.
+func (pu *PaymentUpdate) SetStripeCurrentPeriodStart(t time.Time) *PaymentUpdate {
+	pu.mutation.SetStripeCurrentPeriodStart(t)
+	return pu
+}
+
+// SetNillableStripeCurrentPeriodStart sets the "stripe_current_period_start" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableStripeCurrentPeriodStart(t *time.Time) *PaymentUpdate {
 	if t != nil {
-		pu.SetCurrentPeriodStart(*t)
+		pu.SetStripeCurrentPeriodStart(*t)
 	}
 	return pu
 }
 
-// ClearCurrentPeriodStart clears the value of the "current_period_start" field.
-func (pu *PaymentUpdate) ClearCurrentPeriodStart() *PaymentUpdate {
-	pu.mutation.ClearCurrentPeriodStart()
+// ClearStripeCurrentPeriodStart clears the value of the "stripe_current_period_start" field.
+func (pu *PaymentUpdate) ClearStripeCurrentPeriodStart() *PaymentUpdate {
+	pu.mutation.ClearStripeCurrentPeriodStart()
 	return pu
 }
 
-// SetCurrentPeriodEnd sets the "current_period_end" field.
-func (pu *PaymentUpdate) SetCurrentPeriodEnd(t time.Time) *PaymentUpdate {
-	pu.mutation.SetCurrentPeriodEnd(t)
+// SetStripeCurrentPeriodEnd sets the "stripe_current_period_end" field.
+func (pu *PaymentUpdate) SetStripeCurrentPeriodEnd(t time.Time) *PaymentUpdate {
+	pu.mutation.SetStripeCurrentPeriodEnd(t)
 	return pu
 }
 
-// SetNillableCurrentPeriodEnd sets the "current_period_end" field if the given value is not nil.
-func (pu *PaymentUpdate) SetNillableCurrentPeriodEnd(t *time.Time) *PaymentUpdate {
+// SetNillableStripeCurrentPeriodEnd sets the "stripe_current_period_end" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableStripeCurrentPeriodEnd(t *time.Time) *PaymentUpdate {
 	if t != nil {
-		pu.SetCurrentPeriodEnd(*t)
+		pu.SetStripeCurrentPeriodEnd(*t)
 	}
 	return pu
 }
 
-// ClearCurrentPeriodEnd clears the value of the "current_period_end" field.
-func (pu *PaymentUpdate) ClearCurrentPeriodEnd() *PaymentUpdate {
-	pu.mutation.ClearCurrentPeriodEnd()
+// ClearStripeCurrentPeriodEnd clears the value of the "stripe_current_period_end" field.
+func (pu *PaymentUpdate) ClearStripeCurrentPeriodEnd() *PaymentUpdate {
+	pu.mutation.ClearStripeCurrentPeriodEnd()
 	return pu
 }
 
-// SetCustomerID sets the "customer_id" field.
-func (pu *PaymentUpdate) SetCustomerID(s string) *PaymentUpdate {
-	pu.mutation.SetCustomerID(s)
+// SetStripeCustomerID sets the "stripe_customer_id" field.
+func (pu *PaymentUpdate) SetStripeCustomerID(s string) *PaymentUpdate {
+	pu.mutation.SetStripeCustomerID(s)
 	return pu
 }
 
-// SetNillableCustomerID sets the "customer_id" field if the given value is not nil.
-func (pu *PaymentUpdate) SetNillableCustomerID(s *string) *PaymentUpdate {
+// SetNillableStripeCustomerID sets the "stripe_customer_id" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableStripeCustomerID(s *string) *PaymentUpdate {
 	if s != nil {
-		pu.SetCustomerID(*s)
+		pu.SetStripeCustomerID(*s)
 	}
 	return pu
 }
 
-// ClearCustomerID clears the value of the "customer_id" field.
-func (pu *PaymentUpdate) ClearCustomerID() *PaymentUpdate {
-	pu.mutation.ClearCustomerID()
+// ClearStripeCustomerID clears the value of the "stripe_customer_id" field.
+func (pu *PaymentUpdate) ClearStripeCustomerID() *PaymentUpdate {
+	pu.mutation.ClearStripeCustomerID()
 	return pu
 }
 
-// SetCustomerEmail sets the "customer_email" field.
-func (pu *PaymentUpdate) SetCustomerEmail(s string) *PaymentUpdate {
-	pu.mutation.SetCustomerEmail(s)
+// SetStripeCustomerEmail sets the "stripe_customer_email" field.
+func (pu *PaymentUpdate) SetStripeCustomerEmail(s string) *PaymentUpdate {
+	pu.mutation.SetStripeCustomerEmail(s)
 	return pu
 }
 
-// SetNillableCustomerEmail sets the "customer_email" field if the given value is not nil.
-func (pu *PaymentUpdate) SetNillableCustomerEmail(s *string) *PaymentUpdate {
+// SetNillableStripeCustomerEmail sets the "stripe_customer_email" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableStripeCustomerEmail(s *string) *PaymentUpdate {
 	if s != nil {
-		pu.SetCustomerEmail(*s)
+		pu.SetStripeCustomerEmail(*s)
 	}
 	return pu
 }
 
-// ClearCustomerEmail clears the value of the "customer_email" field.
-func (pu *PaymentUpdate) ClearCustomerEmail() *PaymentUpdate {
-	pu.mutation.ClearCustomerEmail()
+// ClearStripeCustomerEmail clears the value of the "stripe_customer_email" field.
+func (pu *PaymentUpdate) ClearStripeCustomerEmail() *PaymentUpdate {
+	pu.mutation.ClearStripeCustomerEmail()
 	return pu
 }
 
-// SetCheckoutSessionID sets the "checkout_session_id" field.
-func (pu *PaymentUpdate) SetCheckoutSessionID(s string) *PaymentUpdate {
-	pu.mutation.SetCheckoutSessionID(s)
+// SetStripeCheckoutSessionID sets the "stripe_checkout_session_id" field.
+func (pu *PaymentUpdate) SetStripeCheckoutSessionID(s string) *PaymentUpdate {
+	pu.mutation.SetStripeCheckoutSessionID(s)
 	return pu
 }
 
-// SetNillableCheckoutSessionID sets the "checkout_session_id" field if the given value is not nil.
-func (pu *PaymentUpdate) SetNillableCheckoutSessionID(s *string) *PaymentUpdate {
+// SetNillableStripeCheckoutSessionID sets the "stripe_checkout_session_id" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableStripeCheckoutSessionID(s *string) *PaymentUpdate {
 	if s != nil {
-		pu.SetCheckoutSessionID(*s)
+		pu.SetStripeCheckoutSessionID(*s)
 	}
 	return pu
 }
 
-// ClearCheckoutSessionID clears the value of the "checkout_session_id" field.
-func (pu *PaymentUpdate) ClearCheckoutSessionID() *PaymentUpdate {
-	pu.mutation.ClearCheckoutSessionID()
+// ClearStripeCheckoutSessionID clears the value of the "stripe_checkout_session_id" field.
+func (pu *PaymentUpdate) ClearStripeCheckoutSessionID() *PaymentUpdate {
+	pu.mutation.ClearStripeCheckoutSessionID()
+	return pu
+}
+
+// SetStripeInvoiceID sets the "stripe_invoice_id" field.
+func (pu *PaymentUpdate) SetStripeInvoiceID(s string) *PaymentUpdate {
+	pu.mutation.SetStripeInvoiceID(s)
+	return pu
+}
+
+// SetNillableStripeInvoiceID sets the "stripe_invoice_id" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableStripeInvoiceID(s *string) *PaymentUpdate {
+	if s != nil {
+		pu.SetStripeInvoiceID(*s)
+	}
+	return pu
+}
+
+// ClearStripeInvoiceID clears the value of the "stripe_invoice_id" field.
+func (pu *PaymentUpdate) ClearStripeInvoiceID() *PaymentUpdate {
+	pu.mutation.ClearStripeInvoiceID()
 	return pu
 }
 
@@ -471,11 +497,6 @@ func (pu *PaymentUpdate) check() error {
 			return &ValidationError{Name: "channel", err: fmt.Errorf(`ent: validator failed for field "Payment.channel": %w`, err)}
 		}
 	}
-	if v, ok := pu.mutation.Platform(); ok {
-		if err := payment.PlatformValidator(v); err != nil {
-			return &ValidationError{Name: "platform", err: fmt.Errorf(`ent: validator failed for field "Payment.platform": %w`, err)}
-		}
-	}
 	if v, ok := pu.mutation.Service(); ok {
 		if err := payment.ServiceValidator(v); err != nil {
 			return &ValidationError{Name: "service", err: fmt.Errorf(`ent: validator failed for field "Payment.service": %w`, err)}
@@ -506,16 +527,6 @@ func (pu *PaymentUpdate) check() error {
 			return &ValidationError{Name: "payment_type", err: fmt.Errorf(`ent: validator failed for field "Payment.payment_type": %w`, err)}
 		}
 	}
-	if v, ok := pu.mutation.SubscriptionStatus(); ok {
-		if err := payment.SubscriptionStatusValidator(v); err != nil {
-			return &ValidationError{Name: "subscription_status", err: fmt.Errorf(`ent: validator failed for field "Payment.subscription_status": %w`, err)}
-		}
-	}
-	if v, ok := pu.mutation.Interval(); ok {
-		if err := payment.IntervalValidator(v); err != nil {
-			return &ValidationError{Name: "interval", err: fmt.Errorf(`ent: validator failed for field "Payment.interval": %w`, err)}
-		}
-	}
 	if pu.mutation.UserCleared() && len(pu.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "Payment.user"`)
 	}
@@ -540,23 +551,8 @@ func (pu *PaymentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := pu.mutation.OutTradeNo(); ok {
 		_spec.SetField(payment.FieldOutTradeNo, field.TypeString, value)
 	}
-	if value, ok := pu.mutation.TransactionID(); ok {
-		_spec.SetField(payment.FieldTransactionID, field.TypeString, value)
-	}
-	if pu.mutation.TransactionIDCleared() {
-		_spec.ClearField(payment.FieldTransactionID, field.TypeString)
-	}
-	if value, ok := pu.mutation.OpenID(); ok {
-		_spec.SetField(payment.FieldOpenID, field.TypeString, value)
-	}
-	if pu.mutation.OpenIDCleared() {
-		_spec.ClearField(payment.FieldOpenID, field.TypeString)
-	}
 	if value, ok := pu.mutation.Channel(); ok {
 		_spec.SetField(payment.FieldChannel, field.TypeEnum, value)
-	}
-	if value, ok := pu.mutation.Platform(); ok {
-		_spec.SetField(payment.FieldPlatform, field.TypeEnum, value)
 	}
 	if value, ok := pu.mutation.Service(); ok {
 		_spec.SetField(payment.FieldService, field.TypeString, value)
@@ -585,53 +581,77 @@ func (pu *PaymentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := pu.mutation.PaymentType(); ok {
 		_spec.SetField(payment.FieldPaymentType, field.TypeEnum, value)
 	}
-	if value, ok := pu.mutation.SubscriptionID(); ok {
-		_spec.SetField(payment.FieldSubscriptionID, field.TypeString, value)
+	if value, ok := pu.mutation.WechatPlatform(); ok {
+		_spec.SetField(payment.FieldWechatPlatform, field.TypeString, value)
 	}
-	if pu.mutation.SubscriptionIDCleared() {
-		_spec.ClearField(payment.FieldSubscriptionID, field.TypeString)
+	if pu.mutation.WechatPlatformCleared() {
+		_spec.ClearField(payment.FieldWechatPlatform, field.TypeString)
 	}
-	if value, ok := pu.mutation.SubscriptionStatus(); ok {
-		_spec.SetField(payment.FieldSubscriptionStatus, field.TypeEnum, value)
+	if value, ok := pu.mutation.WechatOpenID(); ok {
+		_spec.SetField(payment.FieldWechatOpenID, field.TypeString, value)
 	}
-	if pu.mutation.SubscriptionStatusCleared() {
-		_spec.ClearField(payment.FieldSubscriptionStatus, field.TypeEnum)
+	if pu.mutation.WechatOpenIDCleared() {
+		_spec.ClearField(payment.FieldWechatOpenID, field.TypeString)
 	}
-	if value, ok := pu.mutation.Interval(); ok {
-		_spec.SetField(payment.FieldInterval, field.TypeEnum, value)
+	if value, ok := pu.mutation.WechatTransactionID(); ok {
+		_spec.SetField(payment.FieldWechatTransactionID, field.TypeString, value)
 	}
-	if pu.mutation.IntervalCleared() {
-		_spec.ClearField(payment.FieldInterval, field.TypeEnum)
+	if pu.mutation.WechatTransactionIDCleared() {
+		_spec.ClearField(payment.FieldWechatTransactionID, field.TypeString)
 	}
-	if value, ok := pu.mutation.CurrentPeriodStart(); ok {
-		_spec.SetField(payment.FieldCurrentPeriodStart, field.TypeTime, value)
+	if value, ok := pu.mutation.StripeSubscriptionID(); ok {
+		_spec.SetField(payment.FieldStripeSubscriptionID, field.TypeString, value)
 	}
-	if pu.mutation.CurrentPeriodStartCleared() {
-		_spec.ClearField(payment.FieldCurrentPeriodStart, field.TypeTime)
+	if pu.mutation.StripeSubscriptionIDCleared() {
+		_spec.ClearField(payment.FieldStripeSubscriptionID, field.TypeString)
 	}
-	if value, ok := pu.mutation.CurrentPeriodEnd(); ok {
-		_spec.SetField(payment.FieldCurrentPeriodEnd, field.TypeTime, value)
+	if value, ok := pu.mutation.StripeSubscriptionStatus(); ok {
+		_spec.SetField(payment.FieldStripeSubscriptionStatus, field.TypeString, value)
 	}
-	if pu.mutation.CurrentPeriodEndCleared() {
-		_spec.ClearField(payment.FieldCurrentPeriodEnd, field.TypeTime)
+	if pu.mutation.StripeSubscriptionStatusCleared() {
+		_spec.ClearField(payment.FieldStripeSubscriptionStatus, field.TypeString)
 	}
-	if value, ok := pu.mutation.CustomerID(); ok {
-		_spec.SetField(payment.FieldCustomerID, field.TypeString, value)
+	if value, ok := pu.mutation.StripeInterval(); ok {
+		_spec.SetField(payment.FieldStripeInterval, field.TypeString, value)
 	}
-	if pu.mutation.CustomerIDCleared() {
-		_spec.ClearField(payment.FieldCustomerID, field.TypeString)
+	if pu.mutation.StripeIntervalCleared() {
+		_spec.ClearField(payment.FieldStripeInterval, field.TypeString)
 	}
-	if value, ok := pu.mutation.CustomerEmail(); ok {
-		_spec.SetField(payment.FieldCustomerEmail, field.TypeString, value)
+	if value, ok := pu.mutation.StripeCurrentPeriodStart(); ok {
+		_spec.SetField(payment.FieldStripeCurrentPeriodStart, field.TypeTime, value)
 	}
-	if pu.mutation.CustomerEmailCleared() {
-		_spec.ClearField(payment.FieldCustomerEmail, field.TypeString)
+	if pu.mutation.StripeCurrentPeriodStartCleared() {
+		_spec.ClearField(payment.FieldStripeCurrentPeriodStart, field.TypeTime)
 	}
-	if value, ok := pu.mutation.CheckoutSessionID(); ok {
-		_spec.SetField(payment.FieldCheckoutSessionID, field.TypeString, value)
+	if value, ok := pu.mutation.StripeCurrentPeriodEnd(); ok {
+		_spec.SetField(payment.FieldStripeCurrentPeriodEnd, field.TypeTime, value)
 	}
-	if pu.mutation.CheckoutSessionIDCleared() {
-		_spec.ClearField(payment.FieldCheckoutSessionID, field.TypeString)
+	if pu.mutation.StripeCurrentPeriodEndCleared() {
+		_spec.ClearField(payment.FieldStripeCurrentPeriodEnd, field.TypeTime)
+	}
+	if value, ok := pu.mutation.StripeCustomerID(); ok {
+		_spec.SetField(payment.FieldStripeCustomerID, field.TypeString, value)
+	}
+	if pu.mutation.StripeCustomerIDCleared() {
+		_spec.ClearField(payment.FieldStripeCustomerID, field.TypeString)
+	}
+	if value, ok := pu.mutation.StripeCustomerEmail(); ok {
+		_spec.SetField(payment.FieldStripeCustomerEmail, field.TypeString, value)
+	}
+	if pu.mutation.StripeCustomerEmailCleared() {
+		_spec.ClearField(payment.FieldStripeCustomerEmail, field.TypeString)
+	}
+	if value, ok := pu.mutation.StripeCheckoutSessionID(); ok {
+		_spec.SetField(payment.FieldStripeCheckoutSessionID, field.TypeString, value)
+	}
+	if pu.mutation.StripeCheckoutSessionIDCleared() {
+		_spec.ClearField(payment.FieldStripeCheckoutSessionID, field.TypeString)
+	}
+	if value, ok := pu.mutation.StripeInvoiceID(); ok {
+		_spec.SetField(payment.FieldStripeInvoiceID, field.TypeString, value)
+	}
+	if pu.mutation.StripeInvoiceIDCleared() {
+		_spec.ClearField(payment.FieldStripeInvoiceID, field.TypeString)
 	}
 	if pu.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -716,46 +736,6 @@ func (puo *PaymentUpdateOne) SetNillableUserID(s *string) *PaymentUpdateOne {
 	return puo
 }
 
-// SetTransactionID sets the "transaction_id" field.
-func (puo *PaymentUpdateOne) SetTransactionID(s string) *PaymentUpdateOne {
-	puo.mutation.SetTransactionID(s)
-	return puo
-}
-
-// SetNillableTransactionID sets the "transaction_id" field if the given value is not nil.
-func (puo *PaymentUpdateOne) SetNillableTransactionID(s *string) *PaymentUpdateOne {
-	if s != nil {
-		puo.SetTransactionID(*s)
-	}
-	return puo
-}
-
-// ClearTransactionID clears the value of the "transaction_id" field.
-func (puo *PaymentUpdateOne) ClearTransactionID() *PaymentUpdateOne {
-	puo.mutation.ClearTransactionID()
-	return puo
-}
-
-// SetOpenID sets the "open_id" field.
-func (puo *PaymentUpdateOne) SetOpenID(s string) *PaymentUpdateOne {
-	puo.mutation.SetOpenID(s)
-	return puo
-}
-
-// SetNillableOpenID sets the "open_id" field if the given value is not nil.
-func (puo *PaymentUpdateOne) SetNillableOpenID(s *string) *PaymentUpdateOne {
-	if s != nil {
-		puo.SetOpenID(*s)
-	}
-	return puo
-}
-
-// ClearOpenID clears the value of the "open_id" field.
-func (puo *PaymentUpdateOne) ClearOpenID() *PaymentUpdateOne {
-	puo.mutation.ClearOpenID()
-	return puo
-}
-
 // SetChannel sets the "channel" field.
 func (puo *PaymentUpdateOne) SetChannel(pa payment.Channel) *PaymentUpdateOne {
 	puo.mutation.SetChannel(pa)
@@ -766,20 +746,6 @@ func (puo *PaymentUpdateOne) SetChannel(pa payment.Channel) *PaymentUpdateOne {
 func (puo *PaymentUpdateOne) SetNillableChannel(pa *payment.Channel) *PaymentUpdateOne {
 	if pa != nil {
 		puo.SetChannel(*pa)
-	}
-	return puo
-}
-
-// SetPlatform sets the "platform" field.
-func (puo *PaymentUpdateOne) SetPlatform(pa payment.Platform) *PaymentUpdateOne {
-	puo.mutation.SetPlatform(pa)
-	return puo
-}
-
-// SetNillablePlatform sets the "platform" field if the given value is not nil.
-func (puo *PaymentUpdateOne) SetNillablePlatform(pa *payment.Platform) *PaymentUpdateOne {
-	if pa != nil {
-		puo.SetPlatform(*pa)
 	}
 	return puo
 }
@@ -895,163 +861,243 @@ func (puo *PaymentUpdateOne) SetNillablePaymentType(pt *payment.PaymentType) *Pa
 	return puo
 }
 
-// SetSubscriptionID sets the "subscription_id" field.
-func (puo *PaymentUpdateOne) SetSubscriptionID(s string) *PaymentUpdateOne {
-	puo.mutation.SetSubscriptionID(s)
+// SetWechatPlatform sets the "wechat_platform" field.
+func (puo *PaymentUpdateOne) SetWechatPlatform(s string) *PaymentUpdateOne {
+	puo.mutation.SetWechatPlatform(s)
 	return puo
 }
 
-// SetNillableSubscriptionID sets the "subscription_id" field if the given value is not nil.
-func (puo *PaymentUpdateOne) SetNillableSubscriptionID(s *string) *PaymentUpdateOne {
+// SetNillableWechatPlatform sets the "wechat_platform" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableWechatPlatform(s *string) *PaymentUpdateOne {
 	if s != nil {
-		puo.SetSubscriptionID(*s)
+		puo.SetWechatPlatform(*s)
 	}
 	return puo
 }
 
-// ClearSubscriptionID clears the value of the "subscription_id" field.
-func (puo *PaymentUpdateOne) ClearSubscriptionID() *PaymentUpdateOne {
-	puo.mutation.ClearSubscriptionID()
+// ClearWechatPlatform clears the value of the "wechat_platform" field.
+func (puo *PaymentUpdateOne) ClearWechatPlatform() *PaymentUpdateOne {
+	puo.mutation.ClearWechatPlatform()
 	return puo
 }
 
-// SetSubscriptionStatus sets the "subscription_status" field.
-func (puo *PaymentUpdateOne) SetSubscriptionStatus(ps payment.SubscriptionStatus) *PaymentUpdateOne {
-	puo.mutation.SetSubscriptionStatus(ps)
+// SetWechatOpenID sets the "wechat_open_id" field.
+func (puo *PaymentUpdateOne) SetWechatOpenID(s string) *PaymentUpdateOne {
+	puo.mutation.SetWechatOpenID(s)
 	return puo
 }
 
-// SetNillableSubscriptionStatus sets the "subscription_status" field if the given value is not nil.
-func (puo *PaymentUpdateOne) SetNillableSubscriptionStatus(ps *payment.SubscriptionStatus) *PaymentUpdateOne {
-	if ps != nil {
-		puo.SetSubscriptionStatus(*ps)
+// SetNillableWechatOpenID sets the "wechat_open_id" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableWechatOpenID(s *string) *PaymentUpdateOne {
+	if s != nil {
+		puo.SetWechatOpenID(*s)
 	}
 	return puo
 }
 
-// ClearSubscriptionStatus clears the value of the "subscription_status" field.
-func (puo *PaymentUpdateOne) ClearSubscriptionStatus() *PaymentUpdateOne {
-	puo.mutation.ClearSubscriptionStatus()
+// ClearWechatOpenID clears the value of the "wechat_open_id" field.
+func (puo *PaymentUpdateOne) ClearWechatOpenID() *PaymentUpdateOne {
+	puo.mutation.ClearWechatOpenID()
 	return puo
 }
 
-// SetInterval sets the "interval" field.
-func (puo *PaymentUpdateOne) SetInterval(pa payment.Interval) *PaymentUpdateOne {
-	puo.mutation.SetInterval(pa)
+// SetWechatTransactionID sets the "wechat_transaction_id" field.
+func (puo *PaymentUpdateOne) SetWechatTransactionID(s string) *PaymentUpdateOne {
+	puo.mutation.SetWechatTransactionID(s)
 	return puo
 }
 
-// SetNillableInterval sets the "interval" field if the given value is not nil.
-func (puo *PaymentUpdateOne) SetNillableInterval(pa *payment.Interval) *PaymentUpdateOne {
-	if pa != nil {
-		puo.SetInterval(*pa)
+// SetNillableWechatTransactionID sets the "wechat_transaction_id" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableWechatTransactionID(s *string) *PaymentUpdateOne {
+	if s != nil {
+		puo.SetWechatTransactionID(*s)
 	}
 	return puo
 }
 
-// ClearInterval clears the value of the "interval" field.
-func (puo *PaymentUpdateOne) ClearInterval() *PaymentUpdateOne {
-	puo.mutation.ClearInterval()
+// ClearWechatTransactionID clears the value of the "wechat_transaction_id" field.
+func (puo *PaymentUpdateOne) ClearWechatTransactionID() *PaymentUpdateOne {
+	puo.mutation.ClearWechatTransactionID()
 	return puo
 }
 
-// SetCurrentPeriodStart sets the "current_period_start" field.
-func (puo *PaymentUpdateOne) SetCurrentPeriodStart(t time.Time) *PaymentUpdateOne {
-	puo.mutation.SetCurrentPeriodStart(t)
+// SetStripeSubscriptionID sets the "stripe_subscription_id" field.
+func (puo *PaymentUpdateOne) SetStripeSubscriptionID(s string) *PaymentUpdateOne {
+	puo.mutation.SetStripeSubscriptionID(s)
 	return puo
 }
 
-// SetNillableCurrentPeriodStart sets the "current_period_start" field if the given value is not nil.
-func (puo *PaymentUpdateOne) SetNillableCurrentPeriodStart(t *time.Time) *PaymentUpdateOne {
+// SetNillableStripeSubscriptionID sets the "stripe_subscription_id" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableStripeSubscriptionID(s *string) *PaymentUpdateOne {
+	if s != nil {
+		puo.SetStripeSubscriptionID(*s)
+	}
+	return puo
+}
+
+// ClearStripeSubscriptionID clears the value of the "stripe_subscription_id" field.
+func (puo *PaymentUpdateOne) ClearStripeSubscriptionID() *PaymentUpdateOne {
+	puo.mutation.ClearStripeSubscriptionID()
+	return puo
+}
+
+// SetStripeSubscriptionStatus sets the "stripe_subscription_status" field.
+func (puo *PaymentUpdateOne) SetStripeSubscriptionStatus(s string) *PaymentUpdateOne {
+	puo.mutation.SetStripeSubscriptionStatus(s)
+	return puo
+}
+
+// SetNillableStripeSubscriptionStatus sets the "stripe_subscription_status" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableStripeSubscriptionStatus(s *string) *PaymentUpdateOne {
+	if s != nil {
+		puo.SetStripeSubscriptionStatus(*s)
+	}
+	return puo
+}
+
+// ClearStripeSubscriptionStatus clears the value of the "stripe_subscription_status" field.
+func (puo *PaymentUpdateOne) ClearStripeSubscriptionStatus() *PaymentUpdateOne {
+	puo.mutation.ClearStripeSubscriptionStatus()
+	return puo
+}
+
+// SetStripeInterval sets the "stripe_interval" field.
+func (puo *PaymentUpdateOne) SetStripeInterval(s string) *PaymentUpdateOne {
+	puo.mutation.SetStripeInterval(s)
+	return puo
+}
+
+// SetNillableStripeInterval sets the "stripe_interval" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableStripeInterval(s *string) *PaymentUpdateOne {
+	if s != nil {
+		puo.SetStripeInterval(*s)
+	}
+	return puo
+}
+
+// ClearStripeInterval clears the value of the "stripe_interval" field.
+func (puo *PaymentUpdateOne) ClearStripeInterval() *PaymentUpdateOne {
+	puo.mutation.ClearStripeInterval()
+	return puo
+}
+
+// SetStripeCurrentPeriodStart sets the "stripe_current_period_start" field.
+func (puo *PaymentUpdateOne) SetStripeCurrentPeriodStart(t time.Time) *PaymentUpdateOne {
+	puo.mutation.SetStripeCurrentPeriodStart(t)
+	return puo
+}
+
+// SetNillableStripeCurrentPeriodStart sets the "stripe_current_period_start" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableStripeCurrentPeriodStart(t *time.Time) *PaymentUpdateOne {
 	if t != nil {
-		puo.SetCurrentPeriodStart(*t)
+		puo.SetStripeCurrentPeriodStart(*t)
 	}
 	return puo
 }
 
-// ClearCurrentPeriodStart clears the value of the "current_period_start" field.
-func (puo *PaymentUpdateOne) ClearCurrentPeriodStart() *PaymentUpdateOne {
-	puo.mutation.ClearCurrentPeriodStart()
+// ClearStripeCurrentPeriodStart clears the value of the "stripe_current_period_start" field.
+func (puo *PaymentUpdateOne) ClearStripeCurrentPeriodStart() *PaymentUpdateOne {
+	puo.mutation.ClearStripeCurrentPeriodStart()
 	return puo
 }
 
-// SetCurrentPeriodEnd sets the "current_period_end" field.
-func (puo *PaymentUpdateOne) SetCurrentPeriodEnd(t time.Time) *PaymentUpdateOne {
-	puo.mutation.SetCurrentPeriodEnd(t)
+// SetStripeCurrentPeriodEnd sets the "stripe_current_period_end" field.
+func (puo *PaymentUpdateOne) SetStripeCurrentPeriodEnd(t time.Time) *PaymentUpdateOne {
+	puo.mutation.SetStripeCurrentPeriodEnd(t)
 	return puo
 }
 
-// SetNillableCurrentPeriodEnd sets the "current_period_end" field if the given value is not nil.
-func (puo *PaymentUpdateOne) SetNillableCurrentPeriodEnd(t *time.Time) *PaymentUpdateOne {
+// SetNillableStripeCurrentPeriodEnd sets the "stripe_current_period_end" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableStripeCurrentPeriodEnd(t *time.Time) *PaymentUpdateOne {
 	if t != nil {
-		puo.SetCurrentPeriodEnd(*t)
+		puo.SetStripeCurrentPeriodEnd(*t)
 	}
 	return puo
 }
 
-// ClearCurrentPeriodEnd clears the value of the "current_period_end" field.
-func (puo *PaymentUpdateOne) ClearCurrentPeriodEnd() *PaymentUpdateOne {
-	puo.mutation.ClearCurrentPeriodEnd()
+// ClearStripeCurrentPeriodEnd clears the value of the "stripe_current_period_end" field.
+func (puo *PaymentUpdateOne) ClearStripeCurrentPeriodEnd() *PaymentUpdateOne {
+	puo.mutation.ClearStripeCurrentPeriodEnd()
 	return puo
 }
 
-// SetCustomerID sets the "customer_id" field.
-func (puo *PaymentUpdateOne) SetCustomerID(s string) *PaymentUpdateOne {
-	puo.mutation.SetCustomerID(s)
+// SetStripeCustomerID sets the "stripe_customer_id" field.
+func (puo *PaymentUpdateOne) SetStripeCustomerID(s string) *PaymentUpdateOne {
+	puo.mutation.SetStripeCustomerID(s)
 	return puo
 }
 
-// SetNillableCustomerID sets the "customer_id" field if the given value is not nil.
-func (puo *PaymentUpdateOne) SetNillableCustomerID(s *string) *PaymentUpdateOne {
+// SetNillableStripeCustomerID sets the "stripe_customer_id" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableStripeCustomerID(s *string) *PaymentUpdateOne {
 	if s != nil {
-		puo.SetCustomerID(*s)
+		puo.SetStripeCustomerID(*s)
 	}
 	return puo
 }
 
-// ClearCustomerID clears the value of the "customer_id" field.
-func (puo *PaymentUpdateOne) ClearCustomerID() *PaymentUpdateOne {
-	puo.mutation.ClearCustomerID()
+// ClearStripeCustomerID clears the value of the "stripe_customer_id" field.
+func (puo *PaymentUpdateOne) ClearStripeCustomerID() *PaymentUpdateOne {
+	puo.mutation.ClearStripeCustomerID()
 	return puo
 }
 
-// SetCustomerEmail sets the "customer_email" field.
-func (puo *PaymentUpdateOne) SetCustomerEmail(s string) *PaymentUpdateOne {
-	puo.mutation.SetCustomerEmail(s)
+// SetStripeCustomerEmail sets the "stripe_customer_email" field.
+func (puo *PaymentUpdateOne) SetStripeCustomerEmail(s string) *PaymentUpdateOne {
+	puo.mutation.SetStripeCustomerEmail(s)
 	return puo
 }
 
-// SetNillableCustomerEmail sets the "customer_email" field if the given value is not nil.
-func (puo *PaymentUpdateOne) SetNillableCustomerEmail(s *string) *PaymentUpdateOne {
+// SetNillableStripeCustomerEmail sets the "stripe_customer_email" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableStripeCustomerEmail(s *string) *PaymentUpdateOne {
 	if s != nil {
-		puo.SetCustomerEmail(*s)
+		puo.SetStripeCustomerEmail(*s)
 	}
 	return puo
 }
 
-// ClearCustomerEmail clears the value of the "customer_email" field.
-func (puo *PaymentUpdateOne) ClearCustomerEmail() *PaymentUpdateOne {
-	puo.mutation.ClearCustomerEmail()
+// ClearStripeCustomerEmail clears the value of the "stripe_customer_email" field.
+func (puo *PaymentUpdateOne) ClearStripeCustomerEmail() *PaymentUpdateOne {
+	puo.mutation.ClearStripeCustomerEmail()
 	return puo
 }
 
-// SetCheckoutSessionID sets the "checkout_session_id" field.
-func (puo *PaymentUpdateOne) SetCheckoutSessionID(s string) *PaymentUpdateOne {
-	puo.mutation.SetCheckoutSessionID(s)
+// SetStripeCheckoutSessionID sets the "stripe_checkout_session_id" field.
+func (puo *PaymentUpdateOne) SetStripeCheckoutSessionID(s string) *PaymentUpdateOne {
+	puo.mutation.SetStripeCheckoutSessionID(s)
 	return puo
 }
 
-// SetNillableCheckoutSessionID sets the "checkout_session_id" field if the given value is not nil.
-func (puo *PaymentUpdateOne) SetNillableCheckoutSessionID(s *string) *PaymentUpdateOne {
+// SetNillableStripeCheckoutSessionID sets the "stripe_checkout_session_id" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableStripeCheckoutSessionID(s *string) *PaymentUpdateOne {
 	if s != nil {
-		puo.SetCheckoutSessionID(*s)
+		puo.SetStripeCheckoutSessionID(*s)
 	}
 	return puo
 }
 
-// ClearCheckoutSessionID clears the value of the "checkout_session_id" field.
-func (puo *PaymentUpdateOne) ClearCheckoutSessionID() *PaymentUpdateOne {
-	puo.mutation.ClearCheckoutSessionID()
+// ClearStripeCheckoutSessionID clears the value of the "stripe_checkout_session_id" field.
+func (puo *PaymentUpdateOne) ClearStripeCheckoutSessionID() *PaymentUpdateOne {
+	puo.mutation.ClearStripeCheckoutSessionID()
+	return puo
+}
+
+// SetStripeInvoiceID sets the "stripe_invoice_id" field.
+func (puo *PaymentUpdateOne) SetStripeInvoiceID(s string) *PaymentUpdateOne {
+	puo.mutation.SetStripeInvoiceID(s)
+	return puo
+}
+
+// SetNillableStripeInvoiceID sets the "stripe_invoice_id" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableStripeInvoiceID(s *string) *PaymentUpdateOne {
+	if s != nil {
+		puo.SetStripeInvoiceID(*s)
+	}
+	return puo
+}
+
+// ClearStripeInvoiceID clears the value of the "stripe_invoice_id" field.
+func (puo *PaymentUpdateOne) ClearStripeInvoiceID() *PaymentUpdateOne {
+	puo.mutation.ClearStripeInvoiceID()
 	return puo
 }
 
@@ -1137,11 +1183,6 @@ func (puo *PaymentUpdateOne) check() error {
 			return &ValidationError{Name: "channel", err: fmt.Errorf(`ent: validator failed for field "Payment.channel": %w`, err)}
 		}
 	}
-	if v, ok := puo.mutation.Platform(); ok {
-		if err := payment.PlatformValidator(v); err != nil {
-			return &ValidationError{Name: "platform", err: fmt.Errorf(`ent: validator failed for field "Payment.platform": %w`, err)}
-		}
-	}
 	if v, ok := puo.mutation.Service(); ok {
 		if err := payment.ServiceValidator(v); err != nil {
 			return &ValidationError{Name: "service", err: fmt.Errorf(`ent: validator failed for field "Payment.service": %w`, err)}
@@ -1170,16 +1211,6 @@ func (puo *PaymentUpdateOne) check() error {
 	if v, ok := puo.mutation.PaymentType(); ok {
 		if err := payment.PaymentTypeValidator(v); err != nil {
 			return &ValidationError{Name: "payment_type", err: fmt.Errorf(`ent: validator failed for field "Payment.payment_type": %w`, err)}
-		}
-	}
-	if v, ok := puo.mutation.SubscriptionStatus(); ok {
-		if err := payment.SubscriptionStatusValidator(v); err != nil {
-			return &ValidationError{Name: "subscription_status", err: fmt.Errorf(`ent: validator failed for field "Payment.subscription_status": %w`, err)}
-		}
-	}
-	if v, ok := puo.mutation.Interval(); ok {
-		if err := payment.IntervalValidator(v); err != nil {
-			return &ValidationError{Name: "interval", err: fmt.Errorf(`ent: validator failed for field "Payment.interval": %w`, err)}
 		}
 	}
 	if puo.mutation.UserCleared() && len(puo.mutation.UserIDs()) > 0 {
@@ -1223,23 +1254,8 @@ func (puo *PaymentUpdateOne) sqlSave(ctx context.Context) (_node *Payment, err e
 	if value, ok := puo.mutation.OutTradeNo(); ok {
 		_spec.SetField(payment.FieldOutTradeNo, field.TypeString, value)
 	}
-	if value, ok := puo.mutation.TransactionID(); ok {
-		_spec.SetField(payment.FieldTransactionID, field.TypeString, value)
-	}
-	if puo.mutation.TransactionIDCleared() {
-		_spec.ClearField(payment.FieldTransactionID, field.TypeString)
-	}
-	if value, ok := puo.mutation.OpenID(); ok {
-		_spec.SetField(payment.FieldOpenID, field.TypeString, value)
-	}
-	if puo.mutation.OpenIDCleared() {
-		_spec.ClearField(payment.FieldOpenID, field.TypeString)
-	}
 	if value, ok := puo.mutation.Channel(); ok {
 		_spec.SetField(payment.FieldChannel, field.TypeEnum, value)
-	}
-	if value, ok := puo.mutation.Platform(); ok {
-		_spec.SetField(payment.FieldPlatform, field.TypeEnum, value)
 	}
 	if value, ok := puo.mutation.Service(); ok {
 		_spec.SetField(payment.FieldService, field.TypeString, value)
@@ -1268,53 +1284,77 @@ func (puo *PaymentUpdateOne) sqlSave(ctx context.Context) (_node *Payment, err e
 	if value, ok := puo.mutation.PaymentType(); ok {
 		_spec.SetField(payment.FieldPaymentType, field.TypeEnum, value)
 	}
-	if value, ok := puo.mutation.SubscriptionID(); ok {
-		_spec.SetField(payment.FieldSubscriptionID, field.TypeString, value)
+	if value, ok := puo.mutation.WechatPlatform(); ok {
+		_spec.SetField(payment.FieldWechatPlatform, field.TypeString, value)
 	}
-	if puo.mutation.SubscriptionIDCleared() {
-		_spec.ClearField(payment.FieldSubscriptionID, field.TypeString)
+	if puo.mutation.WechatPlatformCleared() {
+		_spec.ClearField(payment.FieldWechatPlatform, field.TypeString)
 	}
-	if value, ok := puo.mutation.SubscriptionStatus(); ok {
-		_spec.SetField(payment.FieldSubscriptionStatus, field.TypeEnum, value)
+	if value, ok := puo.mutation.WechatOpenID(); ok {
+		_spec.SetField(payment.FieldWechatOpenID, field.TypeString, value)
 	}
-	if puo.mutation.SubscriptionStatusCleared() {
-		_spec.ClearField(payment.FieldSubscriptionStatus, field.TypeEnum)
+	if puo.mutation.WechatOpenIDCleared() {
+		_spec.ClearField(payment.FieldWechatOpenID, field.TypeString)
 	}
-	if value, ok := puo.mutation.Interval(); ok {
-		_spec.SetField(payment.FieldInterval, field.TypeEnum, value)
+	if value, ok := puo.mutation.WechatTransactionID(); ok {
+		_spec.SetField(payment.FieldWechatTransactionID, field.TypeString, value)
 	}
-	if puo.mutation.IntervalCleared() {
-		_spec.ClearField(payment.FieldInterval, field.TypeEnum)
+	if puo.mutation.WechatTransactionIDCleared() {
+		_spec.ClearField(payment.FieldWechatTransactionID, field.TypeString)
 	}
-	if value, ok := puo.mutation.CurrentPeriodStart(); ok {
-		_spec.SetField(payment.FieldCurrentPeriodStart, field.TypeTime, value)
+	if value, ok := puo.mutation.StripeSubscriptionID(); ok {
+		_spec.SetField(payment.FieldStripeSubscriptionID, field.TypeString, value)
 	}
-	if puo.mutation.CurrentPeriodStartCleared() {
-		_spec.ClearField(payment.FieldCurrentPeriodStart, field.TypeTime)
+	if puo.mutation.StripeSubscriptionIDCleared() {
+		_spec.ClearField(payment.FieldStripeSubscriptionID, field.TypeString)
 	}
-	if value, ok := puo.mutation.CurrentPeriodEnd(); ok {
-		_spec.SetField(payment.FieldCurrentPeriodEnd, field.TypeTime, value)
+	if value, ok := puo.mutation.StripeSubscriptionStatus(); ok {
+		_spec.SetField(payment.FieldStripeSubscriptionStatus, field.TypeString, value)
 	}
-	if puo.mutation.CurrentPeriodEndCleared() {
-		_spec.ClearField(payment.FieldCurrentPeriodEnd, field.TypeTime)
+	if puo.mutation.StripeSubscriptionStatusCleared() {
+		_spec.ClearField(payment.FieldStripeSubscriptionStatus, field.TypeString)
 	}
-	if value, ok := puo.mutation.CustomerID(); ok {
-		_spec.SetField(payment.FieldCustomerID, field.TypeString, value)
+	if value, ok := puo.mutation.StripeInterval(); ok {
+		_spec.SetField(payment.FieldStripeInterval, field.TypeString, value)
 	}
-	if puo.mutation.CustomerIDCleared() {
-		_spec.ClearField(payment.FieldCustomerID, field.TypeString)
+	if puo.mutation.StripeIntervalCleared() {
+		_spec.ClearField(payment.FieldStripeInterval, field.TypeString)
 	}
-	if value, ok := puo.mutation.CustomerEmail(); ok {
-		_spec.SetField(payment.FieldCustomerEmail, field.TypeString, value)
+	if value, ok := puo.mutation.StripeCurrentPeriodStart(); ok {
+		_spec.SetField(payment.FieldStripeCurrentPeriodStart, field.TypeTime, value)
 	}
-	if puo.mutation.CustomerEmailCleared() {
-		_spec.ClearField(payment.FieldCustomerEmail, field.TypeString)
+	if puo.mutation.StripeCurrentPeriodStartCleared() {
+		_spec.ClearField(payment.FieldStripeCurrentPeriodStart, field.TypeTime)
 	}
-	if value, ok := puo.mutation.CheckoutSessionID(); ok {
-		_spec.SetField(payment.FieldCheckoutSessionID, field.TypeString, value)
+	if value, ok := puo.mutation.StripeCurrentPeriodEnd(); ok {
+		_spec.SetField(payment.FieldStripeCurrentPeriodEnd, field.TypeTime, value)
 	}
-	if puo.mutation.CheckoutSessionIDCleared() {
-		_spec.ClearField(payment.FieldCheckoutSessionID, field.TypeString)
+	if puo.mutation.StripeCurrentPeriodEndCleared() {
+		_spec.ClearField(payment.FieldStripeCurrentPeriodEnd, field.TypeTime)
+	}
+	if value, ok := puo.mutation.StripeCustomerID(); ok {
+		_spec.SetField(payment.FieldStripeCustomerID, field.TypeString, value)
+	}
+	if puo.mutation.StripeCustomerIDCleared() {
+		_spec.ClearField(payment.FieldStripeCustomerID, field.TypeString)
+	}
+	if value, ok := puo.mutation.StripeCustomerEmail(); ok {
+		_spec.SetField(payment.FieldStripeCustomerEmail, field.TypeString, value)
+	}
+	if puo.mutation.StripeCustomerEmailCleared() {
+		_spec.ClearField(payment.FieldStripeCustomerEmail, field.TypeString)
+	}
+	if value, ok := puo.mutation.StripeCheckoutSessionID(); ok {
+		_spec.SetField(payment.FieldStripeCheckoutSessionID, field.TypeString, value)
+	}
+	if puo.mutation.StripeCheckoutSessionIDCleared() {
+		_spec.ClearField(payment.FieldStripeCheckoutSessionID, field.TypeString)
+	}
+	if value, ok := puo.mutation.StripeInvoiceID(); ok {
+		_spec.SetField(payment.FieldStripeInvoiceID, field.TypeString, value)
+	}
+	if puo.mutation.StripeInvoiceIDCleared() {
+		_spec.ClearField(payment.FieldStripeInvoiceID, field.TypeString)
 	}
 	if puo.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
