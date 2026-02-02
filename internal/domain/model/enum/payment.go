@@ -37,6 +37,7 @@ const (
 	PaymentStatusSuccess PaymentStatus = "SUCCESS"
 	PaymentStatusClosed  PaymentStatus = "CLOSED"
 	PaymentStatusRefund  PaymentStatus = "REFUND"
+	PaymentStatusFailed  PaymentStatus = "FAILED"
 )
 
 func (p PaymentChannel) String() string {
@@ -60,6 +61,7 @@ func GetAllPaymentStatus() []PaymentStatus {
 		PaymentStatusSuccess,
 		PaymentStatusClosed,
 		PaymentStatusRefund,
+		PaymentStatusFailed,
 	}
 }
 
@@ -84,6 +86,8 @@ func ParsePaymentStatus(status string) PaymentStatus {
 		return PaymentStatusClosed
 	case "REFUND":
 		return PaymentStatusRefund
+	case "FAILED":
+		return PaymentStatusFailed
 	default:
 		return ""
 	}

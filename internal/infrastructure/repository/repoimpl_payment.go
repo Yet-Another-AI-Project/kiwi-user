@@ -58,6 +58,7 @@ func (p *paymentImpl) Create(ctx context.Context, paymentAggregate *aggregate.Pa
 		SetStripeCustomerID(paymentAggregate.Payment.ChannelInfo.StripeCustomerID).
 		SetStripeCustomerEmail(paymentAggregate.Payment.ChannelInfo.StripeCustomerEmail).
 		SetStripeCheckoutSessionID(paymentAggregate.Payment.ChannelInfo.StripeCheckoutSessionID).
+		SetStripeCancelAtPeriodEnd(paymentAggregate.Payment.ChannelInfo.StripeCancelAtPeriodEnd).
 		Save(ctx)
 
 	if err != nil {
@@ -88,6 +89,7 @@ func (p *paymentImpl) Update(ctx context.Context, paymentAggregate *aggregate.Pa
 		SetStripeCustomerID(paymentAggregate.Payment.ChannelInfo.StripeCustomerID).
 		SetStripeCustomerEmail(paymentAggregate.Payment.ChannelInfo.StripeCustomerEmail).
 		SetStripeCheckoutSessionID(paymentAggregate.Payment.ChannelInfo.StripeCheckoutSessionID).
+		SetStripeCancelAtPeriodEnd(paymentAggregate.Payment.ChannelInfo.StripeCancelAtPeriodEnd).
 		// status
 		SetStatus(payment.Status(paymentAggregate.Payment.Status.String())).
 		SetPaidAt(paymentAggregate.Payment.PaidAt).

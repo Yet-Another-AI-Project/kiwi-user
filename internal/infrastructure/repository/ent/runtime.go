@@ -327,6 +327,10 @@ func init() {
 	paymentDescDescription := paymentFields[8].Descriptor()
 	// payment.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	payment.DescriptionValidator = paymentDescDescription.Validators[0].(func(string) error)
+	// paymentDescStripeCancelAtPeriodEnd is the schema descriptor for stripe_cancel_at_period_end field.
+	paymentDescStripeCancelAtPeriodEnd := paymentFields[18].Descriptor()
+	// payment.DefaultStripeCancelAtPeriodEnd holds the default value on creation for the stripe_cancel_at_period_end field.
+	payment.DefaultStripeCancelAtPeriodEnd = paymentDescStripeCancelAtPeriodEnd.Default.(bool)
 	qywechatuseridFields := schema.QyWechatUserID{}.Fields()
 	_ = qywechatuseridFields
 	// qywechatuseridDescCreatedAt is the schema descriptor for created_at field.

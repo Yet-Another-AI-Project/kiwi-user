@@ -54,6 +54,8 @@ type Payment struct {
 	StripeSubscriptionStatus string `json:"stripe_subscription_status,omitempty"`
 	// StripeInterval holds the value of the "stripe_interval" field.
 	StripeInterval string `json:"stripe_interval,omitempty"`
+	// StripeCancelAtPeriodEnd holds the value of the "stripe_cancel_at_period_end" field.
+	StripeCancelAtPeriodEnd bool `json:"stripe_cancel_at_period_end,omitempty"`
 	// StripeCurrentPeriodStart holds the value of the "stripe_current_period_start" field.
 	StripeCurrentPeriodStart time.Time `json:"stripe_current_period_start,omitempty"`
 	// StripeCurrentPeriodEnd holds the value of the "stripe_current_period_end" field.
@@ -97,6 +99,8 @@ func (*Payment) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case payment.FieldStripeCancelAtPeriodEnd:
+			values[i] = new(sql.NullBool)
 		case payment.FieldID, payment.FieldAmount:
 			values[i] = new(sql.NullInt64)
 		case payment.FieldOutTradeNo, payment.FieldUserID, payment.FieldChannel, payment.FieldService, payment.FieldCurrency, payment.FieldDescription, payment.FieldStatus, payment.FieldPaymentType, payment.FieldWechatPlatform, payment.FieldWechatOpenID, payment.FieldWechatTransactionID, payment.FieldStripeSubscriptionID, payment.FieldStripeSubscriptionStatus, payment.FieldStripeInterval, payment.FieldStripeCustomerID, payment.FieldStripeCustomerEmail, payment.FieldStripeCheckoutSessionID, payment.FieldStripeInvoiceID:
@@ -232,6 +236,12 @@ func (pa *Payment) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				pa.StripeInterval = value.String
 			}
+		case payment.FieldStripeCancelAtPeriodEnd:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field stripe_cancel_at_period_end", values[i])
+			} else if value.Valid {
+				pa.StripeCancelAtPeriodEnd = value.Bool
+			}
 		case payment.FieldStripeCurrentPeriodStart:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field stripe_current_period_start", values[i])
@@ -362,6 +372,9 @@ func (pa *Payment) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("stripe_interval=")
 	builder.WriteString(pa.StripeInterval)
+	builder.WriteString(", ")
+	builder.WriteString("stripe_cancel_at_period_end=")
+	builder.WriteString(fmt.Sprintf("%v", pa.StripeCancelAtPeriodEnd))
 	builder.WriteString(", ")
 	builder.WriteString("stripe_current_period_start=")
 	builder.WriteString(pa.StripeCurrentPeriodStart.Format(time.ANSIC))

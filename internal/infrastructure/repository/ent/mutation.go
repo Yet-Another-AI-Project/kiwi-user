@@ -8097,6 +8097,7 @@ type PaymentMutation struct {
 	stripe_subscription_id      *string
 	stripe_subscription_status  *string
 	stripe_interval             *string
+	stripe_cancel_at_period_end *bool
 	stripe_current_period_start *time.Time
 	stripe_current_period_end   *time.Time
 	stripe_customer_id          *string
@@ -8968,6 +8969,42 @@ func (m *PaymentMutation) ResetStripeInterval() {
 	delete(m.clearedFields, payment.FieldStripeInterval)
 }
 
+// SetStripeCancelAtPeriodEnd sets the "stripe_cancel_at_period_end" field.
+func (m *PaymentMutation) SetStripeCancelAtPeriodEnd(b bool) {
+	m.stripe_cancel_at_period_end = &b
+}
+
+// StripeCancelAtPeriodEnd returns the value of the "stripe_cancel_at_period_end" field in the mutation.
+func (m *PaymentMutation) StripeCancelAtPeriodEnd() (r bool, exists bool) {
+	v := m.stripe_cancel_at_period_end
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStripeCancelAtPeriodEnd returns the old "stripe_cancel_at_period_end" field's value of the Payment entity.
+// If the Payment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaymentMutation) OldStripeCancelAtPeriodEnd(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStripeCancelAtPeriodEnd is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStripeCancelAtPeriodEnd requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStripeCancelAtPeriodEnd: %w", err)
+	}
+	return oldValue.StripeCancelAtPeriodEnd, nil
+}
+
+// ResetStripeCancelAtPeriodEnd resets all changes to the "stripe_cancel_at_period_end" field.
+func (m *PaymentMutation) ResetStripeCancelAtPeriodEnd() {
+	m.stripe_cancel_at_period_end = nil
+}
+
 // SetStripeCurrentPeriodStart sets the "stripe_current_period_start" field.
 func (m *PaymentMutation) SetStripeCurrentPeriodStart(t time.Time) {
 	m.stripe_current_period_start = &t
@@ -9323,7 +9360,7 @@ func (m *PaymentMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PaymentMutation) Fields() []string {
-	fields := make([]string, 0, 24)
+	fields := make([]string, 0, 25)
 	if m.created_at != nil {
 		fields = append(fields, payment.FieldCreatedAt)
 	}
@@ -9377,6 +9414,9 @@ func (m *PaymentMutation) Fields() []string {
 	}
 	if m.stripe_interval != nil {
 		fields = append(fields, payment.FieldStripeInterval)
+	}
+	if m.stripe_cancel_at_period_end != nil {
+		fields = append(fields, payment.FieldStripeCancelAtPeriodEnd)
 	}
 	if m.stripe_current_period_start != nil {
 		fields = append(fields, payment.FieldStripeCurrentPeriodStart)
@@ -9440,6 +9480,8 @@ func (m *PaymentMutation) Field(name string) (ent.Value, bool) {
 		return m.StripeSubscriptionStatus()
 	case payment.FieldStripeInterval:
 		return m.StripeInterval()
+	case payment.FieldStripeCancelAtPeriodEnd:
+		return m.StripeCancelAtPeriodEnd()
 	case payment.FieldStripeCurrentPeriodStart:
 		return m.StripeCurrentPeriodStart()
 	case payment.FieldStripeCurrentPeriodEnd:
@@ -9497,6 +9539,8 @@ func (m *PaymentMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldStripeSubscriptionStatus(ctx)
 	case payment.FieldStripeInterval:
 		return m.OldStripeInterval(ctx)
+	case payment.FieldStripeCancelAtPeriodEnd:
+		return m.OldStripeCancelAtPeriodEnd(ctx)
 	case payment.FieldStripeCurrentPeriodStart:
 		return m.OldStripeCurrentPeriodStart(ctx)
 	case payment.FieldStripeCurrentPeriodEnd:
@@ -9643,6 +9687,13 @@ func (m *PaymentMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetStripeInterval(v)
+		return nil
+	case payment.FieldStripeCancelAtPeriodEnd:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStripeCancelAtPeriodEnd(v)
 		return nil
 	case payment.FieldStripeCurrentPeriodStart:
 		v, ok := value.(time.Time)
@@ -9884,6 +9935,9 @@ func (m *PaymentMutation) ResetField(name string) error {
 		return nil
 	case payment.FieldStripeInterval:
 		m.ResetStripeInterval()
+		return nil
+	case payment.FieldStripeCancelAtPeriodEnd:
+		m.ResetStripeCancelAtPeriodEnd()
 		return nil
 	case payment.FieldStripeCurrentPeriodStart:
 		m.ResetStripeCurrentPeriodStart()

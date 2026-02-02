@@ -122,5 +122,15 @@ func (c *StripeClient) CancelSubscription(ctx context.Context, subscriptionID st
 	if err != nil {
 		return nil, xerror.Wrap(err)
 	}
+
+	return sub, nil
+}
+
+func (c *StripeClient) UpdateSubscription(ctx context.Context, subscriptionID string, params *stripe.SubscriptionParams) (*stripe.Subscription, error) {
+	sub, err := subscription.Update(subscriptionID, params)
+	if err != nil {
+		return nil, xerror.Wrap(err)
+	}
+
 	return sub, nil
 }

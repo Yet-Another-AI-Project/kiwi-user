@@ -345,7 +345,7 @@ var (
 		{Name: "amount", Type: field.TypeInt},
 		{Name: "currency", Type: field.TypeString},
 		{Name: "description", Type: field.TypeString},
-		{Name: "status", Type: field.TypeEnum, Enums: []string{"NOTPAY", "SUCCESS", "CLOSED", "REFUND"}},
+		{Name: "status", Type: field.TypeEnum, Enums: []string{"NOTPAY", "SUCCESS", "CLOSED", "REFUND", "FAILED"}},
 		{Name: "paid_at", Type: field.TypeTime, Nullable: true},
 		{Name: "payment_type", Type: field.TypeEnum, Enums: []string{"one_time", "subscription"}, Default: "one_time"},
 		{Name: "wechat_platform", Type: field.TypeString, Nullable: true},
@@ -354,6 +354,7 @@ var (
 		{Name: "stripe_subscription_id", Type: field.TypeString, Nullable: true},
 		{Name: "stripe_subscription_status", Type: field.TypeString, Nullable: true},
 		{Name: "stripe_interval", Type: field.TypeString, Nullable: true},
+		{Name: "stripe_cancel_at_period_end", Type: field.TypeBool, Default: false},
 		{Name: "stripe_current_period_start", Type: field.TypeTime, Nullable: true},
 		{Name: "stripe_current_period_end", Type: field.TypeTime, Nullable: true},
 		{Name: "stripe_customer_id", Type: field.TypeString, Nullable: true},
@@ -370,7 +371,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "payments_users_payments",
-				Columns:    []*schema.Column{PaymentsColumns[24]},
+				Columns:    []*schema.Column{PaymentsColumns[25]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -389,12 +390,12 @@ var (
 			{
 				Name:    "payment_stripe_customer_id",
 				Unique:  false,
-				Columns: []*schema.Column{PaymentsColumns[20]},
+				Columns: []*schema.Column{PaymentsColumns[21]},
 			},
 			{
 				Name:    "payment_stripe_checkout_session_id",
 				Unique:  false,
-				Columns: []*schema.Column{PaymentsColumns[22]},
+				Columns: []*schema.Column{PaymentsColumns[23]},
 			},
 		},
 	}

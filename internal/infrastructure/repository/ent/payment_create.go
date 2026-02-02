@@ -209,6 +209,20 @@ func (pc *PaymentCreate) SetNillableStripeInterval(s *string) *PaymentCreate {
 	return pc
 }
 
+// SetStripeCancelAtPeriodEnd sets the "stripe_cancel_at_period_end" field.
+func (pc *PaymentCreate) SetStripeCancelAtPeriodEnd(b bool) *PaymentCreate {
+	pc.mutation.SetStripeCancelAtPeriodEnd(b)
+	return pc
+}
+
+// SetNillableStripeCancelAtPeriodEnd sets the "stripe_cancel_at_period_end" field if the given value is not nil.
+func (pc *PaymentCreate) SetNillableStripeCancelAtPeriodEnd(b *bool) *PaymentCreate {
+	if b != nil {
+		pc.SetStripeCancelAtPeriodEnd(*b)
+	}
+	return pc
+}
+
 // SetStripeCurrentPeriodStart sets the "stripe_current_period_start" field.
 func (pc *PaymentCreate) SetStripeCurrentPeriodStart(t time.Time) *PaymentCreate {
 	pc.mutation.SetStripeCurrentPeriodStart(t)
@@ -345,6 +359,10 @@ func (pc *PaymentCreate) defaults() {
 		v := payment.DefaultPaymentType
 		pc.mutation.SetPaymentType(v)
 	}
+	if _, ok := pc.mutation.StripeCancelAtPeriodEnd(); !ok {
+		v := payment.DefaultStripeCancelAtPeriodEnd
+		pc.mutation.SetStripeCancelAtPeriodEnd(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -426,6 +444,9 @@ func (pc *PaymentCreate) check() error {
 		if err := payment.PaymentTypeValidator(v); err != nil {
 			return &ValidationError{Name: "payment_type", err: fmt.Errorf(`ent: validator failed for field "Payment.payment_type": %w`, err)}
 		}
+	}
+	if _, ok := pc.mutation.StripeCancelAtPeriodEnd(); !ok {
+		return &ValidationError{Name: "stripe_cancel_at_period_end", err: errors.New(`ent: missing required field "Payment.stripe_cancel_at_period_end"`)}
 	}
 	if len(pc.mutation.UserIDs()) == 0 {
 		return &ValidationError{Name: "user", err: errors.New(`ent: missing required edge "Payment.user"`)}
@@ -523,6 +544,10 @@ func (pc *PaymentCreate) createSpec() (*Payment, *sqlgraph.CreateSpec) {
 	if value, ok := pc.mutation.StripeInterval(); ok {
 		_spec.SetField(payment.FieldStripeInterval, field.TypeString, value)
 		_node.StripeInterval = value
+	}
+	if value, ok := pc.mutation.StripeCancelAtPeriodEnd(); ok {
+		_spec.SetField(payment.FieldStripeCancelAtPeriodEnd, field.TypeBool, value)
+		_node.StripeCancelAtPeriodEnd = value
 	}
 	if value, ok := pc.mutation.StripeCurrentPeriodStart(); ok {
 		_spec.SetField(payment.FieldStripeCurrentPeriodStart, field.TypeTime, value)

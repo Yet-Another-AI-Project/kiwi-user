@@ -42,6 +42,8 @@ func (Payment) Fields() []ent.Field {
 		field.String("stripe_subscription_id").Optional(),
 		field.String("stripe_subscription_status").Optional(),
 		field.String("stripe_interval").Optional(),
+		field.Bool("stripe_cancel_at_period_end").
+			Default(false),
 		field.Time("stripe_current_period_start").
 			Optional(),
 		field.Time("stripe_current_period_end").

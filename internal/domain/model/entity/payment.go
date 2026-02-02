@@ -30,6 +30,7 @@ type PaymentChannelInfo struct {
 	// stripe
 	StripeSubscriptionID     string
 	StripeSubscriptionStatus enum.SubscriptionStatus
+	StripeCancelAtPeriodEnd  bool
 	StripeInterval           enum.SubscriptionInterval
 	StripeCurrentPeriodStart time.Time
 	StripeCurrentPeriodEnd   time.Time

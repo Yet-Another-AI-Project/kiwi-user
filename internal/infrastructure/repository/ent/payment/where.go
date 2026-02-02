@@ -130,6 +130,11 @@ func StripeInterval(v string) predicate.Payment {
 	return predicate.Payment(sql.FieldEQ(FieldStripeInterval, v))
 }
 
+// StripeCancelAtPeriodEnd applies equality check predicate on the "stripe_cancel_at_period_end" field. It's identical to StripeCancelAtPeriodEndEQ.
+func StripeCancelAtPeriodEnd(v bool) predicate.Payment {
+	return predicate.Payment(sql.FieldEQ(FieldStripeCancelAtPeriodEnd, v))
+}
+
 // StripeCurrentPeriodStart applies equality check predicate on the "stripe_current_period_start" field. It's identical to StripeCurrentPeriodStartEQ.
 func StripeCurrentPeriodStart(v time.Time) predicate.Payment {
 	return predicate.Payment(sql.FieldEQ(FieldStripeCurrentPeriodStart, v))
@@ -1163,6 +1168,16 @@ func StripeIntervalEqualFold(v string) predicate.Payment {
 // StripeIntervalContainsFold applies the ContainsFold predicate on the "stripe_interval" field.
 func StripeIntervalContainsFold(v string) predicate.Payment {
 	return predicate.Payment(sql.FieldContainsFold(FieldStripeInterval, v))
+}
+
+// StripeCancelAtPeriodEndEQ applies the EQ predicate on the "stripe_cancel_at_period_end" field.
+func StripeCancelAtPeriodEndEQ(v bool) predicate.Payment {
+	return predicate.Payment(sql.FieldEQ(FieldStripeCancelAtPeriodEnd, v))
+}
+
+// StripeCancelAtPeriodEndNEQ applies the NEQ predicate on the "stripe_cancel_at_period_end" field.
+func StripeCancelAtPeriodEndNEQ(v bool) predicate.Payment {
+	return predicate.Payment(sql.FieldNEQ(FieldStripeCancelAtPeriodEnd, v))
 }
 
 // StripeCurrentPeriodStartEQ applies the EQ predicate on the "stripe_current_period_start" field.

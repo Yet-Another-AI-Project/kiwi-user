@@ -24,11 +24,13 @@ type CheckoutSessionCompleted struct {
 type InvoicePaid struct {
 	InvoiceID          string
 	CustomerID         string
+	CustomerEmail      string
 	SubscriptionID     string
 	AmountPaid         int64
 	Currency           string
 	PaidAt             time.Time
 	BillingReason      string
+	Metadata           map[string]string
 	CurrentPeriodStart int64
 	CurrentPeriodEnd   int64
 }
@@ -36,11 +38,13 @@ type InvoicePaid struct {
 type InvoicePaymentFailed struct {
 	InvoiceID          string
 	CustomerID         string
+	CustomerEmail      string
 	SubscriptionID     string
 	AmountDue          int64
 	Currency           string
 	AttemptCount       int64
 	NextPaymentAttempt time.Time
+	Metadata           map[string]string
 }
 
 type SubscriptionUpdated struct {
@@ -157,7 +161,9 @@ func ParseInvoicePaid(event *WebhookEvent) (*InvoicePaid, error) {
 		InvoiceID:          invoice.ID,
 		AmountPaid:         invoice.AmountPaid,
 		Currency:           string(invoice.Currency),
+		CustomerEmail:      invoice.CustomerEmail,
 		BillingReason:      string(invoice.BillingReason),
+		Metadata:           invoice.Lines.Data[0].Metadata,
 		CurrentPeriodStart: invoice.Lines.Data[0].Period.Start,
 		CurrentPeriodEnd:   invoice.Lines.Data[0].Period.End,
 	}
@@ -184,10 +190,12 @@ func ParseInvoicePaymentFailed(event *WebhookEvent) (*InvoicePaymentFailed, erro
 	}
 
 	result := &InvoicePaymentFailed{
-		InvoiceID:    invoice.ID,
-		AmountDue:    invoice.AmountDue,
-		Currency:     string(invoice.Currency),
-		AttemptCount: invoice.AttemptCount,
+		InvoiceID:     invoice.ID,
+		CustomerEmail: invoice.CustomerEmail,
+		AmountDue:     invoice.AmountDue,
+		Currency:      string(invoice.Currency),
+		AttemptCount:  invoice.AttemptCount,
+		Metadata:      invoice.Metadata,
 	}
 
 	if invoice.Customer != nil {

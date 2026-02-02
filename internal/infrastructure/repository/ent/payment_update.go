@@ -308,6 +308,20 @@ func (pu *PaymentUpdate) ClearStripeInterval() *PaymentUpdate {
 	return pu
 }
 
+// SetStripeCancelAtPeriodEnd sets the "stripe_cancel_at_period_end" field.
+func (pu *PaymentUpdate) SetStripeCancelAtPeriodEnd(b bool) *PaymentUpdate {
+	pu.mutation.SetStripeCancelAtPeriodEnd(b)
+	return pu
+}
+
+// SetNillableStripeCancelAtPeriodEnd sets the "stripe_cancel_at_period_end" field if the given value is not nil.
+func (pu *PaymentUpdate) SetNillableStripeCancelAtPeriodEnd(b *bool) *PaymentUpdate {
+	if b != nil {
+		pu.SetStripeCancelAtPeriodEnd(*b)
+	}
+	return pu
+}
+
 // SetStripeCurrentPeriodStart sets the "stripe_current_period_start" field.
 func (pu *PaymentUpdate) SetStripeCurrentPeriodStart(t time.Time) *PaymentUpdate {
 	pu.mutation.SetStripeCurrentPeriodStart(t)
@@ -616,6 +630,9 @@ func (pu *PaymentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if pu.mutation.StripeIntervalCleared() {
 		_spec.ClearField(payment.FieldStripeInterval, field.TypeString)
+	}
+	if value, ok := pu.mutation.StripeCancelAtPeriodEnd(); ok {
+		_spec.SetField(payment.FieldStripeCancelAtPeriodEnd, field.TypeBool, value)
 	}
 	if value, ok := pu.mutation.StripeCurrentPeriodStart(); ok {
 		_spec.SetField(payment.FieldStripeCurrentPeriodStart, field.TypeTime, value)
@@ -981,6 +998,20 @@ func (puo *PaymentUpdateOne) ClearStripeInterval() *PaymentUpdateOne {
 	return puo
 }
 
+// SetStripeCancelAtPeriodEnd sets the "stripe_cancel_at_period_end" field.
+func (puo *PaymentUpdateOne) SetStripeCancelAtPeriodEnd(b bool) *PaymentUpdateOne {
+	puo.mutation.SetStripeCancelAtPeriodEnd(b)
+	return puo
+}
+
+// SetNillableStripeCancelAtPeriodEnd sets the "stripe_cancel_at_period_end" field if the given value is not nil.
+func (puo *PaymentUpdateOne) SetNillableStripeCancelAtPeriodEnd(b *bool) *PaymentUpdateOne {
+	if b != nil {
+		puo.SetStripeCancelAtPeriodEnd(*b)
+	}
+	return puo
+}
+
 // SetStripeCurrentPeriodStart sets the "stripe_current_period_start" field.
 func (puo *PaymentUpdateOne) SetStripeCurrentPeriodStart(t time.Time) *PaymentUpdateOne {
 	puo.mutation.SetStripeCurrentPeriodStart(t)
@@ -1319,6 +1350,9 @@ func (puo *PaymentUpdateOne) sqlSave(ctx context.Context) (_node *Payment, err e
 	}
 	if puo.mutation.StripeIntervalCleared() {
 		_spec.ClearField(payment.FieldStripeInterval, field.TypeString)
+	}
+	if value, ok := puo.mutation.StripeCancelAtPeriodEnd(); ok {
+		_spec.SetField(payment.FieldStripeCancelAtPeriodEnd, field.TypeBool, value)
 	}
 	if value, ok := puo.mutation.StripeCurrentPeriodStart(); ok {
 		_spec.SetField(payment.FieldStripeCurrentPeriodStart, field.TypeTime, value)

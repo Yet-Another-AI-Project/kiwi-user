@@ -51,6 +51,8 @@ const (
 	FieldStripeSubscriptionStatus = "stripe_subscription_status"
 	// FieldStripeInterval holds the string denoting the stripe_interval field in the database.
 	FieldStripeInterval = "stripe_interval"
+	// FieldStripeCancelAtPeriodEnd holds the string denoting the stripe_cancel_at_period_end field in the database.
+	FieldStripeCancelAtPeriodEnd = "stripe_cancel_at_period_end"
 	// FieldStripeCurrentPeriodStart holds the string denoting the stripe_current_period_start field in the database.
 	FieldStripeCurrentPeriodStart = "stripe_current_period_start"
 	// FieldStripeCurrentPeriodEnd holds the string denoting the stripe_current_period_end field in the database.
@@ -97,6 +99,7 @@ var Columns = []string{
 	FieldStripeSubscriptionID,
 	FieldStripeSubscriptionStatus,
 	FieldStripeInterval,
+	FieldStripeCancelAtPeriodEnd,
 	FieldStripeCurrentPeriodStart,
 	FieldStripeCurrentPeriodEnd,
 	FieldStripeCustomerID,
@@ -134,6 +137,8 @@ var (
 	CurrencyValidator func(string) error
 	// DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	DescriptionValidator func(string) error
+	// DefaultStripeCancelAtPeriodEnd holds the default value on creation for the "stripe_cancel_at_period_end" field.
+	DefaultStripeCancelAtPeriodEnd bool
 )
 
 // Channel defines the type for the "channel" enum field.
@@ -168,6 +173,7 @@ const (
 	StatusSUCCESS Status = "SUCCESS"
 	StatusCLOSED  Status = "CLOSED"
 	StatusREFUND  Status = "REFUND"
+	StatusFAILED  Status = "FAILED"
 )
 
 func (s Status) String() string {
@@ -177,7 +183,7 @@ func (s Status) String() string {
 // StatusValidator is a validator for the "status" field enum values. It is called by the builders before save.
 func StatusValidator(s Status) error {
 	switch s {
-	case StatusNOTPAY, StatusSUCCESS, StatusCLOSED, StatusREFUND:
+	case StatusNOTPAY, StatusSUCCESS, StatusCLOSED, StatusREFUND, StatusFAILED:
 		return nil
 	default:
 		return fmt.Errorf("payment: invalid enum value for status field: %q", s)
@@ -306,6 +312,11 @@ func ByStripeSubscriptionStatus(opts ...sql.OrderTermOption) OrderOption {
 // ByStripeInterval orders the results by the stripe_interval field.
 func ByStripeInterval(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldStripeInterval, opts...).ToFunc()
+}
+
+// ByStripeCancelAtPeriodEnd orders the results by the stripe_cancel_at_period_end field.
+func ByStripeCancelAtPeriodEnd(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStripeCancelAtPeriodEnd, opts...).ToFunc()
 }
 
 // ByStripeCurrentPeriodStart orders the results by the stripe_current_period_start field.
