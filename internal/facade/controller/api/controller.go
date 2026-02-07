@@ -21,12 +21,10 @@ type Controller struct {
 	tokenApplication                   *application.TokenApplication
 	userApplication                    *application.UserApplication
 	organizationApplication            *application.OrganizationApplication
-	mediaApplication                   *application.MediaApplication
 	bindingApplication                 *application.BindingApplication
 	paymentApplication                 *application.PaymentApplication
 	organizationApplicationApplication *application.OrganizationApplicationApplication
 	logger                             logger.ILogger
-	configApplication                  *application.ConfigApplication
 }
 
 func NewController(
@@ -35,12 +33,10 @@ func NewController(
 	tokenApplication *application.TokenApplication,
 	userApplication *application.UserApplication,
 	organizationApplication *application.OrganizationApplication,
-	mediaApplication *application.MediaApplication,
 	bindingApplication *application.BindingApplication,
 	paymentApplication *application.PaymentApplication,
 	organizationApplicationApplication *application.OrganizationApplicationApplication,
 	logger logger.ILogger,
-	configApplication *application.ConfigApplication,
 ) (*Controller, error) {
 	return &Controller{
 		loginApplication:                   loginApplication,
@@ -48,11 +44,9 @@ func NewController(
 		tokenApplication:                   tokenApplication,
 		userApplication:                    userApplication,
 		organizationApplication:            organizationApplication,
-		mediaApplication:                   mediaApplication,
 		bindingApplication:                 bindingApplication,
 		paymentApplication:                 paymentApplication,
 		organizationApplicationApplication: organizationApplicationApplication,
 		logger:                             logger,
-		configApplication:                  configApplication,
 	}, nil
 }

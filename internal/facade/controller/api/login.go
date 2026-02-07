@@ -68,30 +68,6 @@ func (c *Controller) WechatMiniProgramLogin(ctx *gin.Context) (*dto.LoginRespons
 	return response, nil
 }
 
-// QyWechatLogin godoc
-// @Summary QyWechatLogin
-// @Tags Login
-// @Description QyWechatLogin
-// @Accept  json
-// @Produce  json
-// @Param  request body dto.QyWechatLoginRequest true "qy wechat login request"
-// @Success 200 {object}  facade.BaseResponse{data=dto.LoginResponse}
-//
-// @Router /v1/login/qy_wechat [post]
-func (c *Controller) QyWechatLogin(ctx *gin.Context) (*dto.LoginResponse, *facade.Error) {
-	var request dto.QyWechatLoginRequest
-	if err := ctx.BindJSON(&request); err != nil {
-		return nil, facade.ErrBadRequest.Wrap(err)
-	}
-
-	response, err := c.loginApplication.QyWechatLogin(ctx, request)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
-}
-
 // PasswordLogin godoc
 // @Summary PasswordLogin
 // @Tags Login

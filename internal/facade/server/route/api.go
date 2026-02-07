@@ -20,16 +20,15 @@ func (route *Route) RegisterApiV1(gin *gin.Engine) {
 
 	login := v1.Group("/login")
 	{
-		// login.POST("/wechat/miniprogram", NormalHandler(route.apiController.WechatMiniProgramLogin))
+		login.POST("/wechat/miniprogram", NormalHandler(route.apiController.WechatMiniProgramLogin))
 		login.POST("/wechat/web", NormalHandler(route.apiController.WechatWebLogin))
-		// login.POST("/qy_wechat", NormalHandler(route.apiController.QyWechatLogin))
 		login.POST("/password", NormalHandler(route.apiController.PasswordLogin))
-		// login.POST("/organization", NormalHandler(route.apiController.OrganizationLogin))
-		// login.POST("/phone", NormalHandler(route.apiController.PhoneLogin))
-		// login.POST("/phone/verify_code", NormalHandler(route.apiController.SendPhoneVerifyCode))
+		login.POST("/organization", NormalHandler(route.apiController.OrganizationLogin))
+		login.POST("/phone", NormalHandler(route.apiController.PhoneLogin))
+		login.POST("/phone/verify_code", NormalHandler(route.apiController.SendPhoneVerifyCode))
 		// login.POST("/phone/captcha/verify_code", NormalHandler(route.apiController.SendPhoneVerifyCodeWithCaptcha))
-		// login.POST("/email", NormalHandler(route.apiController.EmailLogin))
-		// login.POST("/email/verify_code", NormalHandler(route.apiController.SendEmailVerificationCode))
+		login.POST("/email", NormalHandler(route.apiController.EmailLogin))
+		login.POST("/email/verify_code", NormalHandler(route.apiController.SendEmailVerificationCode))
 		// login.POST("/email/captcha/verify_code", NormalHandler(route.apiController.SendEmailVerificationCodeWithCaptcha))
 		login.POST("/google/web", NormalHandler(route.apiController.GoogleWebLogin))
 	}
@@ -56,9 +55,11 @@ func (route *Route) RegisterApiV1(gin *gin.Engine) {
 
 	payment := v1.Group("/payments")
 	{
-		// payment.POST("", NormalHandler(route.apiController.CreatePayment))
-		// payment.GET("/:out-trade-no/status", NormalHandler(route.apiController.QueryPaymentStatus))
+		payment.GET("/:out-trade-no/status", NormalHandler(route.apiController.QueryPaymentStatus))
+		// Wechat payment
+		payment.POST("", NormalHandler(route.apiController.CreateWechatPayment))
 		// payment.POST("/wechat/notify", NormalHandler(route.apiController.WechatPaymentCallback))
+
 		// Stripe subscription payments
 		payment.POST("/stripe/checkout", NormalHandler(route.apiController.CreateStripeCheckoutSession))
 		payment.POST("/stripe/webhook", NormalHandler(route.apiController.StripeWebhook))

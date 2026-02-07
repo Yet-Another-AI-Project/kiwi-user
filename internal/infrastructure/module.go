@@ -17,16 +17,12 @@ import (
 	"github.com/Yet-Another-AI-Project/kiwi-lib/client/volcengine/msgsms"
 
 	"github.com/posthog/posthog-go"
-	"github.com/redis/go-redis/v9"
 	"go.uber.org/fx"
-
-	"context"
 
 	"github.com/futurxlab/golanggraph/logger"
 
 	"github.com/Yet-Another-AI-Project/kiwi-lib/client/alibaba/oss"
 	liblogger "github.com/Yet-Another-AI-Project/kiwi-lib/logger"
-	libutils "github.com/Yet-Another-AI-Project/kiwi-lib/tools/utils"
 	"github.com/Yet-Another-AI-Project/kiwi-lib/tools/xhttp"
 	"github.com/futurxlab/golanggraph/xerror"
 )
@@ -94,29 +90,14 @@ func newCaptchaClient(config *config.Config) captcha.CaptchaClient {
 	return captchaClient
 }
 
-func newMailClient(config *config.Config, redisClient *redis.Client) *resend.ResendClient {
+func newMailClient(config *config.Config) *resend.ResendClient {
 	client := resend.NewResendClient(
 		resend.WithAPIKey(config.Mail.ResendAPIKey),
 		resend.WithFrom(config.Mail.ResendFromEmail),
 		resend.WithVerifyCodeTemplate(config.Mail.VertifyCodeTemplate),
 		resend.WithVerifyCodeSubject(config.Mail.VertifyCodeSubject),
-		resend.WithRedis(redisClient),
 	)
-	libutils.SafeGo(context.Background(), nil, func() {
-		client.BatchSendLoop(func(err error) {
-			//feishu.SendFeishuAlertAsync(nil, nil, config.Mail.FeishuWebhook, "邮件发送异常", err.Error())
-		})
-	})
 	return client
-}
-
-func newRedisClient(cfg *config.Config) *redis.Client {
-	return redis.NewClient(&redis.Options{
-		Addr:     cfg.Redis.Host,
-		Password: cfg.Redis.Password,
-		DB:       cfg.Redis.DbIndex,
-		Protocol: 2,
-	})
 }
 
 func newOSSClient(cfg *config.Config) (*oss.AliyunOss, error) {
@@ -256,12 +237,4 @@ var Module = fx.Provide(
 
 	// stripe client
 	newStripeClient,
-
-	// redis
-	fx.Annotate(
-		newRedisClient,
-		fx.OnStop(func(client *redis.Client) {
-			client.Close()
-		}),
-	),
 )

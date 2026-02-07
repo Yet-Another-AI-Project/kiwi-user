@@ -11,6 +11,4 @@ var Module = fx.Provide(
 	NewBindingApplication,
 	NewPaymentApplication,
 	NewOrganizationRequestApplication,
-	NewConfigApplication,
-	NewMediaApplication,
 )

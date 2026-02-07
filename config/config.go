@@ -27,7 +27,6 @@ type Config struct {
 	OSS        *OSSConfig           `config:"oss"`
 	Mail       *MailClientConfig    `config:"mail"`
 	Captcha    *CaptchaClientConfig `config:"captcha"`
-	Redis      *RedisConfig         `config:"redis"`
 }
 
 func NewConfig() (*Config, error) {
@@ -78,7 +77,6 @@ func decodeConfig(c *config.Config) (*Config, error) {
 		OSS:        &OSSConfig{},
 		Mail:       &MailClientConfig{},
 		Captcha:    &CaptchaClientConfig{},
-		Redis:      &RedisConfig{},
 	}
 
 	t := reflect.TypeOf(cfg)

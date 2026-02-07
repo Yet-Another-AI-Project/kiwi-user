@@ -21,8 +21,6 @@ import (
 	"github.com/posthog/posthog-go"
 
 	"kiwi-user/internal/infrastructure/jwt"
-
-	"github.com/redis/go-redis/v9"
 )
 
 type LoginApplication struct {
@@ -42,7 +40,6 @@ type LoginApplication struct {
 	posthogClient posthog.Client
 	smsClient     msgsms.SmsClient
 	captchaClient captcha.CaptchaClient
-	redisClient   *redis.Client
 }
 
 func NewLoginApplication(
@@ -60,7 +57,6 @@ func NewLoginApplication(
 	smsClient msgsms.SmsClient,
 	vertificationCodeService *service.VertificationCodeService,
 	captchaClient captcha.CaptchaClient,
-	redisClient *redis.Client,
 ) *LoginApplication {
 	return &LoginApplication{
 		config:                         config,
@@ -77,7 +73,6 @@ func NewLoginApplication(
 		smsClient:                      smsClient,
 		vertificationCodeService:       vertificationCodeService,
 		captchaClient:                  captchaClient,
-		redisClient:                    redisClient,
 	}
 }
 
